@@ -1,516 +1,579 @@
 {
   "meta": {
-    "familyName": "The Aboud Family",
-    "tagline": "Interactive lineage · Est. 1938"
+    "familyName": "The Accoumeh Family",
+    "tagline": "Descendants of Abedelrahman Accoumeh",
+    "description": "Four generations of the Accoumeh family — tap anyone to see their details, spouses, children and siblings.",
+    "root": "abedelrahman"
   },
   "people": {
-    "ibrahim": {
-      "name": "Ibrahim Aboud",
-      "gender": "male",
-      "birth": 1938,
-      "death": 2021,
-      "occupation": "Master carpenter",
-      "location": "Ramallah, Palestine",
-      "bio": "Born in the old stone quarter of Ramallah, Ibrahim learned carpentry from his father and opened his own workshop at twenty. He built the family's first stone house with his own hands and led the family through four turbulent decades — every dispute in the family ended at his workbench, over cardamom coffee.",
-      "timeline": [
-        { "year": 1938, "title": "Born in the old quarter", "text": "Eldest of five children of a carpenter family in Ramallah." },
-        { "year": 1956, "title": "Opens his workshop", "text": "Took over the family carpentry workshop on Al-Zahra Street." },
-        { "year": 1962, "title": "Marries Fatima", "text": "A courtyard wedding the family still retells today." },
-        { "year": 1974, "title": "Builds the stone house", "text": "Raised the family home on the southern hillside, stone by stone." },
-        { "year": 2009, "title": "Passes the torch", "text": "Formally handed the workshop to Omar and Yousef." },
-        { "year": 2021, "title": "Passes away", "text": "Buried beside the olive grove he planted in 1968." }
-      ],
-      "photos": [
-        "Wedding portrait — Ramallah, 1962",
-        "The first workshop on Al-Zahra Street, 1965",
-        "Raising the stone house, autumn 1974",
-        "Four generations on the terrace, 1998"
-      ]
+    "abedelrahman": {
+      "name": "Abedelrahman Accoumeh",
+      "gender": "male"
     },
-    "fatima": {
-      "name": "Fatima Aboud",
+    "khadra": {
+      "name": "Khadra Jaloul",
+      "gender": "female"
+    },
+    "abedelrahman-wife-2": {
+      "name": "Second wife (name to add)",
+      "gender": "female"
+    },
+    "ahmed": {
+      "name": "Ahmed Accoumeh",
+      "gender": "male",
+      "birth": 1952,
+      "birthApprox": true,
+      "father": "abedelrahman"
+    },
+    "sania": {
+      "name": "Sania Accoumeh",
       "gender": "female",
-      "birth": 1944,
-      "occupation": "Weaver & family matriarch",
-      "location": "Ramallah, Palestine",
-      "bio": "A weaver by craft and the family's gravitational center, Fatima kept the ledger of births, marriages and reconciliations for sixty years. Her notebooks remain the family's only written archive before 1980.",
-      "timeline": [
-        { "year": 1944, "title": "Born in Beitunia", "text": "Daughter of a weaving family from the hills." },
-        { "year": 1962, "title": "Marries Ibrahim", "text": "Moved into the stone quarter of Ramallah." },
-        { "year": 1987, "title": "The Sunday table", "text": "Founded the family tradition of Sunday lunch — never canceled since." },
-        { "year": 2003, "title": "The first register", "text": "Compiled the hand-written family register of 120 years." },
-        { "year": 2018, "title": "Going digital", "text": "Digitized her register with her granddaughter Rana." }
-      ],
-      "photos": [
-        "The wedding courtyard, 1962",
-        "Weaving in the courtyard, 1970s",
-        "80th birthday with the whole family, 2024"
-      ]
+      "birth": 1959,
+      "birthApprox": true,
+      "maidenName": "Dabbous"
     },
-    "omar": {
-      "name": "Omar Ibrahim Aboud",
-      "gender": "male",
-      "birth": 1966,
-      "occupation": "Civil engineer",
-      "location": "Amman, Jordan",
-      "bio": "An engineer by training and the guardian of the family property, Omar splits his year between Amman and the old house in Ramallah. He keeps Ibrahim's workbench exactly where it stood.",
-      "timeline": [
-        { "year": 1966, "title": "Born in Ramallah", "text": "First child of Ibrahim and Fatima." },
-        { "year": 1989, "title": "Engineering degree", "text": "Civil engineering, University of Jordan." },
-        { "year": 1994, "title": "Marries Layla", "text": "Settled in Amman but returned every summer." },
-        { "year": 2010, "title": "Restores the stone house", "text": "Led the two-year restoration of the family home." }
-      ],
-      "photos": [
-        "Restoring the stone house, 2010",
-        "With Layla on the Jordan Trail, 2015"
-      ]
-    },
-    "layla": {
-      "name": "Layla Nasser",
-      "gender": "female",
-      "birth": 1968,
-      "occupation": "School principal",
-      "location": "Amman, Jordan",
-      "bio": "For thirty years a principal in Amman, Layla taught four of the Aboud grandchildren to read before any school did. The family calls her 'the teacher' — a title she never refuses.",
-      "photos": [
-        "First day of school — Al-Manara, 2005"
-      ]
-    },
-    "huda": {
-      "name": "Huda Ibrahim Aboud",
-      "gender": "female",
-      "birth": 1968,
-      "death": 2019,
-      "occupation": "Pediatric physician",
-      "location": "Ramallah, Palestine",
-      "bio": "The family's first physician, Huda built the pediatric clinic that still serves the western neighborhoods of Ramallah. She is remembered every spring when the clinic plants its anniversary olive tree.",
-      "timeline": [
-        { "year": 1968, "title": "Born in Ramallah", "text": "Second child of Ibrahim and Fatima." },
-        { "year": 1993, "title": "Medical degree", "text": "Graduated medicine; chose pediatrics over surgery." },
-        { "year": 1996, "title": "Opens the clinic", "text": "Founded the Aboud Children's Clinic with Karim's blueprints." },
-        { "year": 2019, "title": "Passes away", "text": "Remembered by the clinic and the families it healed." }
-      ],
-      "photos": [
-        "White coat day, 1993",
-        "The clinic team, 2004"
-      ]
-    },
-    "karim": {
-      "name": "Karim Haddad",
-      "gender": "male",
-      "birth": 1965,
-      "occupation": "Architect",
-      "location": "Ramallah, Palestine",
-      "bio": "Architect who drew the extension of the stone house — and, more quietly, half of modern Ramallah. Keeps a sketch of Huda's clinic framed above his desk.",
-      "photos": [
-        "Drafting table at the studio, 1990"
-      ]
-    },
-    "ahmad": {
-      "name": "Ahmad Ibrahim Aboud",
-      "gender": "male",
-      "birth": 1971,
-      "occupation": "Restaurateur",
-      "location": "Dearborn, Michigan",
-      "bio": "Crossed to Michigan in 1992 with two suitcases and his grandfather's spice tin. His restaurant became the Dearborn gathering point for the diaspora side of the family — every July the family flies in for Ahmad's open table.",
-      "timeline": [
-        { "year": 1971, "title": "Born in Ramallah", "text": "Third child of Ibrahim and Fatima." },
-        { "year": 1992, "title": "Arrives in Michigan", "text": "Started as a line cook in a Dearborn diner." },
-        { "year": 1998, "title": "Opens the restaurant", "text": "'Cedar & Cardamom' — Ramallah recipes, Michigan portions." },
-        { "year": 2003, "title": "Marries Mona", "text": "Met at a pharmacy conference in Detroit." }
-      ],
-      "photos": [
-        "Opening night, 1998",
-        "The open table every July"
-      ]
-    },
-    "mona": {
-      "name": "Mona Saleh",
-      "gender": "female",
-      "birth": 1973,
-      "occupation": "Pharmacist",
-      "location": "Dearborn, Michigan",
-      "bio": "Runs the pharmacy across from the restaurant — 'ahmad feeds them, I fix them' she says. Catalogs the family recipes allergen-free.",
-      "photos": [
-        "Snow day in Dearborn, 2008"
-      ]
-    },
-    "dalia": {
-      "name": "Dalia Ibrahim Aboud",
-      "gender": "female",
-      "birth": 1974,
-      "occupation": "Human-rights attorney",
-      "location": "Ramallah, Palestine",
-      "bio": "Fourth child and the family's lawyer — for land, for papers, for the ones who cannot pay. Trained the next generation of clerks in the family's attic office.",
-      "timeline": [
-        { "year": 1974, "title": "Born in Ramallah", "text": "Youngest daughter of Ibrahim and Fatima." },
-        { "year": 2001, "title": "The attic office", "text": "Opened her practice above the old workshop." },
-        { "year": 2019, "title": "Sister's oath", "text": "Finished Huda's clinic endowment after her passing." }
-      ],
-      "photos": [
-        "The attic office, 2001"
-      ]
-    },
-    "fadi": {
-      "name": "Fadi Barakat",
-      "gender": "male",
-      "birth": 1972,
-      "occupation": "Journalist",
-      "location": "Ramallah, Palestine",
-      "bio": "Investigative journalist, radio voice, and the family's unofficial archivist. His tapes of Sunday lunches are how the grandchildren know their grandfathers.",
-      "photos": [
-        "Recording Sunday lunch, 2019"
-      ]
-    },
-    "yousef-sr": {
-      "name": "Yousef Ibrahim Aboud",
-      "gender": "male",
-      "birth": 1978,
-      "occupation": "Documentary photographer",
-      "location": "Beirut, Lebanon",
-      "bio": "The youngest son left for Beirut to photograph what words miss. Forty years of negatives — olive harvests, weddings, departures — sit in Beirut and Ramallah in equal halves.",
-      "timeline": [
-        { "year": 1978, "title": "Born in Ramallah", "text": "Youngest of Ibrahim and Fatima's six children." },
-        { "year": 2000, "title": "First camera", "text": "Traded a winter coat for a second-hand camera." },
-        { "year": 2012, "title": "'Hillside' exhibition", "text": "Photographs of the family orchard shown in Beirut and Amman." },
-        { "year": 2021, "title": "The last portrait", "text": "Photographed his father one week before his passing." }
-      ],
-      "photos": [
-        "Olive harvest, 2001",
-        "The 'Hillside' exhibition opening, 2012"
-      ]
-    },
-    "nour": {
-      "name": "Nour Khalil",
+    "susanne": {
+      "name": "Susanne Accoumeh",
       "gender": "female",
       "birth": 1980,
-      "occupation": "Textile designer",
-      "location": "Beirut, Lebanon",
-      "bio": "Weaves Fatima's terrace patterns into modern textiles; the family shop in Beirut is half gallery, half living room.",
-      "photos": [
-        "Loom in the Beirut studio, 2016"
-      ]
+      "birthApprox": true,
+      "father": "ahmed",
+      "mother": "sania"
     },
-    "salma": {
-      "name": "Salma Ibrahim Aboud",
-      "gender": "female",
-      "birth": 1982,
-      "occupation": "Pediatric nurse",
-      "location": "Nablus, Palestine",
-      "bio": "Youngest of the six, a pediatric nurse in Nablus, and the one who decided the family garden needed fig trees. Sundays, she drives the mountain road home without fail.",
-      "photos": [
-        "The fig trees, first harvest, 2020"
-      ]
+    "delano": {
+      "name": "Delano Gracey",
+      "gender": "male"
     },
-    "rana": {
-      "name": "Rana Omar Aboud",
-      "gender": "female",
-      "birth": 1990,
-      "occupation": "Software engineer",
-      "location": "Berlin, Germany",
-      "bio": "The engineer of the third generation — she digitized Fatima's register and built the first version of this family tree. Insists the data is 'just another kind of weaving'.",
-      "timeline": [
-        { "year": 1990, "title": "Born in Amman", "text": "First grandchild on the Omar branch." },
-        { "year": 2014, "title": "Moves to Berlin", "text": "Joined a maps team; finds family addresses in her sleep." },
-        { "year": 2018, "title": "The digital register", "text": "Sat with Fatima for a winter converting notebooks to bytes." }
-      ],
-      "photos": [
-        "With Fatima and the notebooks, winter 2018"
-      ]
-    },
-    "tomas": {
-      "name": "Tomas Weber",
+    "zein": {
+      "name": "Zein Choghri",
       "gender": "male",
-      "birth": 1988,
-      "occupation": "Data analyst",
-      "location": "Berlin, Germany",
-      "bio": "Berlin-born, speaks Arabic at Sunday video-calls with a Swabian accent the grandparents find delightful. Learned to make taboon bread on the first try.",
-      "photos": [
-        "First taboon bread, 2019"
-      ]
-    },
-    "sami": {
-      "name": "Sami Omar Aboud",
-      "gender": "male",
-      "birth": 1993,
-      "occupation": "Chef",
-      "location": "Amman, Jordan",
-      "bio": "Trained in Beirut, settled in Amman; his hummus has opinions. Runs a supper club where the family recipe for knafeh is officially 'closed source'.",
-      "photos": [
-        "Supper club night three, 2023"
-      ]
-    },
-    "aziza": {
-      "name": "Aziza Mansour",
-      "gender": "female",
-      "birth": 1995,
-      "occupation": "Pastry chef",
-      "location": "Amman, Jordan",
-      "bio": "Patisserie-trained in Paris; her ka'ek won a medal the family refuses to let her be modest about.",
-      "photos": [
-        "Medal day, Paris, 2021"
-      ]
-    },
-    "tariq": {
-      "name": "Tariq Omar Aboud",
-      "gender": "male",
-      "birth": 1999,
-      "occupation": "Architecture student",
-      "location": "Amman, Jordan",
-      "bio": "Studies architecture in Amman and rehearses Karim's old stationery arguments about load-bearing stone. Sketches the stone house from every angle for a graduation project.",
-      "photos": [
-        "Field study — the stone house, 2024"
-      ]
-    },
-    "farah": {
-      "name": "Farah Haddad",
-      "gender": "female",
-      "birth": 1992,
-      "occupation": "Architect",
-      "location": "Toronto, Canada",
-      "bio": "Huda and Karim's daughter, carrying the studio's drafting tradition to Toronto. Her pavilion design for the clinic anniversary won the family's quietest standing ovation.",
-      "timeline": [
-        { "year": 1992, "title": "Born in Ramallah", "text": "First child of Huda and Karim." },
-        { "year": 2019, "title": "The pavilion", "text": "Designed the clinic's 25th-anniversary pavilion in tribute." },
-        { "year": 2021, "title": "Moves to Toronto", "text": "Opened a small studio focused on public spaces." }
-      ],
-      "photos": [
-        "Clinic pavilion opening, 2019"
-      ]
-    },
-    "daniel": {
-      "name": "Daniel Kowalski",
-      "gender": "male",
-      "birth": 1990,
-      "occupation": "Structural engineer",
-      "location": "Toronto, Canada",
-      "bio": "The other half of every Farah project — married into the family and into the structural review process. Favorite uncle status: contested.",
-      "photos": [
-        "Site visit with Farah, 2022"
-      ]
-    },
-    "yousef-haddad": {
-      "name": "Yousef Haddad",
-      "gender": "male",
-      "birth": 1995,
-      "occupation": "Data scientist",
-      "location": "London, UK",
-      "bio": "Named for his Beirut uncle and determined to rival Rana's spreadsheets. Works in London; sails on weekends; calls every eclipse without fail.",
-      "photos": [
-        "Regatta weekend, 2023"
-      ]
-    },
-    "zayd": {
-      "name": "Zayd Ahmad Aboud",
-      "gender": "male",
-      "birth": 1996,
-      "occupation": "Game developer",
-      "location": "Dearborn, Michigan",
-      "bio": "Builds indie games in Dearborn and secretly beta-tested this interface. His current project: a puzzle game about an olive harvest.",
-      "photos": [
-        "Game jam winners, 2022"
-      ]
-    },
-    "maya": {
-      "name": "Maya Ahmad Aboud",
-      "gender": "female",
-      "birth": 2000,
-      "occupation": "Medical student",
-      "location": "Ann Arbor, Michigan",
-      "bio": "Medical student in Ann Arbor, following aunt Huda's clinic stories like a compass. Her white coat photo is now an emoji in the family group chat.",
-      "photos": [
-        "White coat ceremony, 2023"
-      ]
-    },
-    "noor": {
-      "name": "Noor Barakat",
-      "gender": "female",
-      "birth": 1998,
-      "occupation": "Journalist",
-      "location": "London, UK",
-      "bio": "Fadi and Dalia's daughter — inherited the tape recorder, not the patience. Reports from London and co-edits the family's yearly newsletter.",
-      "photos": [
-        "First byline, 2020"
-      ]
-    },
-    "hazem": {
-      "name": "Hazem Shaheen",
-      "gender": "male",
-      "birth": 1996,
-      "occupation": "Motion designer",
-      "location": "London, UK",
-      "bio": "Motion designer who animated old family photos into a living archive for Yousef's 70th-birthday exhibition.",
-      "photos": [
-        "Archive screening night, 2024"
-      ]
-    },
-    "adam-barakat": {
-      "name": "Adam Barakat",
-      "gender": "male",
-      "birth": 2003,
-      "occupation": "Football academy player",
-      "location": "Ramallah, Palestine",
-      "bio": "Adam plays at the Ramallah academy and firmly believes a family reunion is eleven-a-side. Goal celebration: pointing at grandpa Fadi's press badge.",
-      "photos": [
-        "Academy semifinal, 2024"
-      ]
-    },
-    "lina": {
-      "name": "Lina Yousef Aboud",
-      "gender": "female",
       "birth": 2004,
-      "occupation": "Illustration student",
-      "location": "Beirut, Lebanon",
-      "bio": "Illustrates the family's Sunday-lunch comics; her panel of Fatima's register desk is already framed in the Beirut studio.",
-      "photos": [
-        "The register comic, 2023"
-      ]
+      "birthApprox": true,
+      "mother": "susanne"
     },
-    "jad": {
-      "name": "Jad Yousef Aboud",
-      "gender": "male",
-      "birth": 2007,
-      "occupation": "Student — chess prodigy",
-      "location": "Beirut, Lebanon",
-      "bio": "Beats great-uncles at chess and won't tell them how. Keeps a ratings notebook; bribes accepted in knafeh.",
-      "photos": [
-        "Beirut open, juniors, 2023"
-      ]
-    },
-    "mariam": {
-      "name": "Mariam Yousef Aboud",
-      "gender": "female",
-      "birth": 2010,
-      "occupation": "Student",
-      "location": "Beirut, Lebanon",
-      "bio": "The family's youngest explorer — climbed the stone house fig tree first and alphabetized Fatima's register second.",
-      "photos": [
-        "The fig tree summit, 2022"
-      ]
-    },
-    "yara": {
-      "name": "Yara Weber",
-      "gender": "female",
-      "birth": 2016,
-      "occupation": null,
-      "location": "Berlin, Germany",
-      "bio": "Fourth-generation Berliner who says 'tayta' before 'Oma' — inherited the dawn-person gene from Fatima.",
-      "photos": [
-        "First visit to Ramallah, 2024"
-      ]
-    },
-    "nael": {
-      "name": "Nael Weber",
-      "gender": "male",
-      "birth": 2019,
-      "occupation": null,
-      "location": "Berlin, Germany",
-      "bio": "Drum prodigy (pots and pans division). Already asks Sami for the knafeh recipe; gets the family shrug.",
-      "photos": [
-        "Kitchen drum solo, 2024"
-      ]
-    },
-    "dana": {
-      "name": "Dana Mansour",
-      "gender": "female",
-      "birth": 2018,
-      "occupation": null,
-      "location": "Amman, Jordan",
-      "bio": "Draws the family a new portrait every visit; they are taped inside the Amman kitchen cabinet.",
-      "photos": [
-        "Portraits on the cabinet door, 2024"
-      ]
-    },
-    "rami": {
-      "name": "Rami Mansour",
-      "gender": "male",
-      "birth": 2021,
-      "occupation": null,
-      "location": "Amman, Jordan",
-      "bio": "Named for his great-grandfather's workshop; his first word was reportedly 'hummus'.",
-      "photos": [
-        "First birthday, 2022"
-      ]
-    },
-    "elia": {
-      "name": "Elia Kowalski",
+    "adrian": {
+      "name": "Adrian Gracey",
       "gender": "male",
       "birth": 2020,
-      "occupation": null,
-      "location": "Toronto, Canada",
-      "bio": "Toronto's loudest four-year-old; insists his name means 'tallest' and the family's photos agree.",
-      "photos": [
-        "Snow fort engineers, 2024"
-      ]
+      "birthApprox": true,
+      "father": "delano",
+      "mother": "susanne"
     },
-    "sofia": {
-      "name": "Sofia Kowalski",
-      "gender": "female",
-      "birth": 2023,
-      "occupation": null,
-      "location": "Toronto, Canada",
-      "bio": "The newest Toronto Aboud — born during a power outage, lit by candles and the family video-call.",
-      "photos": [
-        "The candle-light welcome, 2023"
-      ]
-    },
-    "waseem": {
-      "name": "Waseem Shaheen",
+    "andrew": {
+      "name": "Andrew Gracey",
       "gender": "male",
       "birth": 2022,
-      "occupation": null,
-      "location": "London, UK",
-      "bio": "London branch, fourth generation — sleeps through Sunday video-calls with impressive commitment.",
-      "photos": [
-        "Sunday call, sound asleep, 2024"
-      ]
+      "birthApprox": true,
+      "father": "delano",
+      "mother": "susanne"
     },
-    "hala": {
-      "name": "Hala Shaheen",
+    "tagreed": {
+      "name": "Tagreed Accoumeh",
       "gender": "female",
+      "birth": 1982,
+      "birthApprox": true,
+      "father": "ahmed",
+      "mother": "sania"
+    },
+    "farhad": {
+      "name": "Farhad Moradi Kouchi",
+      "gender": "male",
+      "birth": 1982,
+      "birthApprox": true
+    },
+    "ryan": {
+      "name": "Ryan Moradi",
+      "gender": "male",
+      "birth": 2021,
+      "birthApprox": true,
+      "father": "farhad",
+      "mother": "tagreed"
+    },
+    "sami": {
+      "name": "Sami Accoumeh",
+      "gender": "male",
+      "birth": 1988,
+      "birthApprox": true,
+      "father": "ahmed",
+      "mother": "sania"
+    },
+    "zena": {
+      "name": "Zena Accoumeh",
+      "gender": "female",
+      "maidenName": "Kabbara"
+    },
+    "lilianna": {
+      "name": "Lilianna Accoumeh",
+      "gender": "female",
+      "birth": 2014,
+      "birthApprox": true,
+      "father": "sami",
+      "mother": "zena"
+    },
+    "liam": {
+      "name": "Liam Accoumeh",
+      "gender": "male",
+      "birth": 2017,
+      "birthApprox": true,
+      "father": "sami",
+      "mother": "zena"
+    },
+    "lucas": {
+      "name": "Lucas Accoumeh",
+      "gender": "male",
+      "birth": 2020,
+      "birthApprox": true,
+      "father": "sami",
+      "mother": "zena"
+    },
+    "rami": {
+      "name": "Rami Accoumeh",
+      "gender": "male",
+      "birth": 1988,
+      "birthApprox": true,
+      "father": "ahmed",
+      "mother": "sania"
+    },
+    "sarah-ghemraoui": {
+      "name": "Sarah Ghemraoui",
+      "gender": "female"
+    },
+    "zachariah": {
+      "name": "Zachariah Accoumeh",
+      "gender": "male",
+      "birth": 2021,
+      "birthApprox": true,
+      "father": "rami",
+      "mother": "sarah-ghemraoui"
+    },
+    "isabella": {
+      "name": "Isabella Accoumeh",
+      "gender": "female",
+      "father": "rami",
+      "mother": "sarah-ghemraoui",
+      "birth": "2025-11",
+      "birthApprox": true
+    },
+    "bassam": {
+      "name": "Bassam Accoumeh",
+      "gender": "male",
+      "birth": 1962,
+      "birthApprox": true,
+      "father": "abedelrahman"
+    },
+    "samira-ghomrawi": {
+      "name": "Samira Ghomrawi",
+      "gender": "female",
+      "birth": 1967,
+      "birthApprox": true
+    },
+    "samer": {
+      "name": "Samer Accoumeh",
+      "gender": "male",
+      "birth": 1986,
+      "birthApprox": true,
+      "father": "bassam",
+      "mother": "samira-ghomrawi"
+    },
+    "sara-moraabi": {
+      "name": "Sara Moraabi",
+      "gender": "female",
+      "birth": 1986,
+      "birthApprox": true
+    },
+    "lara": {
+      "name": "Lara Accoumeh",
+      "gender": "female",
+      "birth": 2010,
+      "birthApprox": true,
+      "father": "samer",
+      "mother": "sara-moraabi"
+    },
+    "yara": {
+      "name": "Yara Accoumeh",
+      "gender": "female",
+      "birth": 2010,
+      "birthApprox": true,
+      "father": "samer",
+      "mother": "sara-moraabi"
+    },
+    "bassam-jr": {
+      "name": "Bassam Accoumeh",
+      "gender": "male",
+      "birth": 2013,
+      "birthApprox": true,
+      "father": "samer",
+      "mother": "sara-moraabi"
+    },
+    "rana": {
+      "name": "Rana Accoumeh",
+      "gender": "female",
+      "birth": 1984,
+      "birthApprox": true,
+      "father": "bassam",
+      "mother": "samira-ghomrawi"
+    },
+    "youssef-hammoud": {
+      "name": "Youssef Hammoud",
+      "gender": "male",
+      "birth": 1984,
+      "birthApprox": true
+    },
+    "lana": {
+      "name": "Lana Hammoud",
+      "gender": "female",
+      "birth": 2012,
+      "birthApprox": true,
+      "father": "youssef-hammoud",
+      "mother": "rana"
+    },
+    "mohamed-hammoud": {
+      "name": "Mohamed Hammoud",
+      "gender": "male",
+      "birth": 2013,
+      "birthApprox": true,
+      "father": "youssef-hammoud",
+      "mother": "rana"
+    },
+    "amani": {
+      "name": "Amani Accoumeh",
+      "gender": "female",
+      "birth": 1990,
+      "birthApprox": true,
+      "father": "bassam",
+      "mother": "samira-ghomrawi"
+    },
+    "bilal-moussa": {
+      "name": "Bilal Moussa",
+      "gender": "male"
+    },
+    "razan": {
+      "name": "Razan Moussa",
+      "gender": "female",
+      "birth": 2012,
+      "birthApprox": true,
+      "father": "bilal-moussa",
+      "mother": "amani"
+    },
+    "sawsan": {
+      "name": "Sawsan Moussa",
+      "gender": "female",
+      "father": "bilal-moussa",
+      "mother": "amani"
+    },
+    "sila": {
+      "name": "Sila Moussa",
+      "gender": "female",
+      "father": "bilal-moussa",
+      "mother": "amani"
+    },
+    "rasha": {
+      "name": "Rasha Accoumeh",
+      "gender": "female",
+      "birth": 1994,
+      "birthApprox": true,
+      "father": "bassam",
+      "mother": "samira-ghomrawi"
+    },
+    "hilal-kahil": {
+      "name": "Hilal Kahil",
+      "gender": "male",
+      "birth": 1986,
+      "birthApprox": true
+    },
+    "jawad": {
+      "name": "Jawad Kahil",
+      "gender": "male",
+      "father": "hilal-kahil",
+      "mother": "rasha",
+      "birth": "2026-01",
+      "birthApprox": true
+    },
+    "diyaa": {
+      "name": "Diyaa Accoumeh",
+      "gender": "male",
+      "birth": 1969,
+      "birthApprox": true,
+      "father": "abedelrahman"
+    },
+    "abeer": {
+      "name": "Abeer Khanji",
+      "gender": "female",
+      "birth": 1975,
+      "birthApprox": true
+    },
+    "hanan": {
+      "name": "Hanan Accoumeh",
+      "gender": "female",
+      "birth": 1991,
+      "birthApprox": true,
+      "father": "diyaa",
+      "mother": "abeer"
+    },
+    "mohammed-hammoud": {
+      "name": "Mohammed Hammoud",
+      "gender": "male"
+    },
+    "hamad": {
+      "name": "Hamad Hammoud",
+      "gender": "male",
+      "birth": 2011,
+      "birthApprox": true,
+      "father": "mohammed-hammoud",
+      "mother": "hanan"
+    },
+    "abdul-raouf": {
+      "name": "Abdul Raouf Hammoud",
+      "gender": "male",
+      "birth": 2011,
+      "birthApprox": true,
+      "father": "mohammed-hammoud",
+      "mother": "hanan"
+    },
+    "jenan": {
+      "name": "Jenan Accoumeh",
+      "gender": "female",
+      "birth": 1993,
+      "birthApprox": true,
+      "father": "diyaa",
+      "mother": "abeer"
+    },
+    "abdullah-ali": {
+      "name": "Abdullah Ali",
+      "gender": "male"
+    },
+    "belal": {
+      "name": "Belal Accoumeh",
+      "gender": "male",
+      "birth": 2012,
+      "birthApprox": true,
+      "mother": "jenan"
+    },
+    "omar-ali": {
+      "name": "Omar Ali",
+      "gender": "male",
+      "birth": 2017,
+      "birthApprox": true,
+      "father": "abdullah-ali",
+      "mother": "jenan"
+    },
+    "amar-ali": {
+      "name": "Amar Ali",
+      "gender": "female",
+      "birth": 2019,
+      "birthApprox": true,
+      "father": "abdullah-ali",
+      "mother": "jenan"
+    },
+    "ahmad-ali": {
+      "name": "Ahmad Ali",
+      "gender": "male",
+      "birth": 2021,
+      "birthApprox": true,
+      "father": "abdullah-ali",
+      "mother": "jenan"
+    },
+    "diyaa-ali": {
+      "name": "Diyaa Ali",
+      "gender": "male",
       "birth": 2024,
-      "occupation": null,
-      "location": "London, UK",
-      "bio": "The family's newest member — great-grandmother Fatima's register now runs to four generations.",
-      "photos": [
-        "Meeting great-grandmother over video, 2024"
-      ]
+      "birthApprox": true,
+      "father": "abdullah-ali",
+      "mother": "jenan"
+    },
+    "khouloud": {
+      "name": "Khouloud Accoumeh",
+      "gender": "female",
+      "birth": 1996,
+      "birthApprox": true,
+      "father": "diyaa",
+      "mother": "abeer"
+    },
+    "mohammed-attal": {
+      "name": "Mohammed Attal",
+      "gender": "male"
+    },
+    "samira-attal": {
+      "name": "Samira Attal",
+      "gender": "female",
+      "birth": 2018,
+      "birthApprox": true,
+      "father": "mohammed-attal",
+      "mother": "khouloud"
+    },
+    "abir-attal": {
+      "name": "Abir Attal",
+      "gender": "female",
+      "birth": 2022,
+      "birthApprox": true,
+      "father": "mohammed-attal",
+      "mother": "khouloud"
+    },
+    "ahmad-attal": {
+      "name": "Ahmad Attal",
+      "gender": "male",
+      "birth": 2023,
+      "birthApprox": true,
+      "father": "mohammed-attal",
+      "mother": "khouloud"
+    },
+    "naim": {
+      "name": "Naim Accoumeh",
+      "gender": "male",
+      "father": "diyaa",
+      "mother": "abeer",
+      "birth": 1998,
+      "birthApprox": true,
+      "death": 2024,
+      "deathApprox": true
+    },
+    "amer": {
+      "name": "Amer Accoumeh",
+      "gender": "male",
+      "father": "abedelrahman"
+    },
+    "rabia": {
+      "name": "Rabia Fatrouni",
+      "gender": "female"
+    },
+    "rachad": {
+      "name": "Rachad Accoumeh",
+      "gender": "male",
+      "father": "amer",
+      "mother": "rabia"
+    },
+    "abed-el-rahman": {
+      "name": "Abed el Rahman Accoumeh",
+      "gender": "male",
+      "father": "amer",
+      "mother": "rabia"
+    },
+    "rabih": {
+      "name": "Rabih Accoumeh",
+      "gender": "male",
+      "father": "amer",
+      "mother": "rabia"
     }
   },
-  "tree": {
-    "partners": ["ibrahim", "fatima"],
-    "children": [
-      {
-        "partners": ["omar", "layla"],
-        "children": [
-          { "partners": ["rana", "tomas"], "children": ["yara", "nael"] },
-          { "partners": ["sami", "aziza"], "children": ["dana", "rami"] },
-          "tariq"
-        ]
-      },
-      {
-        "partners": ["huda", "karim"],
-        "children": [
-          { "partners": ["farah", "daniel"], "children": ["elia", "sofia"] },
-          "yousef-haddad"
-        ]
-      },
-      {
-        "partners": ["ahmad", "mona"],
-        "children": ["zayd", "maya"]
-      },
-      {
-        "partners": ["dalia", "fadi"],
-        "children": [
-          { "partners": ["noor", "hazem"], "children": ["waseem", "hala"] },
-          "adam-barakat"
-        ]
-      },
-      {
-        "partners": ["yousef-sr", "nour"],
-        "children": ["lina", "jad", "mariam"]
-      },
-      "salma"
-    ]
-  }
+  "marriages": [
+    {
+      "partners": [
+        "abedelrahman",
+        "khadra"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "abedelrahman",
+        "abedelrahman-wife-2"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "ahmed",
+        "sania"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "susanne",
+        "delano"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "tagreed",
+        "farhad"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "sami",
+        "zena"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "rami",
+        "sarah-ghemraoui"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "bassam",
+        "samira-ghomrawi"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "samer",
+        "sara-moraabi"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "rana",
+        "youssef-hammoud"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "amani",
+        "bilal-moussa"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "rasha",
+        "hilal-kahil"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "diyaa",
+        "abeer"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "hanan",
+        "mohammed-hammoud"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "jenan",
+        "abdullah-ali"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "khouloud",
+        "mohammed-attal"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "amer",
+        "rabia"
+      ],
+      "status": "married"
+    }
+  ]
 }

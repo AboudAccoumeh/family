@@ -1,2 +1,6 @@
 # local debug screenshots
 shot*.png
+
+# build output
+_site/
+*.zip
