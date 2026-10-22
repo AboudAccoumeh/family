@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The Aboud Family — Interactive Tree</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 28 9v14L16 30 4 23V9z' fill='none' stroke='%235B8CFF' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%2322D3EE'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header id="topbar">
+  <div class="brand">
+    <svg class="logo" width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+      <defs>
+        <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#5B8CFF"/><stop offset="1" stop-color="#22D3EE"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 2 28 9v14L16 30 4 23V9z" fill="none" stroke="url(#lg)" stroke-width="2"/>
+      <circle cx="16" cy="16" r="3.4" fill="url(#lg)"/>
+      <path d="M16 8.5V16m0 0l5.5 3.2" stroke="url(#lg)" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <div class="btext">
+      <h1 id="brand-name">Family</h1>
+      <p id="brand-sub">Interactive lineage</p>
+    </div>
+  </div>
+
+  <nav class="stats" aria-label="Family statistics">
+    <span class="stat"><b id="st-total">–</b> members</span>
+    <span class="sep"></span>
+    <span class="stat"><b id="st-gen">–</b> generations</span>
+    <span class="sep"></span>
+    <span class="stat"><b id="st-living">–</b> living</span>
+  </nav>
+
+  <div class="search" id="search-wrap">
+    <svg class="s-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2"/></svg>
+    <input id="search" placeholder="Find a family member…" autocomplete="off" spellcheck="false" aria-label="Search family members" />
+    <div id="results" role="listbox"></div>
+  </div>
+</header>
+
+<main id="viewport" tabindex="0" aria-label="Family tree canvas — drag to pan, scroll to zoom">
+  <div id="world">
+    <svg id="edges" aria-hidden="true"></svg>
+    <div id="genlabels" aria-hidden="true"></div>
+    <div id="cards"></div>
+  </div>
+  <div id="loading">
+    <svg class="ld-logo" width="46" height="46" viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 2 28 9v14L16 30 4 23V9z" fill="none" stroke="#5B8CFF" stroke-width="1.6"/>
+      <circle cx="16" cy="16" r="3.4" fill="#22D3EE"/>
+    </svg>
+    <p>Loading lineage…</p>
+  </div>
+</main>
+
+<div class="hud" id="hud">
+  <button id="btn-zin" title="Zoom in" aria-label="Zoom in">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+  <button id="btn-zout" title="Zoom out" aria-label="Zoom out">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg>
+  </button>
+  <button id="btn-fit" title="Fit to screen (0)" aria-label="Fit to screen">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H4v5M15 3h5v5M9 21H4v-5M15 21h5v-5"/></svg>
+  </button>
+  <span class="hud-sep"></span>
+  <button id="btn-xall" title="Expand all branches" aria-label="Expand all">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v6m0 0l-3-3m3 3l3-3M12 20v-6m0 0l-3 3m3-3l3 3"/></svg>
+  </button>
+  <button id="btn-call" title="Collapse all branches" aria-label="Collapse all">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h6m0 0l-3-3m3 3l-3 3M20 12h-6m0 0l3-3m-3 3l3 3"/></svg>
+  </button>
+</div>
+
+<div id="zoompill">100%</div>
+<div id="hint">Drag to pan&nbsp;&nbsp;·&nbsp;&nbsp;Scroll to zoom&nbsp;&nbsp;·&nbsp;&nbsp;Click a card for details&nbsp;&nbsp;·&nbsp;&nbsp;<kbd>⌄</kbd> expands a branch</div>
+<div id="toast" role="status"></div>
+
+<div id="drawer-overlay"></div>
+<aside id="drawer" aria-hidden="true" aria-label="Person details">
+  <button id="drawer-close" title="Close (Esc)" aria-label="Close panel">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div id="drawer-body"></div>
+</aside>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
