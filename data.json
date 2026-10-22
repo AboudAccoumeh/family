@@ -19,7 +19,8 @@
       "gender": "male",
       "birth": 1952,
       "birthApprox": true,
-      "father": "abedelrahman"
+      "father": "abedelrahman",
+      "mother": "khadra"
     },
     "sania": {
       "name": "Sania Accoumeh",
@@ -155,7 +156,8 @@
       "gender": "male",
       "birth": 1962,
       "birthApprox": true,
-      "father": "abedelrahman"
+      "father": "abedelrahman",
+      "mother": "khadra"
     },
     "samira-ghomrawi": {
       "name": "Samira Ghomrawi",
@@ -290,7 +292,8 @@
       "gender": "male",
       "birth": 1969,
       "birthApprox": true,
-      "father": "abedelrahman"
+      "father": "abedelrahman",
+      "mother": "khadra"
     },
     "abeer": {
       "name": "Abeer Khanji",
@@ -426,7 +429,8 @@
     "amer": {
       "name": "Amer Accoumeh",
       "gender": "male",
-      "father": "abedelrahman"
+      "father": "abedelrahman",
+      "mother": "khadra"
     },
     "rabia": {
       "name": "Rabia Fatrouni",
