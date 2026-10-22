@@ -62,6 +62,7 @@
 
 <!-- ============ TREE VIEW ============ -->
 <main id="view-tree" class="view on">
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
   <div id="viewport" tabindex="0" aria-label="Family tree — drag to pan, scroll or pinch to zoom">
     <div id="world">
       <svg id="edges" aria-hidden="true"></svg>
@@ -91,9 +92,12 @@
   </div>
 
   <div class="legend" id="legend" aria-hidden="true">
-    <span><i class="lg-dot male"></i>Male</span>
-    <span><i class="lg-dot female"></i>Female</span>
-    <span><i class="lg-dot dec"></i>Deceased</span>
+    <span><i class="lg-shape square"></i>Men</span>
+    <span><i class="lg-shape circle"></i>Women</span>
+    <span class="lg-gens">
+      <i class="lg-metal m0" title="Generation I"></i><i class="lg-metal m1" title="Generation II"></i><i class="lg-metal m2" title="Generation III"></i><i class="lg-metal m3" title="Generation IV"></i>
+      Generations
+    </span>
   </div>
 
   <div id="hint">
@@ -179,8 +183,14 @@
 <div id="toast" role="status"></div>
 
 <div id="loading">
-  <span class="spinner"></span>
-  <p>Loading family…</p>
+  <svg class="ld-tree" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path pathLength="1" d="M32 58V30M32 40l-12-9M32 36l12-10M20 31l-6-6M44 26l6-5" stroke="#0f9f77" stroke-width="3"/>
+    <circle pathLength="1" cx="32" cy="18" r="8" stroke="#e2b23a" stroke-width="3"/>
+    <circle pathLength="1" cx="12" cy="22" r="5" stroke="#e3927b" stroke-width="2.6"/>
+    <circle pathLength="1" cx="52" cy="18" r="5" stroke="#7d8bf7" stroke-width="2.6"/>
+  </svg>
+  <span class="spinner" hidden></span>
+  <p>Gathering the family…</p>
 </div>
 
 <script src="data.js"></script>

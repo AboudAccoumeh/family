@@ -14,16 +14,13 @@
       "name": "Khadra Jaloul",
       "gender": "female"
     },
-    "abedelrahman-wife-2": {
-      "name": "Second wife (name to add)",
-      "gender": "female"
-    },
     "ahmed": {
       "name": "Ahmed Accoumeh",
       "gender": "male",
       "birth": 1952,
       "birthApprox": true,
-      "father": "abedelrahman"
+      "father": "abedelrahman",
+      "mother": "khadra"
     },
     "sania": {
       "name": "Sania Accoumeh",
@@ -159,7 +156,8 @@
       "gender": "male",
       "birth": 1962,
       "birthApprox": true,
-      "father": "abedelrahman"
+      "father": "abedelrahman",
+      "mother": "khadra"
     },
     "samira-ghomrawi": {
       "name": "Samira Ghomrawi",
@@ -294,7 +292,8 @@
       "gender": "male",
       "birth": 1969,
       "birthApprox": true,
-      "father": "abedelrahman"
+      "father": "abedelrahman",
+      "mother": "khadra"
     },
     "abeer": {
       "name": "Abeer Khanji",
@@ -430,7 +429,8 @@
     "amer": {
       "name": "Amer Accoumeh",
       "gender": "male",
-      "father": "abedelrahman"
+      "father": "abedelrahman",
+      "mother": "khadra"
     },
     "rabia": {
       "name": "Rabia Fatrouni",
@@ -460,13 +460,6 @@
       "partners": [
         "abedelrahman",
         "khadra"
-      ],
-      "status": "married"
-    },
-    {
-      "partners": [
-        "abedelrahman",
-        "abedelrahman-wife-2"
       ],
       "status": "married"
     },
