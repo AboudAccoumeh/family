@@ -3,7 +3,7 @@
     "familyName": "The Accoumeh Family",
     "tagline": "Descendants of Abedelrahman Accoumeh",
     "description": "Four generations of the Accoumeh family — tap anyone to see their details, spouses, children and siblings.",
-    "root": "abedelrahman"
+    "root": "Abed el Rahman"
   },
   "people": {
     "abedelrahman": {
@@ -11,7 +11,7 @@
       "gender": "male"
     },
     "khadra": {
-      "name": "Khadra Jaloul",
+      "name": "Khadra Jalloul",
       "gender": "female"
     },
     "ahmed": {
