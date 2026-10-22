@@ -1,894 +1,1284 @@
 'use strict';
 
 /* ============================================================
-   Family Tree — biology-style top-down infinite canvas
-   ancestors on top → descendants below, axis-aligned lines
+   Family Tree — everything is generated from data.json
+   people (with father / mother) + marriages (any number per person)
    ============================================================ */
 
 /* ---------- helpers ---------- */
 const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
-const easeOut = t => 1 - Math.pow(1 - t, 4);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const near = (a, b, k) => (Math.abs(b - a) < 0.05 ? b : lerp(a, b, k));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const hash = s => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h); };
-const near = (a, b, k) => (Math.abs(b - a) < 0.001 ? b : lerp(a, b, k));
+const NOW_YEAR = new Date().getFullYear();
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+const isMobile = () => matchMedia('(max-width: 760px)').matches;
 
-const NS = 'http://www.w3.org/2000/svg';
-/* geometry: circles + marriage gap + sibling-subtree gap + branch clearance */
-const C = 86, MG = 30, CG = 52, BAR1 = 44, BAR2 = 44;
-const VSTEP = C + BAR1 + BAR2;
-const MALE_G = ['g-m0', 'g-m1', 'g-m2', 'g-m3'];
-const FEMALE_G = ['g-f0', 'g-f1', 'g-f2', 'g-f3'];
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
+/* card geometry (world units) */
+/* W×H = one person (portrait frame P×P on top, name + years below) */
+const W = 150, H = 184, P = 112, MG = 40, SG = 34, VGAP = 100;
+const VSTEP = H + VGAP;
 
-const CHEV = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
-const ICON_IMG = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 15.5l-4.8-4-7.4 6.5"/></svg>';
+const ICON = {
+  chev: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  right: '<svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+  heart: '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.6 1.2 5.4 3.2 1.8-2 3.3-3.2 5.4-3.2 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg>',
+  broken: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.6 1.2 5.4 3.2"/><path d="M12 21s7.5-4.6 9.6-9.3c1.5-3.5-.6-7.2-4.2-7.2-1.4 0-2.5.5-3.6 1.5L11 10l3 2.5-2 3"/></svg>',
+  img: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 15.5l-4.8-4-7.4 6.5"/></svg>',
+  job: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  pin: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  link: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M17 11h5M19.5 8.5v5"/></svg>',
+  tree: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="5" rx="1.5"/><rect x="3" y="16" width="6" height="5" rx="1.5"/><rect x="15" y="16" width="6" height="5" rx="1.5"/><path d="M12 8v4M6 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/></svg>',
+  share: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4L12 18.4"/></svg>',
+  birth: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18.5 8l-3.6 3.1L16 16l-4-2.6L8 16l1.1-4.9L5.5 8l4.7-.4z"/></svg>',
+  death: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 2.5 4.5 5 4.5 8a4.5 4.5 0 0 1-9 0c0-3 1.5-5.5 4.5-8z"/><path d="M12 15.5V21"/></svg>',
+  ring: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14" r="6"/><path d="M9 4h6l-3 4z"/></svg>',
+  dot: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/></svg>',
+};
 
 /* ---------- state ---------- */
-const state = {
-  people: {}, meta: {}, root: null,
-  unions: new Map(), expanded: new Map(),
-  pos: new Map(), nodes: new Map(), edges: new Map(),
-  bbox: null, depthMinX: new Map(), svgO: { x: 0, y: 0 },
-  query: '', selected: null, uid: 0, boot: true,
+const S = {
+  meta: {}, people: {}, ids: [],
+  marriages: [],            // normalized {a, b, status, year, ended, note}
+  units: new Map(),          // tree units (one per blood descendant placed in the tree)
+  unitOf: new Map(),         // pid -> unit (blood or spouse appearance)
+  root: null, gen: new Map(), branch: new Map(),
+  expanded: new Map(),
+  live: new Map(),           // unit id -> { el, x, y, tx, ty }
+  dying: [], bbox: null, dirty: true,
+  selected: null, view: 'tree', query: '',
+  filter: 'all', groupBy: 'gen', hl: new Set(),
 };
-const cur = { x: 0, y: 0, s: 0.7 };
-const target = { x: 0, y: 0, s: 0.7 };
+const cam = { x: 0, y: 0, s: 0.8 };
+const tgt = { x: 0, y: 0, s: 0.8 };
 
 /* ============================================================
-   data loading + model
+   data → model
    ============================================================ */
 
 async function loadData() {
   try {
     const r = await fetch('data.json', { cache: 'no-store' });
-    if (!r.ok) throw new Error('http ' + r.status);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     return await r.json();
   } catch (err) {
-    if (window.FAMILY_DATA_FALLBACK) {
-      showToast('Loaded the offline copy (data.js). Serve the folder over HTTP to load data.json directly.');
-      return window.FAMILY_DATA_FALLBACK;
-    }
-    showToast('Could not load data.json — run a local server (e.g. “python -m http.server”).');
+    if (window.FAMILY_DATA_FALLBACK) return window.FAMILY_DATA_FALLBACK;
     throw err;
   }
 }
 
-function ensurePerson(id) {
-  if (!state.people[id]) {
-    state.people[id] = {
-      name: 'Unknown (' + id + ')',
-      gender: null,
-      bio: 'This record is missing from data.json — add it to the "people" section.',
-    };
+const year = v => {
+  if (v == null || v === '') return null;
+  const m = String(v).match(/-?\d{3,4}/);
+  return m ? parseInt(m[0], 10) : null;
+};
+function fmtDate(v) {
+  if (v == null || v === '') return '';
+  const s = String(v);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    const d = new Date(s + 'T00:00:00');
+    if (!isNaN(d)) return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
   }
-  return state.people[id];
+  if (/^\d{4}-\d{2}$/.test(s)) {
+    const d = new Date(s + '-01T00:00:00');
+    if (!isNaN(d)) return d.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+  }
+  return s;
+}
+const isDead = p => p.death != null || p.deceased === true;
+function ageOf(p) {
+  const b = year(p.birth);
+  if (b == null) return null;
+  const end = isDead(p) ? year(p.death) : NOW_YEAR;
+  return end == null ? null : end - b;
+}
+/* living = not dead and a plausible birth year (no dates → unknown) */
+const isLiving = p => !isDead(p) && (p.living === true || (year(p.birth) != null && NOW_YEAR - year(p.birth) < 105));
+const yb = p => (year(p.birth) == null ? null : (p.birthApprox ? 'c. ' : '') + year(p.birth));
+const yd = p => (year(p.death) == null ? null : (p.deathApprox ? 'c. ' : '') + year(p.death));
+function yearsText(p) {
+  const b = yb(p), d = yd(p);
+  if (b && d) return `${b} – ${d}`;
+  if (b && isDead(p)) return `${b} – ?`;
+  if (b) return `b. ${b}`;
+  if (d) return `d. ${d}`;
+  return isDead(p) ? 'Deceased' : '';
+}
+const approxDate = (v, approx) => (approx ? 'c. ' + year(v) : fmtDate(v));
+function statusTag(p) {
+  if (isDead(p)) return '<span class="tag">Deceased</span>';
+  return isLiving(p) ? '<span class="tag living">Living</span>' : '';
 }
 
-function makeUnion(raw, depth, parent) {
-  const partners = Array.isArray(raw)
-    ? raw.filter(Boolean)
-    : (raw && Array.isArray(raw.partners) ? raw.partners.filter(Boolean) : [raw].filter(Boolean));
-  if (!partners.length) partners.push('unknown-' + (state.uid + 1));
-  partners.forEach(ensurePerson);
-
-  const u = { id: 'u' + (++state.uid), partners, children: [], depth, parent };
-  state.unions.set(u.id, u);
-
-  if (raw && !Array.isArray(raw) && Array.isArray(raw.children)) {
-    for (const c of raw.children) u.children.push(makeUnion(c, depth + 1, u));
+function ensurePerson(id) {
+  if (!S.people[id]) {
+    S.people[id] = { id, name: id, gender: null, missing: true };
+    console.warn(`[family] "${id}" is referenced but not defined in people{}`);
   }
-  // default: only the founding couple is expanded (grandkids hide until first expand)
-  if (u.children.length) state.expanded.set(u.id, depth < 1);
-  return u;
+  return S.people[id];
 }
 
 function buildModel(data) {
-  state.people = {};
-  for (const [id, p] of Object.entries(data.people || {})) state.people[id] = p;
-  state.meta = data.meta || {};
-  state.root = makeUnion(data.tree, 0, null);
-}
+  S.meta = data.meta || {};
+  S.people = {};
+  for (const [id, p] of Object.entries(data.people || {})) S.people[id] = Object.assign({ id }, p);
+  for (const p of Object.values(S.people)) {
+    if (p.father) ensurePerson(p.father);
+    if (p.mother) ensurePerson(p.mother);
+  }
 
-function countDescPeople(u) {
-  let n = 0;
-  for (const c of u.children) n += c.partners.filter(Boolean).length + countDescPeople(c);
-  return n;
-}
-
-function initialsOf(p) {
-  const parts = String(p.name).trim().split(/\s+/).filter(Boolean);
-  if (!parts.length) return '?';
-  const first = parts[0][0] || '';
-  const second = parts.length > 1 ? (parts[parts.length - 1][0] || '') : (parts[0][1] || '');
-  return (first + second).toUpperCase();
-}
-
-function gradClass(pid, gender) {
-  if (gender === 'male') return MALE_G[hash(pid) % MALE_G.length];
-  if (gender === 'female') return FEMALE_G[hash(pid) % FEMALE_G.length];
-  return 'g-x';
-}
-
-function yearsText(p) {
-  if (p.birth && p.death) return p.birth + ' – ' + p.death;
-  if (p.birth) return 'b. ' + p.birth;
-  if (p.death) return 'd. ' + p.death;
-  return '·';
-}
-
-/* ============================================================
-   layout — vertical layered tree (generations stack downward)
-   ============================================================ */
-
-function measureRow(u) {
-  return u.partners.length > 1 ? C * 2 + MG : C;
-}
-
-function computeLayout() {
-  state.pos.clear();
-  state.depthMinX = new Map();
-
-  /* pass 1 — bottom-up subtree widths */
-  const measure = u => {
-    const rowW = measureRow(u);
-    const collapsed = state.expanded.get(u.id) === false;
-    const rec = { rowW, collapsed, couple: u.partners.length > 1 };
-    if (!collapsed && u.children.length) {
-      const w = u.children.map(measure);
-      let kidsW = w[0];
-      for (let i = 1; i < w.length; i++) kidsW += CG + w[i];
-      rec.kidsW = kidsW;
-      rec.sw = Math.max(rowW, kidsW);
-    } else {
-      rec.kidsW = 0;
-      rec.sw = rowW;
-    }
-    state.pos.set(u.id, rec);
-    return rec.sw;
+  /* marriages: explicit list + spouses declared on a person + implicit co-parents */
+  const seen = new Map();
+  const addM = (a, b, info = {}) => {
+    if (!a || !b || a === b) return;
+    ensurePerson(a); ensurePerson(b);
+    const k = [a, b].sort().join('|') + '|' + (info.year || '');
+    const loose = [a, b].sort().join('|');
+    if (seen.has(k) || (!info.year && seen.has(loose))) return;
+    const m = {
+      a, b,
+      status: (info.status || 'married').toLowerCase(),
+      year: info.year != null ? info.year : info.married,
+      ended: info.ended != null ? info.ended : info.divorced,
+      note: info.note || '',
+      implicit: !!info.implicit,
+      order: S.marriages.length,
+    };
+    S.marriages.push(m);
+    seen.set(k, m); seen.set(loose, m);
   };
-  measure(state.root);
+  for (const m of data.marriages || []) {
+    const ps = m.partners || [m.a, m.b];
+    addM(ps[0], ps[1], m);
+  }
+  for (const p of Object.values(S.people)) {
+    for (const sp of [].concat(p.spouses || [])) {
+      if (typeof sp === 'string') addM(p.id, sp);
+      else if (sp && sp.id) addM(p.id, sp.id, sp);
+    }
+  }
+  for (const p of Object.values(S.people)) {
+    if (p.father && p.mother) addM(p.father, p.mother, { status: 'partner', implicit: true });
+  }
+  S.ids = Object.keys(S.people);
+  buildTree();
+}
 
-  /* pass 2 — top-down placement: parents centered above their children */
-  const place = (u, left, depth) => {
-    const rec = state.pos.get(u.id);
-    rec.x = left + rec.sw / 2 - rec.rowW / 2;
-    rec.cx = left + rec.sw / 2;
-    rec.y = depth * VSTEP;
-    rec.depth = depth;
-    if (rec.kidsW) {
-      let kursor = left + (rec.sw - rec.kidsW) / 2;
-      for (const c of u.children) {
-        place(c, kursor, depth + 1);
-        kursor += state.pos.get(c.id).sw + CG;
+const childrenOf = pid => S.ids.filter(id => S.people[id].father === pid || S.people[id].mother === pid).sort(byBirth);
+function byBirth(a, b) {
+  const ya = year(S.people[a].birth), yb = year(S.people[b].birth);
+  if (ya == null && yb == null) return 0;
+  if (ya == null) return 1;
+  if (yb == null) return -1;
+  return ya - yb || String(S.people[a].birth).localeCompare(String(S.people[b].birth));
+}
+function parentsOf(pid) {
+  const p = S.people[pid];
+  return [p.father, p.mother].filter(Boolean);
+}
+function marriagesOf(pid) {
+  return S.marriages
+    .filter(m => m.a === pid || m.b === pid)
+    .sort((x, y) => (year(x.year) ?? 9999) - (year(y.year) ?? 9999) || x.order - y.order);
+}
+const otherOf = (m, pid) => (m.a === pid ? m.b : m.a);
+function coChildren(pid, other) {
+  return childrenOf(pid).filter(c => {
+    const p = S.people[c];
+    return other ? (p.father === other || p.mother === other) : !(p.father && p.mother);
+  });
+}
+function siblingsOf(pid) {
+  const p = S.people[pid];
+  const full = [], half = [];
+  if (!p.father && !p.mother) return { full, half };
+  for (const id of S.ids) {
+    if (id === pid) continue;
+    const q = S.people[id];
+    const sf = p.father && q.father === p.father, sm = p.mother && q.mother === p.mother;
+    if ((sf || !p.father) && (sm || !p.mother) && (sf || sm)) full.push(id);
+    else if (sf || sm) half.push(id);
+  }
+  return { full: full.sort(byBirth), half: half.sort(byBirth) };
+}
+function countDesc(pid, seen = new Set()) {
+  for (const c of childrenOf(pid)) if (!seen.has(c)) { seen.add(c); countDesc(c, seen); }
+  return seen.size;
+}
+
+function pickRoot() {
+  if (S.meta.root && S.people[S.meta.root]) return S.meta.root;
+  let best = null, bestN = -1;
+  for (const id of S.ids) {
+    const p = S.people[id];
+    if (p.father || p.mother) continue;
+    const n = countDesc(id);
+    if (n > bestN || (n === bestN && p.gender === 'male')) { best = id; bestN = n; }
+  }
+  return best || S.ids[0];
+}
+
+/* a unit = one blood descendant + all their spouses, with children grouped per union */
+let uidSeq = 0;
+function buildTree() {
+  S.units.clear(); S.unitOf.clear(); S.gen.clear(); S.branch.clear(); S.expanded.clear();
+  uidSeq = 0;
+  const placed = new Set();
+
+  const mk = (pid, depth, parent, branchId) => {
+    placed.add(pid);
+    const u = { id: 'u' + (++uidSeq), pid, depth, parent, row: [pid], groups: [] };
+    S.units.set(u.id, u);
+    S.unitOf.set(pid, u);
+    S.gen.set(pid, depth);
+    if (branchId) S.branch.set(pid, branchId);
+
+    /* children without a known second parent hang from the person directly */
+    const solo = coChildren(pid, null).filter(c => !placed.has(c));
+    if (solo.length) u.groups.push({ spouse: null, idx: 0, m: null, kidsPids: solo });
+    for (const m of marriagesOf(pid)) {
+      const sp = otherOf(m, pid);
+      if (u.row.includes(sp)) continue;
+      u.row.push(sp);
+      if (!S.unitOf.has(sp)) S.unitOf.set(sp, u);
+      if (!S.gen.has(sp)) S.gen.set(sp, depth);
+      if (branchId && !S.branch.has(sp)) S.branch.set(sp, branchId);
+      u.groups.push({ spouse: sp, idx: u.row.length - 1, m, kidsPids: coChildren(pid, sp).filter(c => !placed.has(c)) });
+    }
+    for (const g of u.groups) {
+      g.kids = [];
+      for (const c of g.kidsPids) {
+        if (placed.has(c)) continue;
+        g.kids.push(mk(c, depth + 1, u, branchId || c));
       }
     }
+    u.groups = u.groups.filter(g => g.spouse || g.kids.length);
+    u.kids = u.groups.flatMap(g => g.kids);
+    if (u.kids.length) S.expanded.set(u.id, depth < 1);
+    return u;
   };
-  place(state.root, 0, 0);
 
-  /* bbox + leftmost node per generation (for the labels) */
-  let x1 = Infinity, y1 = Infinity, x2 = -Infinity, y2 = -Infinity;
-  for (const [, r] of state.pos) {
-    x1 = Math.min(x1, r.x);
-    y1 = Math.min(y1, r.y);
-    x2 = Math.max(x2, r.x + r.rowW);
-    y2 = Math.max(y2, r.y + C);
-    const m = state.depthMinX.get(r.depth);
-    state.depthMinX.set(r.depth, m == null ? r.x : Math.min(m, r.x));
+  const root = pickRoot();
+  S.root = root ? mk(root, 0, null, null) : null;
+  if (S.root) {
+    for (const sp of S.root.row) S.branch.delete(sp);
   }
-  state.bbox = { x: x1 - 90, y: y1 - 110, w: x2 - x1 + 180, h: y2 - y1 + 170 };
+  /* people not connected to the root's descendants still get a generation guess */
+  for (const id of S.ids) if (!S.gen.has(id)) {
+    const kid = childrenOf(id).find(c => S.gen.has(c));
+    if (kid) S.gen.set(id, S.gen.get(kid) - 1);
+  }
 }
 
-/* where a branch line meets a couple (marriage line) or a single (circle top) */
-function joinTopY(r) {
-  return r.couple ? r.y + C / 2 : r.y;
+function hiddenCount(u) {
+  let n = 0;
+  for (const k of u.kids) n += k.row.length + hiddenCount(k);
+  return n;
 }
-function dropOriginY(r) {
-  return r.couple ? r.y + C / 2 : r.y + C;
+function unitChain(u) {
+  const out = [];
+  for (let x = u; x; x = x.parent) out.unshift(x);
+  return out;
 }
 
 /* ============================================================
-   DOM sync
+   avatars + small renderers
    ============================================================ */
 
-function nodeHTML(pid, depth) {
-  const p = state.people[pid];
-  const grad = gradClass(pid, p.gender);
-  const frame = 'd' + Math.min(depth, 3); // frame style depends on generation
-  const inner = p.photo
-    ? `<img class="nimg" src="${esc(p.photo)}" alt="">`
-    : `<span class="nname${p.gender === 'female' ? ' ff' : ''}">${esc(p.name)}</span>`;
-  return `<div class="node ${grad} ${frame}" data-pid="${esc(pid)}" tabindex="0" title="${esc(p.name)}  ·  ${esc(yearsText(p))}">` +
-    `<i class="frame" aria-hidden="true"></i>${inner}</div>`;
+function initialsOf(p) {
+  const parts = String(p.name || '?').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '?';
+  const a = parts[0][0] || '', b = parts.length > 1 ? parts[parts.length - 1][0] : (parts[0][1] || '');
+  return (a + b).toUpperCase();
+}
+function gradClass(pid) {
+  const g = S.people[pid] && S.people[pid].gender;
+  if (g === 'male') return 'g-m' + (hash(pid) % 4);
+  if (g === 'female') return 'g-f' + (hash(pid) % 4);
+  return '';
+}
+function avatar(pid, cls = '') {
+  const p = S.people[pid];
+  const inner = p.photo ? `<img src="${esc(p.photo)}" alt="" loading="lazy">` : esc(initialsOf(p));
+  return `<span class="av ${gradClass(pid)} ${cls}">${inner}</span>`;
+}
+const genderCls = p => (p.gender === 'male' ? 'male' : p.gender === 'female' ? 'female' : 'x');
+function displayName(p) { return p.name + (p.nickname ? ` “${p.nickname}”` : '') + (p.maidenName ? ` (née ${p.maidenName})` : ''); }
+
+function spouseWord(pid) {
+  const g = S.people[pid].gender;
+  return g === 'male' ? 'Husband' : g === 'female' ? 'Wife' : 'Spouse';
+}
+function childWord(pid) {
+  const g = S.people[pid].gender;
+  return g === 'male' ? 'Son' : g === 'female' ? 'Daughter' : 'Child';
+}
+function marriageText(m) {
+  const y = m.year != null ? year(m.year) : null, e = m.ended != null ? year(m.ended) : null;
+  switch (m.status) {
+    case 'divorced': return 'Divorced' + (e ? ' ' + e : '') + (y ? ` · married ${y}` : '');
+    case 'separated': return 'Separated' + (e ? ' ' + e : '');
+    case 'widowed': return 'Widowed' + (e ? ' ' + e : '') + (y ? ` · married ${y}` : '');
+    case 'engaged': return 'Engaged' + (y ? ' ' + y : '');
+    case 'partner': return 'Partner';
+    default: return 'Married' + (y ? ' ' + y : '');
+  }
+}
+const isEnded = m => m.status === 'divorced' || m.status === 'separated';
+
+/* who is this person, in one phrase ("Son of Ibrahim & Fatima", "Wife of Omar") */
+function relationPhrase(pid) {
+  const p = S.people[pid];
+  const pars = parentsOf(pid).map(id => firstName(id));
+  if (pars.length) return `${childWord(pid)} of ${pars.join(' & ')}`;
+  const ms = marriagesOf(pid);
+  if (ms.length) return `${spouseWord(pid)} of ${firstName(otherOf(ms[0], pid))}`;
+  return p.missing ? 'Not yet in data.json' : 'Family founder';
+}
+const firstName = pid => String(S.people[pid].name).split(/\s+/)[0];
+const shortName = pid => {
+  /* "Ahmed & Sania" style labels; spell out the full name when first names repeat */
+  const f = firstName(pid);
+  return S.ids.filter(id => firstName(id) === f).length > 1 ? S.people[pid].name : f;
+};
+
+/* ============================================================
+   tree layout
+   ============================================================ */
+
+function computeLayout() {
+  const L = new Map();
+  if (!S.root) return L;
+  const measure = u => {
+    const rowW = u.row.length * W + (u.row.length - 1) * MG;
+    const open = S.expanded.get(u.id) === true && u.kids.length;
+    let kidsW = 0;
+    if (open) {
+      u.kids.forEach((k, i) => { kidsW += measure(k) + (i ? SG : 0); });
+    }
+    const rec = { rowW, kidsW, sw: Math.max(rowW, kidsW), open };
+    L.set(u.id, rec);
+    return rec.sw;
+  };
+  measure(S.root);
+
+  const place = (u, left) => {
+    const r = L.get(u.id);
+    r.x = left + (r.sw - r.rowW) / 2;
+    r.y = u.depth * VSTEP;
+    if (r.open) {
+      let k = left + (r.sw - r.kidsW) / 2;
+      for (const c of u.kids) { place(c, k); k += L.get(c.id).sw + SG; }
+    }
+  };
+  place(S.root, 0);
+
+  let x1 = Infinity, y1 = Infinity, x2 = -Infinity, y2 = -Infinity;
+  const genMin = new Map();
+  for (const [id, r] of L) {
+    x1 = Math.min(x1, r.x); y1 = Math.min(y1, r.y);
+    x2 = Math.max(x2, r.x + r.rowW); y2 = Math.max(y2, r.y + H);
+    const d = S.units.get(id).depth;
+    genMin.set(d, Math.min(genMin.has(d) ? genMin.get(d) : Infinity, r.x));
+  }
+  S.bbox = { x: x1 - 140, y: y1 - 70, w: x2 - x1 + 200, h: y2 - y1 + 140 };
+  S.genMin = genMin;
+  return L;
 }
 
-function createUnion(u) {
-  const p = state.pos.get(u.id);
-  const el = document.createElement('div');
-  el.className = 'union';
-  el.dataset.uid = u.id;
+/* portrait medallion: frame metal = generation, shape = gender (circle / rounded square) */
+function framed(pid, cls = '') {
+  const p = S.people[pid];
+  const g = S.gen.has(pid) ? S.gen.get(pid) : null;
+  const metal = g == null ? 'm4' : 'm' + Math.min(g, 4);
+  return `<span class="frame ${genderCls(p)} ${metal}${isDead(p) ? ' dead' : ''} ${cls}">` +
+    `<span class="orbit"></span><span class="ring"></span>${avatar(pid)}` +
+    (g != null ? `<span class="badge">${ROMAN[g] || g + 1}</span>` : '') + `</span>`;
+}
 
-  let inner = '';
-  u.partners.forEach((pid, i) => {
-    inner += nodeHTML(pid, u.depth);
-    if (i < u.partners.length - 1) inner += '<div class="wed" aria-hidden="true"><i></i></div>';
+function personCard(pid) {
+  const p = S.people[pid];
+  const sub = p.occupation || p.location || '';
+  return `<div class="pcard ${genderCls(p)}${isDead(p) ? ' dead' : ''}${S.selected === pid ? ' sel' : ''}" data-pid="${esc(pid)}" role="button" tabindex="0" aria-label="${esc(p.name)}">` +
+    framed(pid) +
+    `<b class="pc-name">${esc(p.name)}</b>` +
+    `<small class="pc-yrs">${esc(yearsText(p))}${isDead(p) ? '<span class="dagger"> †</span>' : ''}</small>` +
+    (sub ? `<small class="pc-sub">${esc(sub)}</small>` : '') + `</div>`;
+}
+
+function unitHTML(u) {
+  let html = '';
+  u.row.forEach((pid, i) => {
+    if (i > 0) {
+      const g = u.groups.find(x => x.idx === i);
+      const m = g && g.m;
+      const ended = m && isEnded(m);
+      html += `<div class="wed${ended ? ' ended' : ''}${m && m.status === 'partner' ? ' partner' : ''}" title="${esc(m ? marriageText(m) : '')}"><i>${ended ? ICON.broken : ICON.heart}</i></div>`;
+    }
+    html += personCard(pid);
   });
-  if (u.children.length) {
-    const n = countDescPeople(u);
-    inner += `<button class="chev" title="Toggle branch — ${n} descendant${n === 1 ? '' : 's'} inside" aria-expanded="true">${CHEV}</button>`;
-    inner += `<span class="chip-hid">+${n} hidden</span>`;
+  if (u.kids.length) {
+    const g = u.groups.find(x => x.kids.length);
+    const tx = dropX(u, g, 0);
+    const n = hiddenCount(u);
+    html += `<button class="tog" style="left:${tx}px" aria-label="Show or hide ${n} descendants" title="${n} descendant${n === 1 ? '' : 's'}">${ICON.chev}<span>${n}</span></button>`;
   }
-  el.innerHTML = inner;
-
-  /* enter animation starts from the parent's marriage point */
-  let ox = p.x, oy = p.y;
-  if (u.parent && state.pos.get(u.parent.id)) {
-    const pp = state.pos.get(u.parent.id);
-    ox = pp.cx - C / 2;
-    oy = dropOriginY(pp) - C / 2;
-  }
-  el.style.transform = `translate3d(${ox}px, ${oy}px, 0) scale(0.7)`;
-  el.classList.add('enter');
-
-  const stagger = state.boot ? u.depth * 130 + 160 : 0;
-  if (stagger) el.style.transitionDelay = stagger + 'ms, ' + (stagger + 240) + 'ms';
-
-  $('#cards').appendChild(el);
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    el.classList.remove('enter');
-    el.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) scale(1)`;
-    if (stagger) setTimeout(() => { el.style.transitionDelay = ''; }, stagger + 900);
-  }));
-
-  state.nodes.set(u.id, { el, chev: $('.chev', el) });
+  return html;
 }
 
-function destroyUnion(uid) {
-  const n = state.nodes.get(uid);
-  const u = state.unions.get(uid);
-  if (!n || !u) return;
-  state.nodes.delete(uid);
-
-  let ax, ay;
-  if (u.parent && state.pos.get(u.parent.id)) {
-    const pp = state.pos.get(u.parent.id);
-    ax = pp.cx - C / 2;
-    ay = dropOriginY(pp) - C / 2;
-  } else if (state.bbox) {
-    ax = state.bbox.x + state.bbox.w / 2;
-    ay = state.bbox.y + state.bbox.h / 2;
-  } else { ax = 0; ay = 0; }
-
-  n.el.classList.add('dying');
-  n.el.style.transform = `translate3d(${ax}px, ${ay}px, 0) scale(0.6)`;
-  setTimeout(() => n.el.remove(), 620);
+/* x of where a union's children branch starts (relative to row x) */
+function dropX(u, g, rowX) {
+  if (!g || !g.spouse) return rowX + W / 2;
+  return rowX + g.idx * (W + MG) - MG / 2;
 }
 
-function relayout() {
-  computeLayout();
+function relayout(animate = true) {
+  const L = computeLayout();
+  S.layout = L;
 
-  const alive = new Set(state.pos.keys());
-  for (const uid of alive) if (!state.nodes.has(uid)) createUnion(state.unions.get(uid));
-  for (const uid of [...state.nodes.keys()]) if (!alive.has(uid)) destroyUnion(uid);
-
-  for (const [uid, n] of state.nodes) {
-    const p = state.pos.get(uid);
-    n.el.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) scale(1)`;
-    const collapsed = state.expanded.get(uid) === false;
-    n.el.classList.toggle('collapsed', collapsed);
-    if (n.chev) n.chev.setAttribute('aria-expanded', String(!collapsed));
+  for (const [id, r] of L) {
+    let n = S.live.get(id);
+    const u = S.units.get(id);
+    if (!n) {
+      const el = document.createElement('div');
+      el.className = 'union enter';
+      el.dataset.uid = id;
+      /* first paint: generations bloom in one after another */
+      if (S.booting) {
+        el.style.setProperty('--d', (180 + u.depth * 260 + Math.random() * 120) + 'ms');
+        setTimeout(() => el.style.removeProperty('--d'), 2600);
+      }
+      el.innerHTML = unitHTML(u);
+      $('#cards').appendChild(el);
+      /* new units grow out of their parent's branch point */
+      let sx = r.x, sy = r.y;
+      const pl = u.parent && S.live.get(u.parent.id);
+      if (animate && pl) { sx = pl.x + (r.x - pl.tx) * 0.3; sy = pl.y + P * 0.5; }
+      n = { el, x: sx, y: sy, tx: r.x, ty: r.y };
+      S.live.set(id, n);
+      el.style.transform = `translate3d(${sx}px,${sy}px,0)`;
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('enter')));
+    }
+    n.tx = r.x; n.ty = r.y;
+    if (!animate) { n.x = r.x; n.y = r.y; }
+    n.el.classList.toggle('collapsed', u.kids.length > 0 && !r.open);
+  }
+  for (const [id, n] of [...S.live]) {
+    if (L.has(id)) continue;
+    S.live.delete(id);
+    const u = S.units.get(id);
+    let p = u.parent;
+    while (p && !L.has(p.id)) p = p.parent;
+    const pr = p && L.get(p.id);
+    if (pr) { n.tx = pr.x; n.ty = pr.y + P * 0.4; }
+    n.el.classList.add('dying');
+    S.dying.push(n);
+    setTimeout(() => { n.el.remove(); S.dying = S.dying.filter(x => x !== n); }, 450);
   }
 
-  syncEdges();
-  renderGenLabels();
+  $('#genlabels').innerHTML = [...S.genMin]
+    .sort((a, b) => a[0] - b[0])
+    .map(([d, mx]) => `<div class="gen-label m${Math.min(d, 4)}" style="left:${mx - 30}px;top:${d * VSTEP + P / 2}px"><i></i>Generation <b>${ROMAN[d] || d + 1}</b></div>`)
+    .join('');
+  S.dirty = true;
   applySearchDim();
 }
 
-/* ============================================================
-   edges — axis-aligned biology-tree branches
-   one path per expanded parent: drop → horizontal bar → risers
-   ============================================================ */
-
-function edgeD(rec, a, o) {
-  /* a = world coordinates, o = svg origin — PATH must live in svg space */
-  if (rec.n === 1) {
-    return `M ${a[0] - o.x} ${a[1] - o.y} L ${a[2] - o.x} ${a[3] - o.y}`;
-  }
-  const barY = a[2] - o.y, bx1 = a[3] - o.x, bx2 = a[4] - o.x;
-  let d = `M ${a[0] - o.x} ${a[1] - o.y} V ${barY} M ${bx1} ${barY} H ${bx2}`;
-  for (let i = 5; i < a.length; i += 2) d += ` M ${a[i] - o.x} ${barY} V ${a[i + 1] - o.y}`;
-  return d;
+/* ---------- edges (drawn from the animated positions every frame they move) ---------- */
+function elbow(dx, dy, by, cx, cy) {
+  if (Math.abs(cx - dx) < 1) return `M${dx} ${dy}V${cy}`;
+  const s = Math.sign(cx - dx);
+  const r = Math.max(0, Math.min(12, Math.abs(cx - dx) / 2, by - dy, cy - by));
+  return `M${dx} ${dy}V${by - r}Q${dx} ${by} ${dx + s * r} ${by}H${cx - s * r}Q${cx} ${by} ${cx} ${by + r}V${cy}`;
 }
 
-function paintEdge(rec) {
-  const o = state.svgO;
-  rec.path.setAttribute('d', edgeD(rec, rec.pts, o));
-  for (let j = 0; j < rec.dots.length; j++) {
-    rec.dots[j].setAttribute('cx', rec.pts[5 + 2 * j] - o.x);
-    rec.dots[j].setAttribute('cy', rec.pts[2] - o.y);
-  }
-}
-
-function syncEdges() {
+const NS = 'http://www.w3.org/2000/svg';
+const paths = new Map();
+function drawEdges() {
+  const want = new Set();
   const svg = $('#edges');
-  const pad = 240;
-  const ox = Math.round(state.bbox.x - pad), oy = Math.round(state.bbox.y - pad);
-  state.svgO = { x: ox, y: oy };
-  svg.style.left = ox + 'px';
-  svg.style.top = oy + 'px';
-  svg.style.width = (state.bbox.w + pad * 2) + 'px';
-  svg.style.height = (state.bbox.h + pad * 2) + 'px';
-
-  /* desired branch bundles, one per expanded parent */
-  const want = new Map();
-  for (const [uid, r] of state.pos) {
-    const u = state.unions.get(uid);
-    if (state.expanded.get(uid) === false) continue;
-    const kids = u.children.filter(c => state.pos.has(c.id));
-    if (!kids.length) continue;
-
-    const py0 = dropOriginY(r);
-    const targets = kids.map(c => {
-      const cr = state.pos.get(c.id);
-      return [cr.cx, joinTopY(cr)];
-    });
-
-    let pts;
-    if (kids.length === 1) {
-      pts = [r.cx, py0, targets[0][0], targets[0][1]];
-    } else {
-      const barY = r.y + C + BAR1;
-      pts = [r.cx, py0, barY, targets[0][0], targets[targets.length - 1][0]];
-      for (const t of targets) pts.push(t[0], t[1]);
-    }
-    want.set(uid, { n: kids.length, pts });
-  }
-
-  for (const [uid, w] of want) {
-    let rec = state.edges.get(uid);
-    if (rec && rec.g.isConnected && rec.n === w.n) {
-      /* same shape → morph the points to follow the animated circles */
-      const changed = w.pts.some((v, i) => Math.abs(v - rec.to[i]) > 0.01);
-      rec.from = rec.pts.slice();
-      rec.to = w.pts;
-      if (changed) { rec.phase = 'move'; rec.t0 = performance.now(); }
-    } else {
-      if (rec && rec.g.isConnected) { rec.g.classList.add('out'); setTimeout(() => rec.g.remove(), 340); }
-      const g = document.createElementNS(NS, 'g');
-      g.setAttribute('class', 'eg new');
-      const path = document.createElementNS(NS, 'path');
-      path.setAttribute('class', 'edge');
-      g.appendChild(path);
-      const dots = [];
-      if (w.n > 1) for (let j = 0; j < w.n; j++) {
-        const dot = document.createElementNS(NS, 'circle');
-        dot.setAttribute('class', 'edot');
-        dot.setAttribute('r', '2.6');
-        g.appendChild(dot);
-        dots.push(dot);
+  for (const [id, n] of S.live) {
+    const u = S.units.get(id);
+    const r = S.layout.get(id);
+    if (!r || !r.open) continue;
+    const withKids = u.groups.filter(g => g.kids.length);
+    withKids.forEach((g, gi) => {
+      const dx = dropX(u, g, n.x);
+      const dy = g.spouse ? n.y + P / 2 + 12 : n.y + H - 4;
+      const by = n.y + H + VGAP / 2 + (gi - (withKids.length - 1) / 2) * 14;
+      for (const k of g.kids) {
+        const kn = S.live.get(k.id);
+        if (!kn) continue;
+        want.add(k.id);
+        let el = paths.get(k.id);
+        if (!el) {
+          el = document.createElementNS(NS, 'path');
+          el.setAttribute('pathLength', '1');
+          el.setAttribute('class', 'm' + Math.min(k.depth, 4) + ' draw');
+          el.style.animationDelay = (S.booting ? 420 + k.depth * 260 : 120) + 'ms';
+          svg.appendChild(el);
+          paths.set(k.id, el);
+        }
+        el.setAttribute('d', elbow(dx, dy, Math.min(by, kn.y - 14), kn.x + W / 2, kn.y + 8));
+        el.classList.toggle('hl', S.hl.has(k.id));
       }
-      svg.appendChild(g);
-      rec = { g, path, dots, n: w.n, pts: w.pts.slice(), from: w.pts.slice(), to: w.pts, phase: 'idle', t0: 0 };
-      paintEdge(rec);
-      state.edges.set(uid, rec);
-    }
+    });
   }
-
-  for (const [uid, rec] of [...state.edges]) {
-    if (!want.has(uid) && rec.g.isConnected) {
-      rec.g.classList.add('out');
-      setTimeout(() => { rec.g.remove(); state.edges.delete(uid); }, 340);
-    }
+  for (const [key, el] of paths) {
+    if (want.has(key)) continue;
+    paths.delete(key);
+    el.remove();
   }
-}
-
-/* matches CSS cubic-bezier(.22,1,.36,1) exactly, so edges track circles 1:1 */
-function cssEase(x) {
-  const X1 = 0.22, X2 = 0.36;
-  if (x <= 0) return 0;
-  if (x >= 1) return 1;
-  let t = x;
-  for (let i = 0; i < 10; i++) {
-    const mt = 1 - t;
-    const dx = 3 * mt * mt * t * X1 + 3 * mt * t * t * X2 + t * t * t - x;
-    if (Math.abs(dx) < 1e-5) break;
-    const ddx = 3 * mt * mt * X1 + 6 * mt * t * (X2 - X1) + 3 * t * t * (1 - X2);
-    if (Math.abs(ddx) < 1e-6) break;
-    t -= dx / ddx;
-  }
-  return 1 - Math.pow(1 - t, 3); /* y1 = y2 = 1 */
-}
-
-function tickEdges(t) {
-  for (const rec of state.edges.values()) {
-    if (rec.phase !== 'move') continue;
-    const k = Math.min(1, (t - rec.t0) / 550);
-    const q = cssEase(k);
-    rec.pts = rec.pts.map((v, i) => lerp(rec.from[i], rec.to[i], q));
-    paintEdge(rec);
-    if (k >= 1) { rec.phase = 'idle'; rec.pts = rec.to.slice(); paintEdge(rec); }
-  }
-}
-
-function renderGenLabels() {
-  if (!state.bbox) return;
-  $('#genlabels').innerHTML = [...state.depthMinX]
-    .sort((a, b) => a[0] - b[0])
-    .map(([d, mx]) => `<div class="gen-label" style="left:${mx - 22}px;top:${d * VSTEP + C / 2}px">Gen ${ROMAN[d] || d + 1}</div>`)
-    .join('');
 }
 
 /* ============================================================
-   camera — pan / zoom / fit
+   camera
    ============================================================ */
 
-const vpEl = () => $('#viewport');
-
-function applyTransform() {
-  $('#world').style.transform = `translate3d(${cur.x}px, ${cur.y}px, 0) scale(${cur.s})`;
-  const vp = vpEl();
-  /* blueprint grid: major lines every 150px, minor every 30px — both pan+scale */
-  const s30 = 30 * cur.s, s150 = 150 * cur.s;
-  const pos = `${cur.x}px ${cur.y}px`;
-  vp.style.backgroundPosition = `${pos}, ${pos}, ${pos}, ${pos}`;
-  vp.style.backgroundSize = `${s150}px ${s150}px, ${s150}px ${s150}px, ${s30}px ${s30}px, ${s30}px ${s30}px`;
-  $('#zoompill').textContent = Math.round(cur.s * 100) + '%';
+function vpSize() {
+  const vp = $('#viewport');
+  return { w: vp.clientWidth || innerWidth, h: vp.clientHeight || innerHeight };
 }
-
+function applyCam() {
+  $('#world').style.transform = `translate3d(${cam.x}px,${cam.y}px,0) scale(${cam.s})`;
+  const vp = $('#viewport');
+  const g = 26 * cam.s;
+  vp.style.backgroundSize = `${g}px ${g}px`;
+  vp.style.backgroundPosition = `${cam.x}px ${cam.y}px`;
+  $('#zoompill').textContent = Math.round(cam.s * 100) + '%';
+  $('#world').classList.toggle('lod', cam.s < 0.68);
+}
 function zoomAt(px, py, f) {
-  const ns = clamp(target.s * f, 0.16, 2.8);
-  target.x = px - (px - target.x) * (ns / target.s);
-  target.y = py - (py - target.y) * (ns / target.s);
-  target.s = ns;
+  const ns = clamp(tgt.s * f, 0.15, 2.4);
+  tgt.x = px - (px - tgt.x) * (ns / tgt.s);
+  tgt.y = py - (py - tgt.y) * (ns / tgt.s);
+  tgt.s = ns;
   clampPan();
 }
-
 function clampPan() {
-  const b = state.bbox;
-  if (!b || state.boot) return;
-  const m = 300;
-  const s = target.s;
-  const lox = innerWidth - (b.x + b.w) * s - m, hix = -b.x * s + m;
-  const loy = innerHeight - (b.y + b.h) * s - m, hiy = -b.y * s + m;
-  target.x = lox > hix ? (lox + hix) / 2 : clamp(target.x, lox, hix);
-  target.y = loy > hiy ? (loy + hiy) / 2 : clamp(target.y, loy, hiy);
-}
-
-function fitView(pad = 140, maxS = 1.05) {
-  const b = state.bbox;
+  const b = S.bbox;
   if (!b) return;
-  const s = clamp(Math.min((innerWidth - pad * 2) / b.w, (innerHeight - pad * 2) / b.h), 0.16, maxS);
-  target.s = s;
-  target.x = innerWidth / 2 - (b.x + b.w / 2) * s;
-  target.y = innerHeight / 2 - (b.y + b.h / 2) * s;
+  const { w, h } = vpSize();
+  const m = Math.min(w, h) * 0.4, s = tgt.s;
+  const lox = w - (b.x + b.w) * s - m, hix = -b.x * s + m;
+  const loy = h - (b.y + b.h) * s - m, hiy = -b.y * s + m;
+  tgt.x = lox > hix ? (lox + hix) / 2 : clamp(tgt.x, lox, hix);
+  tgt.y = loy > hiy ? (loy + hiy) / 2 : clamp(tgt.y, loy, hiy);
+}
+function fitView(minS = 0.2) {
+  const b = S.bbox;
+  if (!b) return;
+  const { w, h } = vpSize();
+  const pad = isMobile() ? 16 : 60;
+  const s = clamp(Math.min((w - pad * 2) / b.w, (h - pad * 2 - 70) / b.h), minS, 1.1);
+  tgt.s = s;
+  tgt.x = w / 2 - (b.x + b.w / 2) * s;
+  /* when the tree is taller/wider than the screen at min zoom, start at the top */
+  const fitsV = b.h * s <= h - 40;
+  tgt.y = fitsV ? h / 2 - (b.y + b.h / 2) * s : 30 - b.y * s;
+  clampPan();
+}
+function centerOn(wx, wy, s) {
+  const { w, h } = vpSize();
+  /* on wide screens the profile panel covers the right side — centre in what's left */
+  const panel = !isMobile() && w > 900 ? Math.min(472, w * 0.4) : 0;
+  tgt.s = s;
+  tgt.x = (w - panel) / 2 - wx * s;
+  tgt.y = h * (isMobile() ? 0.3 : 0.45) - wy * s;
   clampPan();
 }
 
-/* main animation loop: smooth camera + edge morphs */
-function frame(t) {
-  cur.x = near(cur.x, target.x, 0.22);
-  cur.y = near(cur.y, target.y, 0.22);
-  cur.s = near(cur.s, target.s, 0.22);
-  applyTransform();
-  tickEdges(t || 0);
+function frame() {
+  cam.x = near(cam.x, tgt.x, 0.2);
+  cam.y = near(cam.y, tgt.y, 0.2);
+  cam.s = Math.abs(tgt.s - cam.s) < 0.0005 ? tgt.s : lerp(cam.s, tgt.s, 0.2);
+  applyCam();
+
+  let moved = false;
+  for (const n of [...S.live.values(), ...S.dying]) {
+    if (n.x !== n.tx || n.y !== n.ty) {
+      n.x = near(n.x, n.tx, 0.18);
+      n.y = near(n.y, n.ty, 0.18);
+      n.el.style.transform = `translate3d(${n.x}px,${n.y}px,0)`;
+      moved = true;
+    }
+  }
+  if (moved || S.dirty) { drawEdges(); S.dirty = false; }
   requestAnimationFrame(frame);
 }
 
 /* ============================================================
-   gestures — pointer pan, pinch zoom, wheel, click resolution
+   gestures
    ============================================================ */
 
 function initGestures() {
-  const vp = vpEl();
-  const pointers = new Map();
-  let dragStart = null, movedPx = 0, downTarget = null, pinchPrev = null;
+  const vp = $('#viewport');
+  const pts = new Map();
+  let drag = null, moved = 0, downEl = null, pinch = null;
 
   vp.addEventListener('pointerdown', e => {
     if (e.button === 2) return;
-    vp.setPointerCapture(e.pointerId);
-    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     dismissHint();
-    if (pointers.size === 1) {
-      dragStart = { x: target.x, y: target.y, px: e.clientX, py: e.clientY };
-      movedPx = 0;
-      downTarget = e.target;
-      vp.classList.add('dragging');
-    } else if (pointers.size === 2) {
-      const [a, b] = [...pointers.values()];
-      pinchPrev = { d: Math.hypot(a.x - b.x, a.y - b.y), mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
-      dragStart = null;
+    if (pts.size === 1) {
+      drag = { x: tgt.x, y: tgt.y, px: e.clientX, py: e.clientY };
+      moved = 0; downEl = e.target;
+    } else if (pts.size === 2) {
+      const [a, b] = [...pts.values()];
+      pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+      drag = null;
     }
   });
-
   vp.addEventListener('pointermove', e => {
-    if (!pointers.has(e.pointerId)) return;
-    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    if (pointers.size === 1 && dragStart) {
-      const dx = e.clientX - dragStart.px, dy = e.clientY - dragStart.py;
-      movedPx = Math.max(movedPx, Math.hypot(dx, dy));
-      target.x = dragStart.x + dx;
-      target.y = dragStart.y + dy;
-      cur.x = target.x;
-      cur.y = target.y;
+    if (!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const rect = vp.getBoundingClientRect();
+    if (pts.size === 1 && drag) {
+      const dx = e.clientX - drag.px, dy = e.clientY - drag.py;
+      moved = Math.max(moved, Math.hypot(dx, dy));
+      if (moved > 4 && !vp.hasPointerCapture(e.pointerId)) { vp.setPointerCapture(e.pointerId); vp.classList.add('dragging'); }
+      tgt.x = drag.x + dx; tgt.y = drag.y + dy;
       clampPan();
-    } else if (pointers.size === 2 && pinchPrev) {
-      const [a, b] = [...pointers.values()];
+      cam.x = tgt.x; cam.y = tgt.y;
+    } else if (pts.size === 2 && pinch) {
+      const [a, b] = [...pts.values()];
       const d = Math.hypot(a.x - b.x, a.y - b.y);
       const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-      if (pinchPrev.d > 0) zoomAt(mx, my, d / pinchPrev.d);
-      target.x += mx - pinchPrev.mx;
-      target.y += my - pinchPrev.my;
-      cur.x = target.x;
-      cur.y = target.y;
-      pinchPrev = { d, mx, my };
+      if (pinch.d > 0) zoomAt(mx - rect.left, my - rect.top, d / pinch.d);
+      tgt.x += mx - pinch.mx; tgt.y += my - pinch.my;
+      Object.assign(cam, tgt);
+      pinch = { d, mx, my };
     }
   });
-
-  const endPointer = e => {
-    if (!pointers.has(e.pointerId)) return;
-    pointers.delete(e.pointerId);
-    if (pointers.size < 2) pinchPrev = null;
-    if (pointers.size === 0) {
+  const end = e => {
+    if (!pts.has(e.pointerId)) return;
+    pts.delete(e.pointerId);
+    if (pts.size < 2) pinch = null;
+    if (pts.size === 0) {
       vp.classList.remove('dragging');
-      if (dragStart && movedPx < 5 && downTarget && !state.boot) resolveTap(downTarget);
-      dragStart = null;
-      downTarget = null;
+      if (drag && moved < 6 && downEl) onTap(downEl);
+      drag = null; downEl = null;
     }
   };
-  vp.addEventListener('pointerup', endPointer);
-  vp.addEventListener('pointercancel', endPointer);
+  vp.addEventListener('pointerup', end);
+  vp.addEventListener('pointercancel', end);
 
   vp.addEventListener('wheel', e => {
     e.preventDefault();
     dismissHint();
-    if (e.ctrlKey || Math.abs(e.deltaY) > Math.abs(e.deltaX) * 1.2) {
-      const f = Math.exp(-e.deltaY * (e.ctrlKey ? 0.009 : 0.0016));
-      zoomAt(e.clientX, e.clientY, f);
+    const rect = vp.getBoundingClientRect();
+    /* pinch (ctrl+wheel) or a mouse wheel zooms; two-finger trackpad scroll pans */
+    const mouseWheel = e.deltaMode !== 0 || (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 40);
+    if (e.ctrlKey || mouseWheel) {
+      const f = Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0018));
+      zoomAt(e.clientX - rect.left, e.clientY - rect.top, f);
     } else {
-      target.x -= e.deltaX;
-      target.y -= e.deltaY;
-      cur.x = target.x;
-      cur.y = target.y;
+      tgt.x -= e.deltaX; tgt.y -= e.deltaY;
       clampPan();
     }
   }, { passive: false });
 
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      if ($('#drawer').classList.contains('open')) closeDrawer();
-      else clearSearch();
-      return;
+  vp.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const c = e.target.closest && e.target.closest('.pcard');
+      if (c) { e.preventDefault(); openDrawer(c.dataset.pid); }
     }
-    if (e.target.tagName === 'INPUT') return;
-    const step = 130;
-    if (e.key === '+' || e.key === '=') zoomAt(innerWidth / 2, innerHeight / 2, 1.3);
-    else if (e.key === '-' || e.key === '_') zoomAt(innerWidth / 2, innerHeight / 2, 1 / 1.3);
-    else if (e.key === '0') fitView(140);
-    else if (e.key === 'ArrowLeft') { target.x += step; clampPan(); }
-    else if (e.key === 'ArrowRight') { target.x -= step; clampPan(); }
-    else if (e.key === 'ArrowUp') { target.y += step; clampPan(); }
-    else if (e.key === 'ArrowDown') { target.y -= step; clampPan(); }
   });
 
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if ($('#lightbox').classList.contains('show')) return closeLightbox();
+      if ($('#drawer').classList.contains('open')) return closeDrawer();
+      return clearSearch();
+    }
+    if (/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+    if (e.key === '/') { e.preventDefault(); openSearch(); return; }
+    if (S.view !== 'tree') return;
+    const { w, h } = vpSize();
+    const step = 120;
+    if (e.key === '+' || e.key === '=') zoomAt(w / 2, h / 2, 1.25);
+    else if (e.key === '-' || e.key === '_') zoomAt(w / 2, h / 2, 0.8);
+    else if (e.key === '0') fitView();
+    else if (e.key === 'ArrowLeft') tgt.x += step;
+    else if (e.key === 'ArrowRight') tgt.x -= step;
+    else if (e.key === 'ArrowUp') tgt.y += step;
+    else if (e.key === 'ArrowDown') tgt.y -= step;
+    else return;
+    clampPan();
+  });
   window.addEventListener('resize', () => clampPan());
 }
 
-function resolveTap(el) {
-  const chev = el.closest('.chev');
-  if (chev) {
-    const unionEl = chev.closest('.union');
-    if (unionEl) toggleUnion(unionEl.dataset.uid);
-    return;
-  }
-  const node = el.closest('.node');
-  if (node) { openDrawer(node.dataset.pid); return; }
-  if (!el.closest('.union')) closeDrawer();
+function onTap(el) {
+  const tog = el.closest('.tog');
+  if (tog) { toggleUnit(tog.closest('.union').dataset.uid); return; }
+  const card = el.closest('.pcard');
+  if (card) { openDrawer(card.dataset.pid); return; }
 }
 
-/* ============================================================
-   expand / collapse
-   ============================================================ */
-
-function toggleUnion(uid) {
-  const u = state.unions.get(uid);
-  if (!u || !u.children.length) return;
-  state.expanded.set(uid, state.expanded.get(uid) === false);
+function toggleUnit(uid) {
+  const u = S.units.get(uid);
+  if (!u || !u.kids.length) return;
+  const open = S.expanded.get(uid) !== true;
+  S.expanded.set(uid, open);
   relayout();
+  /* keep the toggled family in view */
+  const r = S.layout.get(uid);
+  if (open && r) {
+    const { h } = vpSize();
+    const bottom = (r.y + VSTEP + H) * tgt.s + tgt.y;
+    if (bottom > h - 90) { tgt.y -= bottom - (h - 90); clampPan(); }
+  }
+}
+
+function setAll(open) {
+  for (const [id, u] of S.units) if (u.kids.length) S.expanded.set(id, open);
+  relayout();
+  setTimeout(() => fitView(), 120);
 }
 
 function initHud() {
-  $('#btn-zin').addEventListener('click', () => zoomAt(innerWidth / 2, innerHeight / 2, 1.35));
-  $('#btn-zout').addEventListener('click', () => zoomAt(innerWidth / 2, innerHeight / 2, 1 / 1.35));
-  $('#btn-fit').addEventListener('click', () => fitView(160));
-  $('#btn-xall').addEventListener('click', () => {
-    for (const [uid, u] of state.unions) if (u.children.length) state.expanded.set(uid, true);
-    relayout();
-    setTimeout(() => fitView(180), 650);
-  });
-  $('#btn-call').addEventListener('click', () => {
-    for (const [uid, u] of state.unions) if (u.children.length) state.expanded.set(uid, false);
-    relayout();
-    setTimeout(() => fitView(220), 650);
-  });
+  const c = () => { const { w, h } = vpSize(); return [w / 2, h / 2]; };
+  $('#btn-zin').addEventListener('click', () => zoomAt(...c(), 1.3));
+  $('#btn-zout').addEventListener('click', () => zoomAt(...c(), 1 / 1.3));
+  $('#btn-fit').addEventListener('click', () => fitView());
+  $('#btn-xall').addEventListener('click', () => setAll(true));
+  $('#btn-call').addEventListener('click', () => setAll(false));
+}
+function dismissHint() { $('#hint').classList.add('off'); }
+
+/* reveal a person in the tree and fly to them */
+function revealInTree(pid, pulse = true) {
+  const u = S.unitOf.get(pid);
+  if (!u) { toast(`${S.people[pid].name} isn't connected to the main tree yet.`); return false; }
+  for (const x of unitChain(u).slice(0, -1)) S.expanded.set(x.id, true);
+  relayout();
+  const r = S.layout.get(u.id);
+  const i = u.row.indexOf(pid);
+  const cx = r.x + i * (W + MG) + W / 2, cy = r.y + P / 2 + 20;
+  centerOn(cx, cy, clamp(Math.max(tgt.s, isMobile() ? 0.75 : 0.85), 0.75, 1.2));
+  if (pulse) setTimeout(() => {
+    const el = $(`.union[data-uid="${u.id}"] .pcard[data-pid="${CSS.escape(pid)}"]`);
+    if (el) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+  }, 350);
+  return true;
 }
 
-function dismissHint() {
-  const h = $('#hint');
-  if (h && !h.classList.contains('off')) h.classList.add('off');
+function setHighlight(pid) {
+  S.hl.clear();
+  const u = pid && S.unitOf.get(pid);
+  if (u) unitChain(u).forEach(x => S.hl.add(x.id));
+  $$('.pcard.sel').forEach(x => x.classList.remove('sel'));
+  if (pid) $$(`.pcard[data-pid="${CSS.escape(pid)}"]`).forEach(x => x.classList.add('sel'));
+  S.dirty = true;
 }
 
 /* ============================================================
    search
    ============================================================ */
 
-let searchList = [], searchIdx = -1;
+let hits = [], hitIdx = -1;
+const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+function matches(pid, q) {
+  const p = S.people[pid];
+  return [p.name, p.nickname, p.maidenName, p.occupation, p.location, p.birthPlace, year(p.birth)].some(v => v != null && norm(v).includes(q));
+}
+function mark(text, q) {
+  const t = String(text || ''), i = norm(t).indexOf(q);
+  if (!q || i < 0) return esc(t);
+  return esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + q.length)) + '</mark>' + esc(t.slice(i + q.length));
+}
 
 function initSearch() {
   const input = $('#search');
   input.addEventListener('input', () => {
-    const q = input.value.trim().toLowerCase();
-    state.query = q;
-    searchIdx = -1;
-    if (!q) { clearSearch(); return; }
-    searchList = Object.keys(state.people)
-      .filter(pid => (state.people[pid].name || '').toLowerCase().includes(q))
-      .slice(0, 8);
+    S.query = norm(input.value.trim());
+    hitIdx = -1;
+    hits = S.query ? S.ids.filter(id => matches(id, S.query)).sort((a, b) => {
+      const sa = norm(S.people[a].name).startsWith(S.query) ? 0 : 1, sb = norm(S.people[b].name).startsWith(S.query) ? 0 : 1;
+      return sa - sb || S.people[a].name.localeCompare(S.people[b].name);
+    }).slice(0, 12) : [];
     renderResults();
     applySearchDim();
+    if (S.view === 'people') renderPeople();
   });
   input.addEventListener('keydown', e => {
-    if (!searchList.length) return;
-    if (e.key === 'ArrowDown') { e.preventDefault(); searchIdx = Math.min(searchIdx + 1, searchList.length - 1); highlightResult(); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); searchIdx = Math.max(searchIdx - 1, 0); highlightResult(); }
-    else if (e.key === 'Enter') { e.preventDefault(); choosePid(searchList[searchIdx >= 0 ? searchIdx : 0]); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); hitIdx = Math.min(hitIdx + 1, hits.length - 1); hiRes(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); hitIdx = Math.max(hitIdx - 1, 0); hiRes(); }
+    else if (e.key === 'Enter' && hits.length) { e.preventDefault(); choose(hits[Math.max(0, hitIdx)]); }
   });
+  input.addEventListener('focus', () => { if (S.query) renderResults(); });
   document.addEventListener('pointerdown', e => {
-    if (!e.target.closest('#search-wrap')) $('#results').classList.remove('show');
+    if (!e.target.closest('#search-wrap') && !e.target.closest('#btn-search-m')) {
+      $('#results').classList.remove('show');
+      if (!S.query) document.body.classList.remove('msearch');
+    }
   });
+  $('#btn-search-m').addEventListener('click', openSearch);
 }
-
+function openSearch() {
+  document.body.classList.add('msearch');
+  setTimeout(() => $('#search').focus(), 30);
+}
 function renderResults() {
   const box = $('#results');
-  box.innerHTML = '';
-  if (!state.query || !searchList.length) { box.classList.remove('show'); return; }
-  searchList.forEach(pid => {
-    const p = state.people[pid];
-    const btn = document.createElement('button');
-    btn.className = 'result';
-    btn.innerHTML = `
-      <span class="avatar r-av ${gradClass(pid, p.gender)}">${esc(initialsOf(p))}</span>
-      <span class="r-name">${esc(p.name)}</span>
-      <span class="r-years">${esc(yearsText(p))}</span>`;
-    btn.addEventListener('pointerup', () => choosePid(pid));
-    box.appendChild(btn);
-  });
+  if (!S.query) { box.classList.remove('show'); return; }
+  box.innerHTML = hits.length ? hits.map((pid, i) => {
+    const p = S.people[pid];
+    const sub = [yearsText(p), p.occupation, p.location].filter(Boolean).join(' · ');
+    return `<button class="result${i === hitIdx ? ' sel' : ''}" data-pid="${esc(pid)}" role="option">${avatar(pid)}<span class="r-txt"><b>${mark(p.name, S.query)}</b><small>${mark(sub, S.query)}</small></span></button>`;
+  }).join('') : `<div class="empty">No one matches “${esc($('#search').value)}”</div>`;
+  $$('.result', box).forEach(b => b.addEventListener('click', () => choose(b.dataset.pid)));
   box.classList.add('show');
 }
-
-function highlightResult() {
-  [...$('#results').children].forEach((el, i) => el.classList.toggle('sel', i === searchIdx));
-}
-
+function hiRes() { $$('#results .result').forEach((el, i) => el.classList.toggle('sel', i === hitIdx)); }
 function clearSearch() {
-  state.query = '';
+  S.query = ''; hits = [];
   $('#search').value = '';
   $('#results').classList.remove('show');
-  searchList = [];
+  document.body.classList.remove('msearch');
   applySearchDim();
+  if (S.view === 'people') renderPeople();
 }
-
+function choose(pid) {
+  clearSearch();
+  $('#search').blur();
+  if (S.view === 'tree') revealInTree(pid);
+  openDrawer(pid);
+}
 function applySearchDim() {
-  const q = state.query;
-  const on = !!q;
-  document.body.classList.toggle('searching', on);
-  if (!on) { for (const n of state.nodes.values()) n.el.classList.remove('hit'); return; }
-  for (const [uid, n] of state.nodes) {
-    const u = state.unions.get(uid);
-    const hit = u.partners.some(pid => (state.people[pid].name || '').toLowerCase().includes(q));
-    n.el.classList.toggle('hit', hit);
-  }
-}
-
-function choosePid(pid) {
-  if (!pid) return;
-  $('#results').classList.remove('show');
-  $('#search').value = state.people[pid] ? state.people[pid].name : '';
-  state.query = '';
-  applySearchDim();
-  dismissHint();
-  focusPerson(pid);
-}
-
-/* reveal the branch containing a person, then fly to them */
-function focusPerson(pid) {
-  const path = [];
-  (function dfs(u) {
-    if (u.partners.includes(pid)) { path.unshift(u); return true; }
-    for (const c of u.children) if (dfs(c)) { path.unshift(u); return true; }
-    return false;
-  })(state.root);
-
-  path.slice(0, -1).forEach(u => state.expanded.set(u.id, true));
-  relayout();
-
-  setTimeout(() => {
-    for (const [uid, p] of state.pos) {
-      const u = state.unions.get(uid);
-      const idx = u.partners.indexOf(pid);
-      if (idx < 0) continue;
-      const cx = p.x + idx * (C + MG) + C / 2;
-      const cy = p.y + C / 2;
-      const s = clamp(cur.s, 0.85, 1.25);
-      target.s = s;
-      target.x = innerWidth / 2 - cx * s;
-      target.y = innerHeight / 2 - cy * s;
-      clampPan();
-      const n = state.nodes.get(uid);
-      const el = n && $(`.node[data-pid="${CSS.escape(pid)}"]`, n.el);
-      if (el) { el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 2400); }
-      break;
-    }
-  }, 640);
+  const q = S.query;
+  document.body.classList.toggle('searching', !!q && S.view === 'tree');
+  $$('#cards .pcard').forEach(el => el.classList.toggle('hit', !!q && matches(el.dataset.pid, q)));
 }
 
 /* ============================================================
-   person drawer
+   profile drawer
    ============================================================ */
 
-function h(tag, cls, text) {
-  const el = document.createElement(tag);
-  if (cls) el.className = cls;
-  if (text != null) el.textContent = text;
-  return el;
+function relRow(pid, role) {
+  const p = S.people[pid];
+  return `<button class="rel" data-go="${esc(pid)}">${avatar(pid)}<span class="r-txt"><b>${esc(p.name)}</b><small>${esc([role, yearsText(p)].filter(Boolean).join(' · '))}</small></span>${ICON.right}</button>`;
+}
+function relGroup(title, rows) {
+  if (!rows.length) return '';
+  return `<div class="rel-group"><small>${esc(title)}</small><div class="rels">${rows.join('')}</div></div>`;
 }
 
-function openDrawer(pid) {
-  if (!pid) return;
-  state.selected = pid;
-  const p = state.people[pid] || ensurePerson(pid);
-  const body = $('#drawer-body');
-  body.innerHTML = '';
+function personEvents(pid) {
+  const p = S.people[pid];
+  const ev = (p.timeline || []).map(e => ({ year: year(e.year), date: e.year, title: e.title, text: e.text || '', kind: 'own' }));
+  const has = y => ev.some(e => e.year === y);
+  const by = year(p.birth);
+  if (by != null && !has(by)) ev.push({ year: by, date: p.birth, title: 'Born' + (p.birthPlace ? ' in ' + p.birthPlace : ''), text: parentsOf(pid).length ? `${childWord(pid)} of ${parentsOf(pid).map(id => S.people[id].name).join(' and ')}.` : '', kind: 'birth' });
+  for (const m of marriagesOf(pid)) {
+    const o = S.people[otherOf(m, pid)];
+    const y = year(m.year);
+    if (y != null && !has(y)) ev.push({ year: y, date: m.year, title: (m.status === 'engaged' ? 'Engaged to ' : 'Married ') + o.name, text: m.note || '', kind: 'wed' });
+    const e = year(m.ended);
+    if (e != null && isEnded(m) && !has(e)) ev.push({ year: e, date: m.ended, title: (m.status === 'separated' ? 'Separated from ' : 'Divorced from ') + o.name, text: '', kind: 'div' });
+  }
+  for (const c of childrenOf(pid)) {
+    const y = year(S.people[c].birth);
+    if (y != null && !has(y)) ev.push({ year: y, date: S.people[c].birth, title: `${childWord(c)} ${firstName(c)} is born`, text: '', kind: 'child' });
+  }
+  const dy = year(p.death);
+  if (dy != null && !has(dy)) ev.push({ year: dy, date: p.death, title: 'Passed away' + (p.deathPlace ? ' in ' + p.deathPlace : ''), text: ageOf(p) != null ? `Aged ${ageOf(p)}.` : '', kind: 'death' });
+  return ev.sort((a, b) => a.year - b.year);
+}
 
-  /* hero */
-  const hero = h('div', 'd-hero');
-  const av = h('div', 'd-avatar ' + gradClass(pid, p.gender));
-  if (p.photo) { const im = h('img'); im.src = p.photo; im.alt = ''; av.appendChild(im); }
-  else av.appendChild(h('span', null, initialsOf(p)));
-  const info = h('div', 'd-hinfo');
-  info.appendChild(h('h2', 'd-name', p.name));
-  info.appendChild(h('div', 'd-sub', yearsText(p)));
-  const chips = h('div', 'd-chips');
-  if (p.death) chips.appendChild(h('span', 'chip', 'Deceased'));
-  else if (p.birth) chips.appendChild(h('span', 'chip', 'Age ' + (new Date().getFullYear() - p.birth)));
-  chips.appendChild(h('span', 'chip ' + (p.gender || 'unknown'), p.gender === 'male' ? 'Male' : p.gender === 'female' ? 'Female' : 'Unspecified'));
-  if (p.occupation) chips.appendChild(h('span', 'chip', p.occupation));
-  if (p.location) chips.appendChild(h('span', 'chip', p.location));
-  info.appendChild(chips);
-  hero.append(av, info);
-  body.appendChild(hero);
+function openDrawer(pid, push = true) {
+  if (!pid || !S.people[pid]) return;
+  S.selected = pid;
+  setHighlight(pid);
+  const p = S.people[pid];
+  const age = ageOf(p);
+  const gen = S.gen.get(pid);
+  const dead = isDead(p);
 
-  /* immediate family quick-links */
-  const union = [...state.unions.values()].find(u => u.partners.includes(pid));
-  if (union) {
-    const members = [];
-    union.partners.forEach(o => { if (o !== pid && state.people[o]) members.push([o, 'Spouse']); });
-    union.children.forEach(c => { const k = c.partners[0]; if (k && state.people[k]) members.push([k, 'Child']); });
-    if (members.length) {
-      const sec = h('section', 'dsec');
-      sec.appendChild(h('h3', 'd-h', 'Immediate family'));
-      const row = h('div', 'flinks');
-      members.forEach(([id, role]) => {
-        const other = state.people[id];
-        const b = h('button', 'flink');
-        b.innerHTML = `<i class="gdot ${other.gender || 'unknown'}"></i><span>${esc(other.name)}</span><em>${role}</em>`;
-        b.addEventListener('click', () => openDrawer(id));
-        row.appendChild(b);
-      });
-      sec.appendChild(row);
-      body.appendChild(sec);
+  /* --- hero --- */
+  const tags = [];
+  tags.push(statusTag(p));
+  if (p.gender) tags.push(`<span class="tag ${genderCls(p)}">${p.gender === 'male' ? 'Male' : p.gender === 'female' ? 'Female' : esc(p.gender)}</span>`);
+  if (gen != null) tags.push(`<span class="tag">Generation ${ROMAN[gen] || gen + 1}</span>`);
+  if (S.branch.get(pid) && S.branch.get(pid) !== pid) tags.push(`<span class="tag">${esc(firstName(S.branch.get(pid)))}'s branch</span>`);
+
+  let html = `<div class="d-cover ${genderCls(p)} m${gen == null ? 4 : Math.min(gen, 4)}"></div><div class="d-hero">${framed(pid, 'xl')}
+    <h2 class="d-name">${esc(displayName(p))}</h2>
+    <p class="d-sub">${esc(relationPhrase(pid))}</p>
+    <div class="d-tags">${tags.join('')}</div>
+    <div class="d-actions">
+      <button class="btn primary" data-act="tree">${ICON.tree}Show in tree</button>
+      <button class="btn" data-act="share">${ICON.share}Copy link</button>
+    </div></div>`;
+
+  /* --- key facts --- */
+  const facts = [];
+  if (p.birth != null) facts.push(['Born', approxDate(p.birth, p.birthApprox) + (p.birthPlace ? ' · ' + p.birthPlace : '')]);
+  if (dead) facts.push(['Died', (approxDate(p.death, p.deathApprox) || 'Unknown') + (p.deathPlace ? ' · ' + p.deathPlace : '')]);
+  if (age != null) facts.push([dead ? 'Lived to' : 'Age', (p.birthApprox || p.deathApprox ? 'about ' : '') + (age < 1 && !dead ? 'under 1 year' : age + (age === 1 ? ' year' : ' years'))]);
+  if (p.maidenName) facts.push(['Maiden name', p.maidenName]);
+  if (p.occupation) facts.push(['Occupation', p.occupation]);
+  if (p.location) facts.push([dead ? 'Lived in' : 'Lives in', p.location]);
+  const nd = countDesc(pid);
+  if (nd) facts.push(['Descendants', nd]);
+  for (const [k, v] of Object.entries(p.details || {})) facts.push([k, v]);
+  if (facts.length) html += `<section class="dsec"><h3 class="d-h">Details</h3><div class="facts">${facts.map(([k, v]) => `<div class="fact"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div></section>`;
+
+  /* --- family --- */
+  const fam = [];
+  const pars = parentsOf(pid);
+  fam.push(relGroup('Parents', pars.map(id => relRow(id, id === p.father ? 'Father' : 'Mother'))));
+  const ms = marriagesOf(pid);
+  fam.push(relGroup(ms.length > 1 ? `Spouses (${ms.length})` : 'Spouse', ms.map(m => relRow(otherOf(m, pid), marriageText(m)))));
+  const kids = childrenOf(pid);
+  if (kids.length) {
+    const groups = new Map();
+    for (const c of kids) {
+      const q = S.people[c];
+      const other = q.father === pid ? q.mother : q.father;
+      const key = other || '';
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(c);
     }
+    if (groups.size === 1) fam.push(relGroup(`Children (${kids.length})`, kids.map(c => relRow(c, childWord(c)))));
+    else for (const [o, list] of groups) fam.push(relGroup(o ? `Children with ${S.people[o].name}` : 'Children (other parent unknown)', list.map(c => relRow(c, childWord(c)))));
+  }
+  const sib = siblingsOf(pid);
+  const sibWord = id => (S.people[id].gender === 'male' ? 'Brother' : S.people[id].gender === 'female' ? 'Sister' : 'Sibling');
+  fam.push(relGroup('Siblings', sib.full.map(id => relRow(id, sibWord(id)))));
+  fam.push(relGroup('Half-siblings', sib.half.map(id => {
+    const q = S.people[id];
+    const via = q.father && q.father === p.father ? 'same father' : 'same mother';
+    return relRow(id, `Half-${sibWord(id).toLowerCase()} · ${via}`);
+  })));
+  const famHTML = fam.join('');
+  if (famHTML) html += `<section class="dsec"><h3 class="d-h">Family</h3>${famHTML}</section>`;
+
+  if (p.bio) html += `<section class="dsec"><h3 class="d-h">Biography</h3><p class="d-bio">${esc(p.bio)}</p></section>`;
+
+  const ev = personEvents(pid);
+  if (ev.length) {
+    html += `<section class="dsec"><h3 class="d-h">Life timeline</h3><div class="tl">${ev.map(e =>
+      `<div class="tl-item"><span class="tl-year">${esc(e.date && String(e.date).length > 4 ? fmtDate(e.date) : e.year)}</span><div class="tl-title">${esc(e.title)}</div>${e.text ? `<p class="tl-text">${esc(e.text)}</p>` : ''}</div>`).join('')}</div></section>`;
   }
 
-  /* biography */
-  if (p.bio) {
-    const sec = h('section', 'dsec');
-    sec.appendChild(h('h3', 'd-h', 'Biography'));
-    sec.appendChild(h('p', 'd-bio', p.bio));
-    body.appendChild(sec);
-  }
-
-  /* timeline */
-  if (p.timeline && p.timeline.length) {
-    const sec = h('section', 'dsec');
-    sec.appendChild(h('h3', 'd-h', 'Historical timeline'));
-    const list = h('div', 'tl');
-    [...p.timeline].sort((a, b) => (a.year || 0) - (b.year || 0)).forEach(ev => {
-      const it = h('div', 'tl-item');
-      it.appendChild(h('b', 'tl-year', ev.year));
-      it.appendChild(h('div', 'tl-title', ev.title));
-      if (ev.text) it.appendChild(h('p', 'tl-text', ev.text));
-      list.appendChild(it);
-    });
-    sec.appendChild(list);
-    body.appendChild(sec);
-  }
-
-  /* photo album */
-  const sec = h('section', 'dsec');
-  sec.appendChild(h('h3', 'd-h', 'Family album'));
-  const grid = h('div', 'phgrid');
   const photos = (p.photos || []).map(x => (typeof x === 'string' ? { caption: x } : x));
-  if (!photos.length) {
-    const g = h('figure', 'ph ghost');
-    g.innerHTML = ICON_IMG + '<figcaption>No photos yet — add captions to this person’s photos[] in data.json</figcaption>';
-    grid.appendChild(g);
-  } else {
-    photos.forEach(item => grid.appendChild(photoTile(item)));
-  }
-  sec.appendChild(grid);
-  body.appendChild(sec);
+  html += `<section class="dsec"><h3 class="d-h">Photos</h3><div class="phgrid">${photos.length
+    ? photos.map((ph, i) => photoTile(ph, i)).join('')
+    : `<figure class="ph ghost">${ICON.img}<figcaption>No photos yet</figcaption></figure>`}</div></section>`;
 
-  $('#drawer').classList.add('open');
-  $('#drawer').setAttribute('aria-hidden', 'false');
-  $('#drawer-overlay').classList.add('show');
+  const body = $('#drawer-body');
+  body.innerHTML = html;
+  body.scrollTop = 0;
+  body._photos = photos;
+
+  $$('[data-go]', body).forEach(b => b.addEventListener('click', () => {
+    const id = b.dataset.go;
+    if (S.view === 'tree') revealInTree(id, true);
+    openDrawer(id);
+  }));
+  $('[data-act="tree"]', body).addEventListener('click', () => {
+    if (isMobile()) closeDrawer();
+    setView('tree', false);
+    requestAnimationFrame(() => revealInTree(pid));
+  });
+  $('[data-act="share"]', body).addEventListener('click', () => copyLink(pid));
+  $$('.ph[data-i]', body).forEach(f => f.addEventListener('click', () => openLightbox(photos[+f.dataset.i], +f.dataset.i)));
+
+  const d = $('#drawer');
+  d.style.removeProperty('--drag');
+  d.classList.add('open');
+  d.setAttribute('aria-hidden', 'false');
+  if (isMobile()) $('#scrim').classList.add('show');
+  if (push) syncHash();
 }
 
-function photoTile(item) {
-  const f = h('figure', 'ph');
-  const m = (item.caption || '').match(/(19|20)\d{2}/);
-  const year = item.year || (m && m[0]);
-  if (item.src) {
-    const im = h('img');
-    im.src = item.src;
-    im.alt = item.caption || '';
-    im.loading = 'lazy';
-    f.appendChild(im);
-  } else {
-    const art = h('div', 'ph-art');
-    art.innerHTML = ICON_IMG;
-    f.appendChild(art);
-  }
-  f.appendChild(h('figcaption', null, item.caption || ''));
-  if (year) f.appendChild(h('span', 'ph-year', year));
-  return f;
+function photoTile(item, i) {
+  const m = String(item.caption || '').match(/(1[89]|20)\d{2}/);
+  const y = item.year || (m && m[0]);
+  const media = item.src ? `<img src="${esc(item.src)}" alt="${esc(item.caption || '')}" loading="lazy">` : `<div class="ph-art">${ICON.img}</div>`;
+  return `<figure class="ph" data-i="${i}" tabindex="0">${media}${y ? `<span class="ph-year">${esc(y)}</span>` : ''}<figcaption>${esc(item.caption || '')}</figcaption></figure>`;
+}
+function openLightbox(item, i) {
+  const lb = $('#lightbox');
+  lb.innerHTML = `<figure>${photoTile(item, i)}</figure>`;
+  lb.classList.add('show');
+  lb.setAttribute('aria-hidden', 'false');
+}
+function closeLightbox() {
+  $('#lightbox').classList.remove('show');
+  $('#lightbox').setAttribute('aria-hidden', 'true');
 }
 
-function closeDrawer() {
-  $('#drawer').classList.remove('open');
-  $('#drawer').setAttribute('aria-hidden', 'true');
-  $('#drawer-overlay').classList.remove('show');
-  state.selected = null;
+function closeDrawer(push = true) {
+  const d = $('#drawer');
+  d.classList.remove('open');
+  d.setAttribute('aria-hidden', 'true');
+  $('#scrim').classList.remove('show');
+  S.selected = null;
+  setHighlight(null);
+  if (push) syncHash();
 }
 
 function initDrawer() {
-  $('#drawer-close').addEventListener('click', closeDrawer);
-  $('#drawer-overlay').addEventListener('click', closeDrawer);
+  $('#drawer-close').addEventListener('click', () => closeDrawer());
+  $('#scrim').addEventListener('click', () => closeDrawer());
+  $('#lightbox').addEventListener('click', closeLightbox);
+
+  /* swipe the bottom sheet down to close (mobile) */
+  const d = $('#drawer'), grab = $('.grab');
+  let y0 = null, dy = 0;
+  const start = e => { y0 = e.clientY; dy = 0; d.classList.add('dragging'); grab.setPointerCapture(e.pointerId); };
+  grab.addEventListener('pointerdown', start);
+  grab.addEventListener('pointermove', e => {
+    if (y0 == null) return;
+    dy = Math.max(0, e.clientY - y0);
+    d.style.setProperty('--drag', dy + 'px');
+  });
+  const stop = () => {
+    if (y0 == null) return;
+    y0 = null;
+    d.classList.remove('dragging');
+    if (dy > 110) closeDrawer();
+    else d.style.removeProperty('--drag');
+  };
+  grab.addEventListener('pointerup', stop);
+  grab.addEventListener('pointercancel', stop);
+}
+
+async function copyLink(pid) {
+  const url = location.href.split('#')[0] + '#' + S.view + '/' + encodeURIComponent(pid);
+  try {
+    if (navigator.share && isMobile()) await navigator.share({ title: S.people[pid].name, url });
+    else { await navigator.clipboard.writeText(url); toast('Link copied to clipboard'); }
+  } catch (e) {
+    if (e && e.name !== 'AbortError') toast(url);
+  }
 }
 
 /* ============================================================
-   misc UI
+   members view
    ============================================================ */
 
-let toastTimer = null;
-function showToast(msg) {
+function renderStats() {
+  const all = S.ids.filter(id => !S.people[id].missing);
+  const living = all.filter(id => isLiving(S.people[id]));
+  const gens = new Set([...S.gen.values()]).size;
+  const kids = all.filter(id => isLiving(S.people[id]) && NOW_YEAR - year(S.people[id].birth) < 18);
+  const branches = S.root ? S.root.kids.length : 0;
+  const stats = [
+    [all.length, 'Members'], [gens, 'Generations'], [living.length, 'Living'],
+    [S.marriages.filter(m => !m.implicit).length, 'Marriages'], [branches, 'Branches'], [kids.length, 'Under 18'],
+  ];
+  $('#stats').innerHTML = stats.map(([v, l]) => `<div class="stat"><b data-n="${esc(v)}">0</b><span>${esc(l)}</span></div>`).join('');
+}
+/* numbers roll up when the Members page opens */
+function countUp() {
+  $$('#stats b[data-n]').forEach((el, i) => {
+    const n = +el.dataset.n;
+    if (!isFinite(n)) { el.textContent = el.dataset.n; return; }
+    const t0 = performance.now() + i * 70, dur = 900;
+    const step = t => {
+      const k = clamp((t - t0) / dur, 0, 1);
+      el.textContent = Math.round(n * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+function memberCard(pid, i) {
+  const p = S.people[pid];
+  const meta = [];
+  meta.push(`<span>${ICON.link}<em>${esc(relationPhrase(pid))}</em></span>`);
+  if (p.occupation) meta.push(`<span>${ICON.job}<em>${esc(p.occupation)}</em></span>`);
+  if (p.location) meta.push(`<span>${ICON.pin}<em>${esc(p.location)}</em></span>`);
+  const age = ageOf(p);
+  const tags = [statusTag(p)].filter(Boolean);
+  if (age != null) tags.push(`<span class="tag">${isDead(p) ? 'Lived ' + age : age < 1 ? 'Baby' : 'Age ' + age}</span>`);
+  const ms = marriagesOf(pid);
+  if (ms.length > 1) tags.push(`<span class="tag">${ms.length} marriages</span>`);
+  const kc = childrenOf(pid).length;
+  if (kc) tags.push(`<span class="tag">${kc} ${kc === 1 ? 'child' : 'children'}</span>`);
+  return `<button class="mcard" data-pid="${esc(pid)}" style="animation-delay:${Math.min(i, 20) * 22}ms">
+    <div class="mc-top">${framed(pid, 'sm')}<div class="mc-name"><b>${esc(displayName(p))}</b><small>${esc(yearsText(p))}</small></div></div>
+    <div class="mc-meta">${meta.join('')}</div>
+    ${p.bio ? `<p class="mc-bio">${esc(p.bio)}</p>` : ''}
+    <div class="mc-foot">${tags.join('')}</div></button>`;
+}
+
+function renderPeople() {
+  let list = S.ids.filter(id => !S.people[id].missing || S.query);
+  const f = S.filter;
+  if (f === 'living') list = list.filter(id => isLiving(S.people[id]));
+  if (f === 'deceased') list = list.filter(id => isDead(S.people[id]));
+  if (f === 'male' || f === 'female') list = list.filter(id => S.people[id].gender === f);
+  if (S.query) list = list.filter(id => matches(id, S.query));
+
+  const groups = new Map();
+  const add = (k, id) => { if (!groups.has(k)) groups.set(k, []); groups.get(k).push(id); };
+  if (S.groupBy === 'gen') {
+    list.forEach(id => add(S.gen.has(id) ? S.gen.get(id) : 99, id));
+  } else if (S.groupBy === 'branch') {
+    list.forEach(id => add(S.branch.get(id) || '', id));
+  } else if (S.groupBy === 'place') {
+    list.forEach(id => add(S.people[id].location ? S.people[id].location.split(',').pop().trim() : 'Unknown', id));
+  } else {
+    list.forEach(id => add(S.people[id].name[0].toUpperCase(), id));
+  }
+
+  let keys = [...groups.keys()];
+  if (S.groupBy === 'gen') keys.sort((a, b) => a - b);
+  else if (S.groupBy === 'branch') keys.sort((a, b) => (a === '' ? -1 : b === '' ? 1 : byBirth(a, b)));
+  else keys.sort((a, b) => (a === 'Unknown') - (b === 'Unknown') || String(a).localeCompare(String(b)));
+
+  const title = k => {
+    if (S.groupBy === 'gen') return k === 99 ? 'Not linked to the tree' : `Generation ${ROMAN[k] || k + 1}`;
+    if (S.groupBy === 'branch') return k ? `${S.people[k].name}'s branch` : 'Founders';
+    return k;
+  };
+  const sortIn = S.groupBy === 'az' ? (a, b) => S.people[a].name.localeCompare(S.people[b].name) : byBirth;
+
+  let i = 0;
+  $('#people-list').innerHTML = keys.length ? keys.map(k => {
+    const ids = groups.get(k).sort(sortIn);
+    return `<section class="group"><div class="group-h"><h2>${esc(title(k))}</h2><span>${ids.length} ${ids.length === 1 ? 'person' : 'people'}</span></div>
+      <div class="grid">${ids.map(id => memberCard(id, i++)).join('')}</div></section>`;
+  }).join('') : `<div class="no-results">No family members match these filters.</div>`;
+}
+
+function initPeople() {
+  $('#filters').addEventListener('click', e => {
+    const b = e.target.closest('.chip');
+    if (!b) return;
+    S.filter = b.dataset.f;
+    $$('#filters .chip').forEach(x => x.classList.toggle('on', x === b));
+    renderPeople();
+  });
+  $('#groupby').addEventListener('change', e => { S.groupBy = e.target.value; renderPeople(); });
+  $('#people-list').addEventListener('click', e => {
+    const c = e.target.closest('.mcard');
+    if (c) openDrawer(c.dataset.pid);
+  });
+}
+
+/* ============================================================
+   family timeline view
+   ============================================================ */
+
+function renderTimeline() {
+  const ev = [];
+  for (const id of S.ids) {
+    const p = S.people[id];
+    if (p.missing) continue;
+    const by = year(p.birth), dy = year(p.death);
+    if (by != null) ev.push({ y: by, approx: p.birthApprox, pid: id, kind: 'birth', t: `${p.name} is born`, d: [p.birthPlace, parentsOf(id).length ? `${childWord(id)} of ${parentsOf(id).map(firstName).join(' & ')}` : ''].filter(Boolean).join(' · ') });
+    if (dy != null) ev.push({ y: dy, approx: p.deathApprox, pid: id, kind: 'death', t: `${p.name} passes away`, d: ageOf(p) != null ? `Aged ${ageOf(p)}` : '' });
+    for (const e of p.timeline || []) {
+      const y = year(e.year);
+      if (y == null || y === by || y === dy || /^(marr|wed)/i.test(e.title)) continue;
+      ev.push({ y, pid: id, kind: 'own', t: e.title, d: `${firstName(id)} — ${e.text || ''}`.replace(/ — $/, '') });
+    }
+  }
+  for (const m of S.marriages) {
+    if (m.implicit) continue;
+    const y = year(m.year);
+    const a = S.people[m.a], b = S.people[m.b];
+    if (y != null) ev.push({ y, pid: m.a, kind: 'wed', t: `${a.name} & ${b.name} marry`, d: m.note || '' });
+    const e = year(m.ended);
+    if (e != null && isEnded(m)) ev.push({ y: e, pid: m.a, kind: 'div', t: `${a.name} & ${b.name} divorce`, d: '' });
+  }
+  ev.sort((a, b) => a.y - b.y || (a.kind === 'birth') - (b.kind === 'birth'));
+
+  const icon = k => (k === 'birth' ? ICON.birth : k === 'death' ? ICON.death : k === 'wed' ? ICON.ring : k === 'div' ? ICON.broken : ICON.dot);
+  let lastDec = null, html = '<div class="ftl">';
+  for (const e of ev) {
+    const dec = Math.floor(e.y / 10) * 10;
+    if (dec !== lastDec) { html += `<div class="ftl-decade">${dec}s</div>`; lastDec = dec; }
+    html += `<button class="ftl-item k-${e.kind}" data-pid="${esc(e.pid)}">${avatar(e.pid)}<div><div class="ftl-y">${e.approx ? 'c. ' : ''}${e.y}</div><div class="ftl-t">${esc(e.t)}</div>${e.d ? `<div class="ftl-d">${esc(e.d)}</div>` : ''}</div><span class="ftl-ic">${icon(e.kind)}</span></button>`;
+  }
+  html += '</div>';
+  $('#family-timeline').innerHTML = ev.length ? html : '<div class="no-results">Add birth years and timeline entries in data.json to see them here.</div>';
+
+  /* items glide in as they scroll into view */
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => entries.forEach(en => {
+      if (en.isIntersecting) { en.target.classList.remove('reveal'); io.unobserve(en.target); }
+    }), { root: $('#view-timeline'), rootMargin: '0px 0px -8% 0px' });
+    $$('.ftl-item').forEach(el => { el.classList.add('reveal'); io.observe(el); });
+  }
+}
+
+/* ============================================================
+   views, routing, theme
+   ============================================================ */
+
+let rendered = { people: false, timeline: false };
+function setView(v, push = true) {
+  if (!['tree', 'people', 'timeline'].includes(v)) v = 'tree';
+  S.view = v;
+  document.body.dataset.view = v;
+  $$('.view').forEach(el => el.classList.toggle('on', el.id === 'view-' + v));
+  $$('#tabs button, #bottom-nav button').forEach(b => b.classList.toggle('on', b.dataset.view === v));
+  if (v === 'people') { renderPeople(); countUp(); }
+  if (v === 'timeline' && !rendered.timeline) { renderTimeline(); rendered.timeline = true; }
+  if (v === 'tree') { clampPan(); S.dirty = true; }
+  applySearchDim();
+  if (push) syncHash();
+}
+
+function syncHash() {
+  const h = '#' + S.view + (S.selected ? '/' + encodeURIComponent(S.selected) : '');
+  if (location.hash !== h) history.replaceState(null, '', h);
+}
+function readHash(first) {
+  const [v, pid] = location.hash.replace(/^#/, '').split('/');
+  setView(v || 'tree', false);
+  const id = pid && decodeURIComponent(pid);
+  if (id && S.people[id]) {
+    if (S.view === 'tree') revealInTree(id, !first);
+    openDrawer(id, false);
+  } else if ($('#drawer').classList.contains('open')) closeDrawer(false);
+}
+
+function initNav() {
+  $$('#tabs button, #bottom-nav button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+  window.addEventListener('hashchange', () => readHash(false));
+  $('.brand').addEventListener('click', e => { e.preventDefault(); closeDrawer(false); setView('tree'); fitView(); });
+}
+
+function initTheme() {
+  $('#btn-theme').addEventListener('click', () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+    try { localStorage.setItem('ft-theme', root.dataset.theme); } catch (e) {}
+  });
+}
+
+let toastT = null;
+function toast(msg) {
   const t = $('#toast');
   t.textContent = msg;
   t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 6000);
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 3200);
 }
 
-function computeStats() {
-  let gens = 1;
-  (function walk(u) { gens = Math.max(gens, u.depth + 1); u.children.forEach(walk); })(state.root);
-  $('#st-total').textContent = Object.keys(state.people).length;
-  $('#st-gen').textContent = gens;
-  $('#st-living').textContent = Object.values(state.people).filter(p => !p.death).length;
-  const name = state.meta.familyName || 'Family Tree';
+function applyMeta() {
+  const name = S.meta.familyName || 'Our Family';
+  const tag = S.meta.tagline || 'Family tree';
   $('#brand-name').textContent = name;
-  $('#brand-sub').textContent = state.meta.tagline || 'Interactive lineage';
-  document.title = name + ' — Interactive Tree';
+  $('#brand-sub').textContent = tag;
+  const m = name.match(/^(The\s+)?(.+?)(\s+Family)?$/i);
+  $('#hero-title').innerHTML = m ? `${esc(m[1] || '')}<em>${esc(m[2])}</em>${esc(m[3] || '')}` : esc(name);
+  $('#hero-tagline').textContent = S.meta.description || tag;
+  $('#hero-eyebrow').textContent = 'Family members';
+  document.title = name + ' · Family Tree';
 }
 
 /* ============================================================
@@ -896,36 +1286,35 @@ function computeStats() {
    ============================================================ */
 
 (async function main() {
-  requestAnimationFrame(frame);
-  initGestures();
-  initHud();
-  initSearch();
-  initDrawer();
-
+  initGestures(); initHud(); initSearch(); initDrawer(); initPeople(); initNav(); initTheme();
   try {
     const data = await loadData();
     buildModel(data);
-    computeStats();
-    /* ?expand=all — dev/preview: show every generation */
-    if (new URLSearchParams(location.search).has('expand')) {
-      for (const [uid, u] of state.unions) if (u.children.length) state.expanded.set(uid, true);
-    }
-    relayout();
-
-    cur.x = innerWidth / 2 - 100;
-    cur.y = innerHeight / 2 - 60;
-    Object.assign(target, cur);
-    requestAnimationFrame(() => fitView(170, 1.02));
-
-    $('#loading').classList.add('done');
-    setTimeout(() => { const l = $('#loading'); if (l) l.remove(); }, 1000);
+    applyMeta();
+    renderStats();
+    if (new URLSearchParams(location.search).has('expand')) for (const [id, u] of S.units) if (u.kids.length) S.expanded.set(id, true);
+    S.booting = true;
+    relayout(false);
+    setTimeout(() => { S.booting = false; }, 2500);
+    if (isMobile() && S.root) {
+      /* phones: start readable, founders at the top — pinch out for the overview */
+      const r = S.layout.get(S.root.id);
+      const s = 0.72, { w } = vpSize();
+      tgt.s = s;
+      tgt.x = w / 2 - (r.x + W / 2) * s;
+      tgt.y = 70 - r.y * s;
+      clampPan();
+    } else fitView(0.5);
+    Object.assign(cam, tgt);
+    readHash(true);
+    requestAnimationFrame(frame);
+    setTimeout(dismissHint, 8000);
   } catch (err) {
-    const l = $('#loading');
-    l.classList.add('done');
-    const p = l && l.querySelector('p');
-    if (p) p.textContent = 'Failed to load family data.';
+    console.error(err);
+    $('#loading p').textContent = 'Could not load data.json — ' + err.message;
+    $('.spinner').style.display = 'none';
+    return;
   }
-
-  state.boot = false;
-  setTimeout(dismissHint, 9000);
+  $('#loading').classList.add('done');
+  setTimeout(() => $('#loading').remove(), 600);
 })();

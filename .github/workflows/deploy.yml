@@ -1,0 +1,58 @@
+# Publishes the family tree to GitHub Pages whenever a tag is pushed:
+#   git tag v1.0.0 && git push origin v1.0.0
+# It also attaches a zipped copy of the site to a GitHub Release for that tag.
+name: Release to GitHub Pages
+
+on:
+  push:
+    tags: ['*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate data.json and build site
+        run: node tools/build.mjs --out _site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Zip site for the release
+        if: startsWith(github.ref, 'refs/tags/')
+        run: cd _site && zip -qr "../family-tree-${GITHUB_REF_NAME}.zip" .
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: family-tree-${{ github.ref_name }}.zip
+          generate_release_notes: true
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
