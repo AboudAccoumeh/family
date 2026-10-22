@@ -1,0 +1,17 @@
+# Catches mistakes in data.json (unknown ids, impossible dates, typos) on every push / PR.
+name: Check family data
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node tools/build.mjs
