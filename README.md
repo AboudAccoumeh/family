@@ -66,9 +66,9 @@ Ids (the keys in `people`) can be anything unique, e.g. `"bassam"` and `"bassam-
 
 ### Things to fill in
 
-- `abedelrahman-wife-2` is a placeholder for the second wife. Add her real name.
-- The four sons of Abedelrahman (`ahmed`, `bassam`, `diyaa`, `amer`) have no `mother` yet. Set
-  `"mother": "khadra"` or `"mother": "abedelrahman-wife-2"` for each one, and add her other children.
+- Abedelrahman's second wife is not in the data yet. When you add her, give her a `people` entry and a
+  `marriages` entry. Then set `"mother"` on each of her children, and on Khadra's (`ahmed`, `bassam`,
+  `diyaa`, `amer` have no `mother` yet).
 - **Zein Choghri** (Susanne's son) and **Belal Accoumeh** (Jenan's son) have no father yet. Add him
   as a person, add a `"divorced"` marriage, and set the child's `father`.
 - Birth years come from the ages you gave, so they are approximate (`birthApprox`).
