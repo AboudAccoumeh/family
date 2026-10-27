@@ -44,11 +44,36 @@
   --font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Fraunces', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
   --font-grotesk: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-ar: 'Noto Kufi Arabic', 'Inter', 'Segoe UI', sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --top-h: 64px;
   --safe-b: env(safe-area-inset-bottom, 0px);
   color-scheme: light;
 }
+
+/* ---------- Arabic language mode (EN / ع toggle) ---------- */
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  src: url('./fonts/NotoKufiArabic.woff2') format('woff2');
+  font-weight: 400 800;
+  font-display: swap;
+}
+body[data-lang="ar"] { --font: var(--font-ar); --font-display: var(--font-ar); }
+/* RTL text flow only in content surfaces — never on the canvas, so edge
+   geometry, card order and camera math can never drift */
+body[data-lang="ar"] #drawer,
+body[data-lang="ar"] #view-people,
+body[data-lang="ar"] #view-timeline,
+body[data-lang="ar"] .facts,
+body[data-lang="ar"] .rel,
+body[data-lang="ar"] .r-txt,
+body[data-lang="ar"] .ftl-item div { direction: rtl; }
+body[data-lang="ar"] .d-name, body[data-lang="ar"] .d-sub, body[data-lang="ar"] .d-bio,
+body[data-lang="ar"] .ftl-t, body[data-lang="ar"] .ftl-d, body[data-lang="ar"] .mc-bio,
+body[data-lang="ar"] .btext b, body[data-lang="ar"] .r-txt b,
+body[data-lang="ar"] .pc-name, body[data-lang="ar"] .mc-name b { direction: rtl; unicode-bidi: isolate; }
+#btn-lang, .lang-btn { font-weight: 800; font-size: 15px; line-height: 1; }
+#btn-lang:not(:disabled):hover { filter: brightness(1.15); }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

@@ -97,20 +97,20 @@ function ageOf(p) {
 }
 /* living = not dead and a plausible birth year (no dates → unknown) */
 const isLiving = p => !isDead(p) && (p.living === true || (year(p.birth) != null && NOW_YEAR - year(p.birth) < 105));
-const yb = p => (year(p.birth) == null ? null : (p.birthApprox ? 'c. ' : '') + year(p.birth));
-const yd = p => (year(p.death) == null ? null : (p.deathApprox ? 'c. ' : '') + year(p.death));
+const yb = p => (year(p.birth) == null ? null : (p.birthApprox ? (RTE() ? 'ح. ' : 'c. ') : '') + year(p.birth));
+const yd = p => (year(p.death) == null ? null : (p.deathApprox ? (RTE() ? 'ح. ' : 'c. ') : '') + year(p.death));
 function yearsText(p) {
   const b = yb(p), d = yd(p);
   if (b && d) return `${b} – ${d}`;
   if (b && isDead(p)) return `${b} – ?`;
-  if (b) return `b. ${b}`;
-  if (d) return `d. ${d}`;
-  return isDead(p) ? 'Deceased' : '';
+  if (b) return RTE() ? `وُلد ${b}` : `b. ${b}`;
+  if (d) return RTE() ? `توفي ${d}` : `d. ${d}`;
+  return L('Deceased');
 }
-const approxDate = (v, approx) => (approx ? 'c. ' + year(v) : fmtDate(v));
+const approxDate = (v, approx) => (approx ? (RTE() ? 'ح. ' : 'c. ') + year(v) : fmtDate(v));
 function statusTag(p) {
-  if (isDead(p)) return '<span class="tag">Deceased</span>';
-  return isLiving(p) ? '<span class="tag living">Living</span>' : '';
+  if (isDead(p)) return `<span class="tag">${L('Deceased')}</span>`;
+  return isLiving(p) ? `<span class="tag living">${L('Living')}</span>` : '';
 }
 
 function ensurePerson(id) {
@@ -289,11 +289,128 @@ function unitChain(u) {
 }
 
 /* ============================================================
+   language: English / العربية  (presentation-only — names, labels,
+   search; the tree layout engine is untouched)
+   ============================================================ */
+
+S.lang = (() => {
+  const q = new URLSearchParams(location.search).get('lang');
+  if (q === 'ar' || q === 'en') return q;
+  try { const v = localStorage.getItem('ft-lang'); if (v === 'ar' || v === 'en') return v; } catch (e) {}
+  return 'en';
+})();
+
+/* display name in the active language (falls back to English) */
+const nm = p => (S.lang === 'ar' && p && p.nameAr) ? p.nameAr : p.name;
+const nmId = pid => nm(S.people[pid]);
+
+const ARUI = {
+  'Tree': 'الشجرة', 'Members': 'الأعضاء', 'Timeline': 'خط الزمن',
+  'Search name, job, city…': 'ابحث عن اسم أو عمل أو مدينة…',
+  'All': 'الكل', 'Living': 'أحياء', 'Deceased': 'رحلوا', 'Male': 'رجال', 'Female': 'نساء',
+  'Show in tree': 'أظهره في الشجرة', 'Copy link': 'انسخ الرابط',
+  'Men': 'رجال', 'Women': 'نساء',
+  'Drag to pan · Scroll to zoom · Click a person for details': 'اسحب للتحريك · عجلة الفأرة للتكبير · اضغط على شخص للتفاصيل',
+  'Drag to move · Pinch to zoom · Tap a person': 'اسحب للتحريك · اضغط بإصبعين للتكبير · انقر على شخص',
+  'Group by': 'تجميع حسب', 'Branch': 'الفرع', 'Location': 'المدينة', 'A – Z': 'أ – ي',
+  'Details': 'تفاصيل', 'Born': 'وُلد', 'Died': 'تُوفي', 'Lived to': 'عاش حتى', 'Age': 'العمر',
+  'Maiden name': 'اسم العائلة قبل الزواج', 'Occupation': 'العمل',
+  'Lives in': 'يسكن في', 'Lived in': 'سكن في', 'Descendants': 'الأحفاد',
+  'Details': 'تفاصيل',
+  'Family': 'العائلة', 'Parents': 'الوالدان', 'Father': 'الأب', 'Mother': 'الأم',
+  'Spouse': 'الزوج/الزوجة', 'Spouses': 'الأزواج',
+  'Siblings': 'الإخوة', 'Half-sibling': 'أخ/أخت غير شقيق',
+  'Biography': 'السيرة', 'Life timeline': 'مسيرة الحياة', 'Photos': 'الصور',
+  'No photos yet': 'لا صور بعد',
+  'Brother': 'أخ', 'Sister': 'أخت', 'Sibling': 'شقيق/شقيقة',
+  'Husband': 'زوج', 'Wife': 'زوجة', 'Son': 'ابن', 'Daughter': 'ابنة', 'Child': 'طفل', 'Children': 'الأولاد', 'married': 'تزوجا',
+  'Married': 'تزوج', 'Divorced': 'انفصل', 'Separated': 'انفصل عن', 'Widowed': 'أرمل',
+  'Engaged': 'مخطوب', 'Partner': 'شريك',
+  'Founders': 'المؤسسون', 'Family founder': 'مؤسس العائلة',
+  'Members': 'الأعضاء', 'Generations': 'الأجيال', 'Marriages': 'الزيجات', 'Branches': 'الفروع',
+  'Under 18': 'دون 18',
+  'Link copied to clipboard': 'نُسخ الرابط',
+  'Passed away': 'تُوفي',
+  'person': 'فرد', 'people': 'أفراد',
+  'Generation': 'الجيل',
+  'Not linked to the tree': 'غير مرتبط بالشجرة',
+  'No one matches': 'لا تطابق',
+  'No family members match these filters.': 'لا يوجد أفراد يطابقون هذا الفلتر.',
+  'Add birth years and timeline entries in data.json to see them here.': 'أضف سنوات الميلاد في data.json ليظهر الخط الزمني هنا.',
+  'Family members': 'أفراد العائلة',
+  'is born': 'وُلد', 'passes away': 'تُوفي',
+  'marry': 'تزوجا', 'divorce': 'انفصلا',
+  'Aged': 'عن عمر',
+  'same father': 'نفس الأب', 'same mother': 'نفس الأم',
+  'Baby': 'طفل', 'marriages': 'زيجات', 'child': 'طفل', 'children': 'أطفال',
+  'Unknown': 'مجهول',
+  ' isn\'t connected to the main tree yet.': ' غير مرتبط بالشجرة الرئيسية بعد.',
+};
+const L = s => (S.lang === 'ar' && ARUI[s]) || s;
+const CONJ = () => (S.lang === 'ar' ? ' و' : ' & ');
+const RTE = () => S.lang === 'ar'; /* in Arabic mode? */
+
+function applyLangDom() {
+  document.body.dataset.lang = S.lang;
+  const bl = $('#btn-lang');
+  if (bl) { bl.textContent = S.lang === 'ar' ? 'EN' : 'ع'; bl.title = S.lang === 'ar' ? 'English' : 'العربية'; }
+  $$('#tabs button span, #bottom-nav button span').forEach(sp => {
+    sp.textContent = L({ tree: 'Tree', people: 'Members', timeline: 'Timeline' }[sp.closest('button').dataset.view]);
+  });
+  const si = $('#search');
+  if (si) si.placeholder = L('Search name, job, city…');
+  $$('#filters .chip').forEach(c => c.textContent = L({ all: 'All', living: 'Living', deceased: 'Deceased', male: 'Male', female: 'Female' }[c.dataset.f]));
+  /* legend + hint bubble */
+  const lg = $('#legend');
+  if (lg) {
+    const [men, women, gens] = lg.querySelectorAll('span');
+    if (men) men.innerHTML = `<i class="lg-shape square"></i>${L('Men')}`;
+    if (women) women.innerHTML = `<i class="lg-shape circle"></i>${L('Women')}`;
+    if (gens) gens.innerHTML = gens.querySelectorAll('i').length
+      ? [...gens.querySelectorAll('i')].map(i => i.outerHTML).join('') + L('Generations') : L('Generations');
+  }
+  const hd = $('.h-desk'); if (hd) hd.textContent = L('Drag to pan · Scroll to zoom · Click a person for details');
+  const hm = $('.h-mob'); if (hm) hm.textContent = L('Drag to move · Pinch to zoom · Tap a person');
+  /* members view controls */
+  const sel = $('#groupby');
+  if (sel) {
+    const vals = { gen: 'Generation', branch: 'Branch', place: 'Location', az: 'A – Z' };
+    const valsAr = { gen: 'الجيل', branch: 'الفرع', place: 'المدينة', az: 'أ – ي' };
+    [...sel.options].forEach(o => { if (vals[o.value]) o.textContent = RTE() ? valsAr[o.value] : vals[o.value]; });
+    const lbl = sel .closest('.sel'); if (lbl && lbl.firstElementChild) lbl.firstElementChild.textContent = L('Group by');
+  }
+}
+
+function setLang(lang) {
+  if (S.lang === lang) return;
+  S.lang = lang === 'ar' ? 'ar' : 'en';
+  try { localStorage.setItem('ft-lang', S.lang); } catch (e) {}
+  applyLangDom();
+  /* tree cards: same nodes and positions, only the text changes */
+  for (const [, n] of S.live) { const u = S.units.get(n.el.dataset.uid); if (u) n.el.innerHTML = unitHTML(u); }
+  relayout(false);
+  applyMeta();
+  renderStats();
+  if (S.selected) openDrawer(S.selected, false);
+  if (S.query) renderResults();
+  if (S.view === 'people' || rendered.people) { renderPeople(); countUp(); }
+  if (rendered.timeline) renderTimeline();
+  applySearchDim();
+}
+
+function initLang() {
+  const btn = $('#btn-lang');
+  if (!btn) return;
+  btn.addEventListener('click', () => setLang(S.lang === 'ar' ? 'en' : 'ar'));
+  applyLangDom();
+}
+
+/* ============================================================
    avatars + small renderers
    ============================================================ */
 
 function initialsOf(p) {
-  const parts = String(p.name || '?').trim().split(/\s+/).filter(Boolean);
+  const parts = String(nm(p) || '?').trim().split(/\s+/).filter(Boolean);
   if (!parts.length) return '?';
   const a = parts[0][0] || '', b = parts.length > 1 ? parts[parts.length - 1][0] : (parts[0][1] || '');
   return (a + b).toUpperCase();
@@ -310,25 +427,30 @@ function avatar(pid, cls = '') {
   return `<span class="av ${gradClass(pid)} ${cls}">${inner}</span>`;
 }
 const genderCls = p => (p.gender === 'male' ? 'male' : p.gender === 'female' ? 'female' : 'x');
-function displayName(p) { return p.name + (p.nickname ? ` “${p.nickname}”` : '') + (p.maidenName ? ` (née ${p.maidenName})` : ''); }
+function displayName(p) {
+  const base = nm(p) || '';
+  const nick = p.nickname ? (RTE() ? ` «${p.nickname}»` : ` “${p.nickname}”`) : '';
+  const maiden = (p.maidenName && !RTE()) ? ` (née ${p.maidenName})` : '';
+  return base + nick + maiden;
+}
 
 function spouseWord(pid) {
   const g = S.people[pid].gender;
-  return g === 'male' ? 'Husband' : g === 'female' ? 'Wife' : 'Spouse';
+  return L(g === 'male' ? 'Husband' : g === 'female' ? 'Wife' : 'Spouse');
 }
 function childWord(pid) {
   const g = S.people[pid].gender;
-  return g === 'male' ? 'Son' : g === 'female' ? 'Daughter' : 'Child';
+  return L(g === 'male' ? 'Son' : g === 'female' ? 'Daughter' : 'Child');
 }
 function marriageText(m) {
   const y = m.year != null ? year(m.year) : null, e = m.ended != null ? year(m.ended) : null;
   switch (m.status) {
-    case 'divorced': return 'Divorced' + (e ? ' ' + e : '') + (y ? ` · married ${y}` : '');
-    case 'separated': return 'Separated' + (e ? ' ' + e : '');
-    case 'widowed': return 'Widowed' + (e ? ' ' + e : '') + (y ? ` · married ${y}` : '');
-    case 'engaged': return 'Engaged' + (y ? ' ' + y : '');
-    case 'partner': return 'Partner';
-    default: return 'Married' + (y ? ' ' + y : '');
+    case 'divorced': return L('Divorced') + (e ? ' ' + e : '') + (y ? ` · ${L('married')} ${y}` : '');
+    case 'separated': return L('Separated') + (e ? ' ' + e : '');
+    case 'widowed': return L('Widowed') + (e ? ' ' + e : '') + (y ? ` · ${L('married')} ${y}` : '');
+    case 'engaged': return L('Engaged') + (y ? ' ' + y : '');
+    case 'partner': return L('Partner');
+    default: return L('Married') + (y ? ' ' + y : '');
   }
 }
 const isEnded = m => m.status === 'divorced' || m.status === 'separated';
@@ -337,12 +459,12 @@ const isEnded = m => m.status === 'divorced' || m.status === 'separated';
 function relationPhrase(pid) {
   const p = S.people[pid];
   const pars = parentsOf(pid).map(id => firstName(id));
-  if (pars.length) return `${childWord(pid)} of ${pars.join(' & ')}`;
+  if (pars.length) return `${childWord(pid)}${RTE() ? '' : ' of'} ${pars.join(CONJ())}`;
   const ms = marriagesOf(pid);
-  if (ms.length) return `${spouseWord(pid)} of ${firstName(otherOf(ms[0], pid))}`;
-  return p.missing ? 'Not yet in data.json' : 'Family founder';
+  if (ms.length) return `${spouseWord(pid)}${RTE() ? '' : ' of'} ${firstName(otherOf(ms[0], pid))}`;
+  return p.missing ? L('Not yet in data.json') : L('Family founder');
 }
-const firstName = pid => String(S.people[pid].name).split(/\s+/)[0];
+const firstName = pid => String(nm(S.people[pid])).split(/\s+/)[0];
 const shortName = pid => {
   /* "Ahmed & Sania" style labels; spell out the full name when first names repeat */
   const f = firstName(pid);
@@ -406,9 +528,9 @@ function framed(pid, cls = '') {
 function personCard(pid) {
   const p = S.people[pid];
   const sub = p.occupation || p.location || '';
-  return `<div class="pcard ${genderCls(p)}${isDead(p) ? ' dead' : ''}${S.selected === pid ? ' sel' : ''}" data-pid="${esc(pid)}" role="button" tabindex="0" aria-label="${esc(p.name)}">` +
+  return `<div class="pcard ${genderCls(p)}${isDead(p) ? ' dead' : ''}${S.selected === pid ? ' sel' : ''}" data-pid="${esc(pid)}" role="button" tabindex="0" aria-label="${esc(nm(p))}">` +
     framed(pid) +
-    `<b class="pc-name">${esc(p.name)}</b>` +
+    `<b class="pc-name">${esc(nm(p))}</b>` +
     `<small class="pc-yrs">${esc(yearsText(p))}${isDead(p) ? '<span class="dagger"> †</span>' : ''}</small>` +
     (sub ? `<small class="pc-sub">${esc(sub)}</small>` : '') + `</div>`;
 }
@@ -428,7 +550,8 @@ function unitHTML(u) {
     const g = u.groups.find(x => x.kids.length);
     const tx = dropX(u, g, 0);
     const n = hiddenCount(u);
-    html += `<button class="tog" style="left:${tx}px" aria-label="Show or hide ${n} descendants" title="${n} descendant${n === 1 ? '' : 's'}">${ICON.chev}<span>${n}</span></button>`;
+    const descLabel = RTE() ? `إظهار أو إخفاء ${n} من أفراد العائلة` : `Show or hide ${n} descendants`;
+    html += `<button class="tog" style="left:${tx}px" aria-label="${esc(descLabel)}" title="${esc(n)} descendant${n === 1 ? '' : 's'}">${ICON.chev}<span>${n}</span></button>`;
   }
   return html;
 }
@@ -440,10 +563,10 @@ function dropX(u, g, rowX) {
 }
 
 function relayout(animate = true) {
-  const L = computeLayout();
-  S.layout = L;
+  const LY = computeLayout();
+  S.layout = LY;
 
-  for (const [id, r] of L) {
+  for (const [id, r] of LY) {
     let n = S.live.get(id);
     const u = S.units.get(id);
     if (!n) {
@@ -471,12 +594,12 @@ function relayout(animate = true) {
     n.el.classList.toggle('collapsed', u.kids.length > 0 && !r.open);
   }
   for (const [id, n] of [...S.live]) {
-    if (L.has(id)) continue;
+    if (LY.has(id)) continue;
     S.live.delete(id);
     const u = S.units.get(id);
     let p = u.parent;
-    while (p && !L.has(p.id)) p = p.parent;
-    const pr = p && L.get(p.id);
+    while (p && !LY.has(p.id)) p = p.parent;
+    const pr = p && LY.get(p.id);
     if (pr) { n.tx = pr.x; n.ty = pr.y + P * 0.4; }
     n.el.classList.add('dying');
     S.dying.push(n);
@@ -485,7 +608,7 @@ function relayout(animate = true) {
 
   $('#genlabels').innerHTML = [...S.genMin]
     .sort((a, b) => a[0] - b[0])
-    .map(([d, mx]) => `<div class="gen-label m${Math.min(d, 4)}" style="left:${mx - 30}px;top:${d * VSTEP + P / 2}px"><i></i>Generation <b>${ROMAN[d] || d + 1}</b></div>`)
+    .map(([d, mx]) => `<div class="gen-label m${Math.min(d, 4)}" style="left:${mx - 30}px;top:${d * VSTEP + P / 2}px"><i></i>${L('Generation')} <b>${ROMAN[d] || d + 1}</b></div>`)
     .join('');
   S.dirty = true;
   applySearchDim();
@@ -757,7 +880,7 @@ function dismissHint() { $('#hint').classList.add('off'); }
 /* reveal a person in the tree and fly to them */
 function revealInTree(pid, pulse = true) {
   const u = S.unitOf.get(pid);
-  if (!u) { toast(`${S.people[pid].name} isn't connected to the main tree yet.`); return false; }
+  if (!u) { toast(`${nm(S.people[pid])}${L(' isn\'t connected to the main tree yet.')}`); return false; }
   for (const x of unitChain(u).slice(0, -1)) S.expanded.set(x.id, true);
   relayout();
   const r = S.layout.get(u.id);
@@ -788,7 +911,7 @@ let hits = [], hitIdx = -1;
 const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 function matches(pid, q) {
   const p = S.people[pid];
-  return [p.name, p.nickname, p.maidenName, p.occupation, p.location, p.birthPlace, year(p.birth)].some(v => v != null && norm(v).includes(q));
+  return [p.name, p.nameAr, p.nickname, p.maidenName, p.occupation, p.location, p.birthPlace, year(p.birth)].some(v => v != null && norm(v).includes(q));
 }
 function mark(text, q) {
   const t = String(text || ''), i = norm(t).indexOf(q);
@@ -802,8 +925,8 @@ function initSearch() {
     S.query = norm(input.value.trim());
     hitIdx = -1;
     hits = S.query ? S.ids.filter(id => matches(id, S.query)).sort((a, b) => {
-      const sa = norm(S.people[a].name).startsWith(S.query) ? 0 : 1, sb = norm(S.people[b].name).startsWith(S.query) ? 0 : 1;
-      return sa - sb || S.people[a].name.localeCompare(S.people[b].name);
+      const sa = norm(nm(S.people[a])).startsWith(S.query) ? 0 : 1, sb = norm(nm(S.people[b])).startsWith(S.query) ? 0 : 1;
+      return sa - sb || nm(S.people[a]).localeCompare(nm(S.people[b]));
     }).slice(0, 12) : [];
     renderResults();
     applySearchDim();
@@ -833,8 +956,8 @@ function renderResults() {
   box.innerHTML = hits.length ? hits.map((pid, i) => {
     const p = S.people[pid];
     const sub = [yearsText(p), p.occupation, p.location].filter(Boolean).join(' · ');
-    return `<button class="result${i === hitIdx ? ' sel' : ''}" data-pid="${esc(pid)}" role="option">${avatar(pid)}<span class="r-txt"><b>${mark(p.name, S.query)}</b><small>${mark(sub, S.query)}</small></span></button>`;
-  }).join('') : `<div class="empty">No one matches “${esc($('#search').value)}”</div>`;
+    return `<button class="result${i === hitIdx ? ' sel' : ''}" data-pid="${esc(pid)}" role="option">${avatar(pid)}<span class="r-txt"><b>${mark(nm(p), S.query)}</b><small>${mark(sub, S.query)}</small></span></button>`;
+  }).join('') : `<div class="empty">${L('No one matches')} “${esc($('#search').value)}”</div>`;
   $$('.result', box).forEach(b => b.addEventListener('click', () => choose(b.dataset.pid)));
   box.classList.add('show');
 }
@@ -865,7 +988,7 @@ function applySearchDim() {
 
 function relRow(pid, role) {
   const p = S.people[pid];
-  return `<button class="rel" data-go="${esc(pid)}">${avatar(pid)}<span class="r-txt"><b>${esc(p.name)}</b><small>${esc([role, yearsText(p)].filter(Boolean).join(' · '))}</small></span>${ICON.right}</button>`;
+  return `<button class="rel" data-go="${esc(pid)}">${avatar(pid)}<span class="r-txt"><b>${esc(nm(p))}</b><small>${esc([role, yearsText(p)].filter(Boolean).join(' · '))}</small></span>${ICON.right}</button>`;
 }
 function relGroup(title, rows) {
   if (!rows.length) return '';
@@ -877,20 +1000,21 @@ function personEvents(pid) {
   const ev = (p.timeline || []).map(e => ({ year: year(e.year), date: e.year, title: e.title, text: e.text || '', kind: 'own' }));
   const has = y => ev.some(e => e.year === y);
   const by = year(p.birth);
-  if (by != null && !has(by)) ev.push({ year: by, date: p.birth, title: 'Born' + (p.birthPlace ? ' in ' + p.birthPlace : ''), text: parentsOf(pid).length ? `${childWord(pid)} of ${parentsOf(pid).map(id => S.people[id].name).join(' and ')}.` : '', kind: 'birth' });
+  const PG = S.people[pid].gender === 'female';
+  if (by != null && !has(by)) ev.push({ year: by, date: p.birth, title: L('Born') + (p.birthPlace ? (RTE() ? ' في ' : ' in ') + p.birthPlace : ''), text: parentsOf(pid).length ? `${childWord(pid)}${RTE() ? '' : ' of'} ${parentsOf(pid).map(id => nmId(id)).join(CONJ())}.` : '', kind: 'birth' });
   for (const m of marriagesOf(pid)) {
     const o = S.people[otherOf(m, pid)];
     const y = year(m.year);
-    if (y != null && !has(y)) ev.push({ year: y, date: m.year, title: (m.status === 'engaged' ? 'Engaged to ' : 'Married ') + o.name, text: m.note || '', kind: 'wed' });
+    if (y != null && !has(y)) ev.push({ year: y, date: m.year, title: m.status === 'engaged' ? (RTE() ? `${PG ? 'مخطوبة' : 'مخطوب'} من ` : 'Engaged to ') + nm(o) : (RTE() ? `${PG ? 'تزوجت' : 'تزوج'} من ` : 'Married ') + nm(o), text: m.note || '', kind: 'wed' });
     const e = year(m.ended);
-    if (e != null && isEnded(m) && !has(e)) ev.push({ year: e, date: m.ended, title: (m.status === 'separated' ? 'Separated from ' : 'Divorced from ') + o.name, text: '', kind: 'div' });
+    if (e != null && isEnded(m) && !has(e)) ev.push({ year: e, date: m.ended, title: (m.status === 'separated' ? (RTE() ? `${PG ? 'انفصلت' : 'انفصل'} عن ` : 'Separated from ') : (RTE() ? `${PG ? 'انفصلت' : 'انفصل'} عن ` : 'Divorced from ')) + nm(o), text: '', kind: 'div' });
   }
   for (const c of childrenOf(pid)) {
     const y = year(S.people[c].birth);
-    if (y != null && !has(y)) ev.push({ year: y, date: S.people[c].birth, title: `${childWord(c)} ${firstName(c)} is born`, text: '', kind: 'child' });
+    if (y != null && !has(y)) ev.push({ year: y, date: S.people[c].birth, title: RTE() ? `${S.people[c].gender === 'female' ? 'وُلدت' : 'وُلد'} ${nmId(c)}` : `${childWord(c)} ${firstName(c)} is born`, text: '', kind: 'child' });
   }
   const dy = year(p.death);
-  if (dy != null && !has(dy)) ev.push({ year: dy, date: p.death, title: 'Passed away' + (p.deathPlace ? ' in ' + p.deathPlace : ''), text: ageOf(p) != null ? `Aged ${ageOf(p)}.` : '', kind: 'death' });
+  if (dy != null && !has(dy)) ev.push({ year: dy, date: p.death, title: L('Passed away') + (p.deathPlace ? (RTE() ? ' في ' : ' in ') + p.deathPlace : ''), text: ageOf(p) != null ? (RTE() ? `عن عمر ${ageOf(p)} سنة.` : `Aged ${ageOf(p)}.`) : '', kind: 'death' });
   return ev.sort((a, b) => a.year - b.year);
 }
 
@@ -906,38 +1030,41 @@ function openDrawer(pid, push = true) {
   /* --- hero --- */
   const tags = [];
   tags.push(statusTag(p));
-  if (p.gender) tags.push(`<span class="tag ${genderCls(p)}">${p.gender === 'male' ? 'Male' : p.gender === 'female' ? 'Female' : esc(p.gender)}</span>`);
-  if (gen != null) tags.push(`<span class="tag">Generation ${ROMAN[gen] || gen + 1}</span>`);
-  if (S.branch.get(pid) && S.branch.get(pid) !== pid) tags.push(`<span class="tag">${esc(firstName(S.branch.get(pid)))}'s branch</span>`);
+  if (p.gender) tags.push(`<span class="tag ${genderCls(p)}">${RTE() ? (p.gender === 'male' ? 'رجال' : p.gender === 'female' ? 'نساء' : esc(p.gender)) : (p.gender === 'male' ? 'Male' : p.gender === 'female' ? 'Female' : esc(p.gender))}</span>`);
+  if (gen != null) tags.push(`<span class="tag">${L('Generation')} ${ROMAN[gen] || gen + 1}</span>`);
+  if (S.branch.get(pid) && S.branch.get(pid) !== pid) tags.push(`<span class="tag">${esc(RTE() ? `فرع ${firstName(S.branch.get(pid))}` : `${firstName(S.branch.get(pid))}'s branch`)}</span>`);
 
   let html = `<div class="d-cover ${genderCls(p)} m${gen == null ? 4 : Math.min(gen, 4)}"></div><div class="d-hero">${framed(pid, 'xl')}
     <h2 class="d-name">${esc(displayName(p))}</h2>
     <p class="d-sub">${esc(relationPhrase(pid))}</p>
     <div class="d-tags">${tags.join('')}</div>
     <div class="d-actions">
-      <button class="btn primary" data-act="tree">${ICON.tree}Show in tree</button>
-      <button class="btn" data-act="share">${ICON.share}Copy link</button>
+      <button class="btn primary" data-act="tree">${ICON.tree}${L('Show in tree')}</button>
+      <button class="btn" data-act="share">${ICON.share}${L('Copy link')}</button>
     </div></div>`;
 
   /* --- key facts --- */
   const facts = [];
-  if (p.birth != null) facts.push(['Born', approxDate(p.birth, p.birthApprox) + (p.birthPlace ? ' · ' + p.birthPlace : '')]);
-  if (dead) facts.push(['Died', (approxDate(p.death, p.deathApprox) || 'Unknown') + (p.deathPlace ? ' · ' + p.deathPlace : '')]);
-  if (age != null) facts.push([dead ? 'Lived to' : 'Age', (p.birthApprox || p.deathApprox ? 'about ' : '') + (age < 1 && !dead ? 'under 1 year' : age + (age === 1 ? ' year' : ' years'))]);
-  if (p.maidenName) facts.push(['Maiden name', p.maidenName]);
-  if (p.occupation) facts.push(['Occupation', p.occupation]);
-  if (p.location) facts.push([dead ? 'Lived in' : 'Lives in', p.location]);
+  const PLCE = RTE() ? ' في ' : ' · ';
+  if (p.birth != null) facts.push([L('Born'), approxDate(p.birth, p.birthApprox) + (p.birthPlace ? PLCE + p.birthPlace : '')]);
+  if (dead) facts.push([L('Died'), (approxDate(p.death, p.deathApprox) || L('Unknown')) + (p.deathPlace ? PLCE + p.deathPlace : '')]);
+  if (age != null) facts.push([dead ? L('Lived to') : L('Age'),
+    (p.birthApprox || p.deathApprox ? (RTE() ? 'حوالي ' : 'about ') : '') +
+    (age < 1 && !dead ? (RTE() ? 'أقل من سنة' : 'under 1 year') : age + (RTE() ? ' سنة' : age === 1 ? ' year' : ' years'))]);
+  if (p.maidenName) facts.push([L('Maiden name'), p.maidenName]);
+  if (p.occupation) facts.push([L('Occupation'), p.occupation]);
+  if (p.location) facts.push([dead ? L('Lived in') : L('Lives in'), p.location]);
   const nd = countDesc(pid);
-  if (nd) facts.push(['Descendants', nd]);
+  if (nd) facts.push([L('Descendants'), nd]);
   for (const [k, v] of Object.entries(p.details || {})) facts.push([k, v]);
-  if (facts.length) html += `<section class="dsec"><h3 class="d-h">Details</h3><div class="facts">${facts.map(([k, v]) => `<div class="fact"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div></section>`;
+  if (facts.length) html += `<section class="dsec"><h3 class="d-h">${L('Details')}</h3><div class="facts">${facts.map(([k, v]) => `<div class="fact"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div></section>`;
 
   /* --- family --- */
   const fam = [];
   const pars = parentsOf(pid);
-  fam.push(relGroup('Parents', pars.map(id => relRow(id, id === p.father ? 'Father' : 'Mother'))));
+  fam.push(relGroup(L('Parents'), pars.map(id => relRow(id, id === p.father ? L('Father') : L('Mother')))));
   const ms = marriagesOf(pid);
-  fam.push(relGroup(ms.length > 1 ? `Spouses (${ms.length})` : 'Spouse', ms.map(m => relRow(otherOf(m, pid), marriageText(m)))));
+  fam.push(relGroup(ms.length > 1 ? `${L('Spouses')} (${ms.length})` : L('Spouse'), ms.map(m => relRow(otherOf(m, pid), marriageText(m)))));
   const kids = childrenOf(pid);
   if (kids.length) {
     const groups = new Map();
@@ -948,32 +1075,32 @@ function openDrawer(pid, push = true) {
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(c);
     }
-    if (groups.size === 1) fam.push(relGroup(`Children (${kids.length})`, kids.map(c => relRow(c, childWord(c)))));
-    else for (const [o, list] of groups) fam.push(relGroup(o ? `Children with ${S.people[o].name}` : 'Children (other parent unknown)', list.map(c => relRow(c, childWord(c)))));
+    if (groups.size === 1) fam.push(relGroup(`${L('Children')} (${kids.length})`, kids.map(c => relRow(c, childWord(c)))));
+    else for (const [o, list] of groups) fam.push(relGroup(o ? (RTE() ? `أولاد ${nm(S.people[o])}` : `Children with ${nm(S.people[o])}`) : (RTE() ? 'أولاد (الوالد الآخر غير معروف)' : 'Children (other parent unknown)'), list.map(c => relRow(c, childWord(c)))));
   }
   const sib = siblingsOf(pid);
-  const sibWord = id => (S.people[id].gender === 'male' ? 'Brother' : S.people[id].gender === 'female' ? 'Sister' : 'Sibling');
-  fam.push(relGroup('Siblings', sib.full.map(id => relRow(id, sibWord(id)))));
-  fam.push(relGroup('Half-siblings', sib.half.map(id => {
+  const sibWord = id => (S.people[id].gender === 'male' ? L('Brother') : S.people[id].gender === 'female' ? L('Sister') : L('Sibling'));
+  fam.push(relGroup(L('Siblings'), sib.full.map(id => relRow(id, sibWord(id)))));
+  fam.push(relGroup(RTE() ? 'أشقاء من طرف واحد' : 'Half-siblings', sib.half.map(id => {
     const q = S.people[id];
-    const via = q.father && q.father === p.father ? 'same father' : 'same mother';
-    return relRow(id, `Half-${sibWord(id).toLowerCase()} · ${via}`);
+    const via = q.father && q.father === p.father ? L('same father') : L('same mother');
+    return relRow(id, RTE() ? `${via} · ${L('Half-sibling')}` : `Half-${sibWord(id).toLowerCase()} · ${via}`);
   })));
   const famHTML = fam.join('');
-  if (famHTML) html += `<section class="dsec"><h3 class="d-h">Family</h3>${famHTML}</section>`;
+  if (famHTML) html += `<section class="dsec"><h3 class="d-h">${L('Family')}</h3>${famHTML}</section>`;
 
-  if (p.bio) html += `<section class="dsec"><h3 class="d-h">Biography</h3><p class="d-bio">${esc(p.bio)}</p></section>`;
+  if (p.bio) html += `<section class="dsec"><h3 class="d-h">${L('Biography')}</h3><p class="d-bio">${esc(p.bio)}</p></section>`;
 
   const ev = personEvents(pid);
   if (ev.length) {
-    html += `<section class="dsec"><h3 class="d-h">Life timeline</h3><div class="tl">${ev.map(e =>
+    html += `<section class="dsec"><h3 class="d-h">${L('Life timeline')}</h3><div class="tl">${ev.map(e =>
       `<div class="tl-item"><span class="tl-year">${esc(e.date && String(e.date).length > 4 ? fmtDate(e.date) : e.year)}</span><div class="tl-title">${esc(e.title)}</div>${e.text ? `<p class="tl-text">${esc(e.text)}</p>` : ''}</div>`).join('')}</div></section>`;
   }
 
   const photos = (p.photos || []).map(x => (typeof x === 'string' ? { caption: x } : x));
-  html += `<section class="dsec"><h3 class="d-h">Photos</h3><div class="phgrid">${photos.length
+  html += `<section class="dsec"><h3 class="d-h">${L('Photos')}</h3><div class="phgrid">${photos.length
     ? photos.map((ph, i) => photoTile(ph, i)).join('')
-    : `<figure class="ph ghost">${ICON.img}<figcaption>No photos yet</figcaption></figure>`}</div></section>`;
+    : `<figure class="ph ghost">${ICON.img}<figcaption>${L('No photos yet')}</figcaption></figure>`}</div></section>`;
 
   const body = $('#drawer-body');
   body.innerHTML = html;
@@ -1058,7 +1185,7 @@ async function copyLink(pid) {
   const url = location.href.split('#')[0] + '#' + S.view + '/' + encodeURIComponent(pid);
   try {
     if (navigator.share && isMobile()) await navigator.share({ title: S.people[pid].name, url });
-    else { await navigator.clipboard.writeText(url); toast('Link copied to clipboard'); }
+    else { await navigator.clipboard.writeText(url); toast(L('Link copied to clipboard')); }
   } catch (e) {
     if (e && e.name !== 'AbortError') toast(url);
   }
@@ -1075,8 +1202,8 @@ function renderStats() {
   const kids = all.filter(id => isLiving(S.people[id]) && NOW_YEAR - year(S.people[id].birth) < 18);
   const branches = S.root ? S.root.kids.length : 0;
   const stats = [
-    [all.length, 'Members'], [gens, 'Generations'], [living.length, 'Living'],
-    [S.marriages.filter(m => !m.implicit).length, 'Marriages'], [branches, 'Branches'], [kids.length, 'Under 18'],
+    [all.length, L('Members')], [gens, L('Generations')], [living.length, L('Living')],
+    [S.marriages.filter(m => !m.implicit).length, L('Marriages')], [branches, L('Branches')], [kids.length, L('Under 18')],
   ];
   $('#stats').innerHTML = stats.map(([v, l]) => `<div class="stat"><b data-n="${esc(v)}">0</b><span>${esc(l)}</span></div>`).join('');
 }
@@ -1103,11 +1230,11 @@ function memberCard(pid, i) {
   if (p.location) meta.push(`<span>${ICON.pin}<em>${esc(p.location)}</em></span>`);
   const age = ageOf(p);
   const tags = [statusTag(p)].filter(Boolean);
-  if (age != null) tags.push(`<span class="tag">${isDead(p) ? 'Lived ' + age : age < 1 ? 'Baby' : 'Age ' + age}</span>`);
+  if (age != null) tags.push(`<span class="tag">${isDead(p) ? (RTE() ? `عاش ${age} سنة` : 'Lived ' + age) : age < 1 ? L('Baby') : (RTE() ? `العمر ${age}` : 'Age ' + age)}</span>`);
   const ms = marriagesOf(pid);
-  if (ms.length > 1) tags.push(`<span class="tag">${ms.length} marriages</span>`);
+  if (ms.length > 1) tags.push(`<span class="tag">${ms.length} ${L('marriages')}</span>`);
   const kc = childrenOf(pid).length;
-  if (kc) tags.push(`<span class="tag">${kc} ${kc === 1 ? 'child' : 'children'}</span>`);
+  if (kc) tags.push(`<span class="tag">${kc} ${L(kc === 1 ? 'child' : 'children')}</span>`);
   return `<button class="mcard" data-pid="${esc(pid)}" style="animation-delay:${Math.min(i, 20) * 22}ms">
     <div class="mc-top">${framed(pid, 'sm')}<div class="mc-name"><b>${esc(displayName(p))}</b><small>${esc(yearsText(p))}</small></div></div>
     <div class="mc-meta">${meta.join('')}</div>
@@ -1132,7 +1259,10 @@ function renderPeople() {
   } else if (S.groupBy === 'place') {
     list.forEach(id => add(S.people[id].location ? S.people[id].location.split(',').pop().trim() : 'Unknown', id));
   } else {
-    list.forEach(id => add(S.people[id].name[0].toUpperCase(), id));
+    list.forEach(id => {
+      const label = nm(S.people[id]).trim();
+      add(label ? label[0] : '؟', id);
+    });
   }
 
   let keys = [...groups.keys()];
@@ -1141,18 +1271,18 @@ function renderPeople() {
   else keys.sort((a, b) => (a === 'Unknown') - (b === 'Unknown') || String(a).localeCompare(String(b)));
 
   const title = k => {
-    if (S.groupBy === 'gen') return k === 99 ? 'Not linked to the tree' : `Generation ${ROMAN[k] || k + 1}`;
-    if (S.groupBy === 'branch') return k ? `${S.people[k].name}'s branch` : 'Founders';
-    return k;
+    if (S.groupBy === 'gen') return k === 99 ? L('Not linked to the tree') : `${L('Generation')} ${ROMAN[k] || k + 1}`;
+    if (S.groupBy === 'branch') return k ? (RTE() ? `فرع ${nmId(k)}` : `${nmId(k)}'s branch`) : L('Founders');
+    return RTE() && k === 'Unknown' ? L('Unknown') : k;
   };
-  const sortIn = S.groupBy === 'az' ? (a, b) => S.people[a].name.localeCompare(S.people[b].name) : byBirth;
+  const sortIn = S.groupBy === 'az' ? (a, b) => nm(S.people[a]).localeCompare(nm(S.people[b]), S.lang === 'ar' ? 'ar' : undefined) : byBirth;
 
   let i = 0;
   $('#people-list').innerHTML = keys.length ? keys.map(k => {
     const ids = groups.get(k).sort(sortIn);
-    return `<section class="group"><div class="group-h"><h2>${esc(title(k))}</h2><span>${ids.length} ${ids.length === 1 ? 'person' : 'people'}</span></div>
+    return `<section class="group"><div class="group-h"><h2>${esc(title(k))}</h2><span>${ids.length} ${L(ids.length === 1 ? 'person' : 'people')}</span></div>
       <div class="grid">${ids.map(id => memberCard(id, i++)).join('')}</div></section>`;
-  }).join('') : `<div class="no-results">No family members match these filters.</div>`;
+  }).join('') : `<div class="no-results">${L('No family members match these filters.')}</div>`;
 }
 
 function initPeople() {
@@ -1180,8 +1310,8 @@ function renderTimeline() {
     const p = S.people[id];
     if (p.missing) continue;
     const by = year(p.birth), dy = year(p.death);
-    if (by != null) ev.push({ y: by, approx: p.birthApprox, pid: id, kind: 'birth', t: `${p.name} is born`, d: [p.birthPlace, parentsOf(id).length ? `${childWord(id)} of ${parentsOf(id).map(firstName).join(' & ')}` : ''].filter(Boolean).join(' · ') });
-    if (dy != null) ev.push({ y: dy, approx: p.deathApprox, pid: id, kind: 'death', t: `${p.name} passes away`, d: ageOf(p) != null ? `Aged ${ageOf(p)}` : '' });
+    if (by != null) ev.push({ y: by, approx: p.birthApprox, pid: id, kind: 'birth', t: RTE() ? (p.gender === 'female' ? `وُلدت ${nm(p)}` : `وُلد ${nm(p)}`) : `${nm(p)} is born`, d: [p.birthPlace, parentsOf(id).length ? `${childWord(id)}${RTE() ? '' : ' of'} ${parentsOf(id).map(firstName).join(CONJ())}` : ''].filter(Boolean).join(RTE() ? ' · ' : ' · ') });
+    if (dy != null) ev.push({ y: dy, approx: p.deathApprox, pid: id, kind: 'death', t: RTE() ? (p.gender === 'female' ? `تُوفيت ${nm(p)}` : `تُوفي ${nm(p)}`) : `${nm(p)} passes away`, d: ageOf(p) != null ? (RTE() ? `عن عمر ${ageOf(p)}` : `Aged ${ageOf(p)}`) : '' });
     for (const e of p.timeline || []) {
       const y = year(e.year);
       if (y == null || y === by || y === dy || /^(marr|wed)/i.test(e.title)) continue;
@@ -1192,9 +1322,9 @@ function renderTimeline() {
     if (m.implicit) continue;
     const y = year(m.year);
     const a = S.people[m.a], b = S.people[m.b];
-    if (y != null) ev.push({ y, pid: m.a, kind: 'wed', t: `${a.name} & ${b.name} marry`, d: m.note || '' });
+    if (y != null) ev.push({ y, pid: m.a, kind: 'wed', t: RTE() ? `تزوجا ${nm(a)} و ${nm(b)}` : `${nm(a)} & ${nm(b)} marry`, d: m.note || '' });
     const e = year(m.ended);
-    if (e != null && isEnded(m)) ev.push({ y: e, pid: m.a, kind: 'div', t: `${a.name} & ${b.name} divorce`, d: '' });
+    if (e != null && isEnded(m)) ev.push({ y: e, pid: m.a, kind: 'div', t: RTE() ? `${nm(a)} و ${nm(b)} انفصلا` : `${nm(a)} & ${nm(b)} divorce`, d: '' });
   }
   ev.sort((a, b) => a.y - b.y || (a.kind === 'birth') - (b.kind === 'birth'));
 
@@ -1202,11 +1332,11 @@ function renderTimeline() {
   let lastDec = null, html = '<div class="ftl">';
   for (const e of ev) {
     const dec = Math.floor(e.y / 10) * 10;
-    if (dec !== lastDec) { html += `<div class="ftl-decade">${dec}s</div>`; lastDec = dec; }
-    html += `<button class="ftl-item k-${e.kind}" data-pid="${esc(e.pid)}">${avatar(e.pid)}<div><div class="ftl-y">${e.approx ? 'c. ' : ''}${e.y}</div><div class="ftl-t">${esc(e.t)}</div>${e.d ? `<div class="ftl-d">${esc(e.d)}</div>` : ''}</div><span class="ftl-ic">${icon(e.kind)}</span></button>`;
+    if (dec !== lastDec) { html += `<div class="ftl-decade">${dec}${RTE() ? '' : 's'}</div>`; lastDec = dec; }
+    html += `<button class="ftl-item k-${e.kind}" data-pid="${esc(e.pid)}">${avatar(e.pid)}<div><div class="ftl-y">${e.approx ? (RTE() ? 'ح. ' : 'c. ') : ''}${e.y}</div><div class="ftl-t">${esc(e.t)}</div>${e.d ? `<div class="ftl-d">${esc(e.d)}</div>` : ''}</div><span class="ftl-ic">${icon(e.kind)}</span></button>`;
   }
   html += '</div>';
-  $('#family-timeline').innerHTML = ev.length ? html : '<div class="no-results">Add birth years and timeline entries in data.json to see them here.</div>';
+  $('#family-timeline').innerHTML = ev.length ? html : `<div class="no-results">${L('Add birth years and timeline entries in data.json to see them here.')}</div>`;
 
   /* items glide in as they scroll into view */
   if ('IntersectionObserver' in window) {
@@ -1281,8 +1411,8 @@ function applyMeta() {
   const m = name.match(/^(The\s+)?(.+?)(\s+Family)?$/i);
   $('#hero-title').innerHTML = m ? `${esc(m[1] || '')}<em>${esc(m[2])}</em>${esc(m[3] || '')}` : esc(name);
   $('#hero-tagline').textContent = S.meta.description || tag;
-  $('#hero-eyebrow').textContent = 'Family members';
-  document.title = name + ' · Family Tree';
+  $('#hero-eyebrow').textContent = L('Family members');
+  document.title = name + (S.lang === 'ar' ? ' · شجرة العائلة' : ' · Family Tree');
 }
 
 /* ============================================================
@@ -1290,7 +1420,7 @@ function applyMeta() {
    ============================================================ */
 
 (async function main() {
-  initGestures(); initHud(); initSearch(); initDrawer(); initPeople(); initNav(); initTheme();
+  initGestures(); initHud(); initSearch(); initDrawer(); initPeople(); initNav(); initTheme(); initLang();
   try {
     const data = await loadData();
     buildModel(data);

@@ -8,11 +8,13 @@
   "people": {
     "abedelrahman": {
       "name": "Abedelrahman Accoumeh",
-      "gender": "male"
+      "gender": "male",
+      "nameAr": "عبد الرحمن أكومة"
     },
     "khadra": {
       "name": "Khadra Jalloul",
-      "gender": "female"
+      "gender": "female",
+      "nameAr": "خضراء جلول"
     },
     "ahmed": {
       "name": "Ahmed Accoumeh",
@@ -20,14 +22,16 @@
       "birth": 1952,
       "birthApprox": true,
       "father": "abedelrahman",
-      "mother": "khadra"
+      "mother": "khadra",
+      "nameAr": "أحمد أكومة"
     },
     "sania": {
       "name": "Sania Accoumeh",
       "gender": "female",
       "birth": 1959,
       "birthApprox": true,
-      "maidenName": "Dabbous"
+      "maidenName": "Dabbous",
+      "nameAr": "سناء أكومة"
     },
     "susanne": {
       "name": "Susanne Accoumeh",
@@ -35,18 +39,21 @@
       "birth": 1980,
       "birthApprox": true,
       "father": "ahmed",
-      "mother": "sania"
+      "mother": "sania",
+      "nameAr": "سوزان أكومة"
     },
     "delano": {
       "name": "Delano Gracey",
-      "gender": "male"
+      "gender": "male",
+      "nameAr": "دلانو غريسي"
     },
     "zein": {
       "name": "Zein Choghri",
       "gender": "male",
       "birth": 2004,
       "birthApprox": true,
-      "mother": "susanne"
+      "mother": "susanne",
+      "nameAr": "زين شغري"
     },
     "adrian": {
       "name": "Adrian Gracey",
@@ -54,7 +61,8 @@
       "birth": 2020,
       "birthApprox": true,
       "father": "delano",
-      "mother": "susanne"
+      "mother": "susanne",
+      "nameAr": "أدريان غريسي"
     },
     "andrew": {
       "name": "Andrew Gracey",
@@ -62,7 +70,8 @@
       "birth": 2022,
       "birthApprox": true,
       "father": "delano",
-      "mother": "susanne"
+      "mother": "susanne",
+      "nameAr": "أندرو غريسي"
     },
     "tagreed": {
       "name": "Tagreed Accoumeh",
@@ -70,13 +79,15 @@
       "birth": 1982,
       "birthApprox": true,
       "father": "ahmed",
-      "mother": "sania"
+      "mother": "sania",
+      "nameAr": "تغريد أكومة"
     },
     "farhad": {
       "name": "Farhad Moradi Kouchi",
       "gender": "male",
       "birth": 1982,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "فرهاد مرادي كوشي"
     },
     "ryan": {
       "name": "Ryan Moradi",
@@ -84,7 +95,8 @@
       "birth": 2021,
       "birthApprox": true,
       "father": "farhad",
-      "mother": "tagreed"
+      "mother": "tagreed",
+      "nameAr": "ريان مرادي"
     },
     "sami": {
       "name": "Sami Accoumeh",
@@ -92,12 +104,14 @@
       "birth": 1988,
       "birthApprox": true,
       "father": "ahmed",
-      "mother": "sania"
+      "mother": "sania",
+      "nameAr": "سامي أكومة"
     },
     "zena": {
       "name": "Zena Accoumeh",
       "gender": "female",
-      "maidenName": "Kabbara"
+      "maidenName": "Kabbara",
+      "nameAr": "زينة أكومة"
     },
     "lilianna": {
       "name": "Lilianna Accoumeh",
@@ -105,7 +119,8 @@
       "birth": 2014,
       "birthApprox": true,
       "father": "sami",
-      "mother": "zena"
+      "mother": "zena",
+      "nameAr": "ليليانا أكومة"
     },
     "liam": {
       "name": "Liam Accoumeh",
@@ -113,7 +128,8 @@
       "birth": 2017,
       "birthApprox": true,
       "father": "sami",
-      "mother": "zena"
+      "mother": "zena",
+      "nameAr": "ليام أكومة"
     },
     "lucas": {
       "name": "Lucas Accoumeh",
@@ -121,7 +137,8 @@
       "birth": 2020,
       "birthApprox": true,
       "father": "sami",
-      "mother": "zena"
+      "mother": "zena",
+      "nameAr": "لوكاس أكومة"
     },
     "rami": {
       "name": "Rami Accoumeh",
@@ -129,11 +146,13 @@
       "birth": 1988,
       "birthApprox": true,
       "father": "ahmed",
-      "mother": "sania"
+      "mother": "sania",
+      "nameAr": "رامي أكومة"
     },
     "sarah-ghemraoui": {
       "name": "Sarah Ghemraoui",
-      "gender": "female"
+      "gender": "female",
+      "nameAr": "سارة غمراوي"
     },
     "zachariah": {
       "name": "Zachariah Accoumeh",
@@ -141,7 +160,8 @@
       "birth": 2021,
       "birthApprox": true,
       "father": "rami",
-      "mother": "sarah-ghemraoui"
+      "mother": "sarah-ghemraoui",
+      "nameAr": "زكريا أكومة"
     },
     "isabella": {
       "name": "Isabella Accoumeh",
@@ -149,7 +169,8 @@
       "father": "rami",
       "mother": "sarah-ghemraoui",
       "birth": "2025-11",
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "إيزابيلا أكومة"
     },
     "bassam": {
       "name": "Bassam Accoumeh",
@@ -157,13 +178,15 @@
       "birth": 1962,
       "birthApprox": true,
       "father": "abedelrahman",
-      "mother": "khadra"
+      "mother": "khadra",
+      "nameAr": "باسم أكومة"
     },
     "samira-ghomrawi": {
       "name": "Samira Ghomrawi",
       "gender": "female",
       "birth": 1967,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "سميرة غمراوي"
     },
     "samer": {
       "name": "Samer Accoumeh",
@@ -171,13 +194,15 @@
       "birth": 1986,
       "birthApprox": true,
       "father": "bassam",
-      "mother": "samira-ghomrawi"
+      "mother": "samira-ghomrawi",
+      "nameAr": "سامر أكومة"
     },
     "sara-moraabi": {
       "name": "Sara Moraabi",
       "gender": "female",
       "birth": 1986,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "سارة مرعبي"
     },
     "lara": {
       "name": "Lara Accoumeh",
@@ -185,7 +210,8 @@
       "birth": 2010,
       "birthApprox": true,
       "father": "samer",
-      "mother": "sara-moraabi"
+      "mother": "sara-moraabi",
+      "nameAr": "لارا أكومة"
     },
     "yara": {
       "name": "Yara Accoumeh",
@@ -193,7 +219,8 @@
       "birth": 2010,
       "birthApprox": true,
       "father": "samer",
-      "mother": "sara-moraabi"
+      "mother": "sara-moraabi",
+      "nameAr": "يارا أكومة"
     },
     "bassam-jr": {
       "name": "Bassam Accoumeh",
@@ -201,7 +228,8 @@
       "birth": 2013,
       "birthApprox": true,
       "father": "samer",
-      "mother": "sara-moraabi"
+      "mother": "sara-moraabi",
+      "nameAr": "باسم أكومة"
     },
     "rana": {
       "name": "Rana Accoumeh",
@@ -209,13 +237,15 @@
       "birth": 1984,
       "birthApprox": true,
       "father": "bassam",
-      "mother": "samira-ghomrawi"
+      "mother": "samira-ghomrawi",
+      "nameAr": "رنا أكومة"
     },
     "youssef-hammoud": {
       "name": "Youssef Hammoud",
       "gender": "male",
       "birth": 1984,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "يوسف حمود"
     },
     "lana": {
       "name": "Lana Hammoud",
@@ -223,7 +253,8 @@
       "birth": 2012,
       "birthApprox": true,
       "father": "youssef-hammoud",
-      "mother": "rana"
+      "mother": "rana",
+      "nameAr": "لانا حمود"
     },
     "mohamed-hammoud": {
       "name": "Mohamed Hammoud",
@@ -231,7 +262,8 @@
       "birth": 2013,
       "birthApprox": true,
       "father": "youssef-hammoud",
-      "mother": "rana"
+      "mother": "rana",
+      "nameAr": "محمد حمود"
     },
     "amani": {
       "name": "Amani Accoumeh",
@@ -239,11 +271,13 @@
       "birth": 1990,
       "birthApprox": true,
       "father": "bassam",
-      "mother": "samira-ghomrawi"
+      "mother": "samira-ghomrawi",
+      "nameAr": "أماني أكومة"
     },
     "bilal-moussa": {
       "name": "Bilal Moussa",
-      "gender": "male"
+      "gender": "male",
+      "nameAr": "بلال موسى"
     },
     "razan": {
       "name": "Razan Moussa",
@@ -251,19 +285,22 @@
       "birth": 2012,
       "birthApprox": true,
       "father": "bilal-moussa",
-      "mother": "amani"
+      "mother": "amani",
+      "nameAr": "رزان موسى"
     },
     "sawsan": {
       "name": "Sawsan Moussa",
       "gender": "female",
       "father": "bilal-moussa",
-      "mother": "amani"
+      "mother": "amani",
+      "nameAr": "سوسن موسى"
     },
     "sila": {
       "name": "Sila Moussa",
       "gender": "female",
       "father": "bilal-moussa",
-      "mother": "amani"
+      "mother": "amani",
+      "nameAr": "سيلا موسى"
     },
     "rasha": {
       "name": "Rasha Accoumeh",
@@ -271,13 +308,15 @@
       "birth": 1994,
       "birthApprox": true,
       "father": "bassam",
-      "mother": "samira-ghomrawi"
+      "mother": "samira-ghomrawi",
+      "nameAr": "رشا أكومة"
     },
     "hilal-kahil": {
       "name": "Hilal Kahil",
       "gender": "male",
       "birth": 1986,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "هلال كحيل"
     },
     "jawad": {
       "name": "Jawad Kahil",
@@ -285,7 +324,8 @@
       "father": "hilal-kahil",
       "mother": "rasha",
       "birth": "2026-01",
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "جواد كحيل"
     },
     "diyaa": {
       "name": "Diyaa Accoumeh",
@@ -293,13 +333,15 @@
       "birth": 1969,
       "birthApprox": true,
       "father": "abedelrahman",
-      "mother": "khadra"
+      "mother": "khadra",
+      "nameAr": "ضياء أكومة"
     },
     "abeer": {
       "name": "Abeer Khanji",
       "gender": "female",
       "birth": 1975,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "عبير كانجي"
     },
     "hanan": {
       "name": "Hanan Accoumeh",
@@ -307,11 +349,13 @@
       "birth": 1991,
       "birthApprox": true,
       "father": "diyaa",
-      "mother": "abeer"
+      "mother": "abeer",
+      "nameAr": "حنان أكومة"
     },
     "mohammed-hammoud": {
       "name": "Mohammed Hammoud",
-      "gender": "male"
+      "gender": "male",
+      "nameAr": "محمد حمود"
     },
     "hamad": {
       "name": "Hamad Hammoud",
@@ -319,7 +363,8 @@
       "birth": 2011,
       "birthApprox": true,
       "father": "mohammed-hammoud",
-      "mother": "hanan"
+      "mother": "hanan",
+      "nameAr": "حمود حمود"
     },
     "abdul-raouf": {
       "name": "Abdul Raouf Hammoud",
@@ -327,7 +372,8 @@
       "birth": 2011,
       "birthApprox": true,
       "father": "mohammed-hammoud",
-      "mother": "hanan"
+      "mother": "hanan",
+      "nameAr": "عبد رؤوف حمود"
     },
     "jenan": {
       "name": "Jenan Accoumeh",
@@ -335,18 +381,21 @@
       "birth": 1993,
       "birthApprox": true,
       "father": "diyaa",
-      "mother": "abeer"
+      "mother": "abeer",
+      "nameAr": "جنان أكومة"
     },
     "abdullah-ali": {
       "name": "Abdullah Ali",
-      "gender": "male"
+      "gender": "male",
+      "nameAr": "عبدالله علي"
     },
     "belal": {
       "name": "Belal Accoumeh",
       "gender": "male",
       "birth": 2012,
       "birthApprox": true,
-      "mother": "jenan"
+      "mother": "jenan",
+      "nameAr": "بلال أكومة"
     },
     "omar-ali": {
       "name": "Omar Ali",
@@ -354,7 +403,8 @@
       "birth": 2017,
       "birthApprox": true,
       "father": "abdullah-ali",
-      "mother": "jenan"
+      "mother": "jenan",
+      "nameAr": "عمر علي"
     },
     "amar-ali": {
       "name": "Amar Ali",
@@ -362,7 +412,8 @@
       "birth": 2019,
       "birthApprox": true,
       "father": "abdullah-ali",
-      "mother": "jenan"
+      "mother": "jenan",
+      "nameAr": "عمار علي"
     },
     "ahmad-ali": {
       "name": "Ahmad Ali",
@@ -370,7 +421,8 @@
       "birth": 2021,
       "birthApprox": true,
       "father": "abdullah-ali",
-      "mother": "jenan"
+      "mother": "jenan",
+      "nameAr": "أحمد علي"
     },
     "diyaa-ali": {
       "name": "Diyaa Ali",
@@ -378,7 +430,8 @@
       "birth": 2024,
       "birthApprox": true,
       "father": "abdullah-ali",
-      "mother": "jenan"
+      "mother": "jenan",
+      "nameAr": "ضياء علي"
     },
     "khouloud": {
       "name": "Khouloud Accoumeh",
@@ -386,11 +439,13 @@
       "birth": 1996,
       "birthApprox": true,
       "father": "diyaa",
-      "mother": "abeer"
+      "mother": "abeer",
+      "nameAr": "خلود أكومة"
     },
     "mohammed-attal": {
       "name": "Mohammed Attal",
-      "gender": "male"
+      "gender": "male",
+      "nameAr": "محمد عتال"
     },
     "samira-attal": {
       "name": "Samira Attal",
@@ -398,7 +453,8 @@
       "birth": 2018,
       "birthApprox": true,
       "father": "mohammed-attal",
-      "mother": "khouloud"
+      "mother": "khouloud",
+      "nameAr": "سميرة عتال"
     },
     "abir-attal": {
       "name": "Abir Attal",
@@ -406,7 +462,8 @@
       "birth": 2022,
       "birthApprox": true,
       "father": "mohammed-attal",
-      "mother": "khouloud"
+      "mother": "khouloud",
+      "nameAr": "عبير عتال"
     },
     "ahmad-attal": {
       "name": "Ahmad Attal",
@@ -414,7 +471,8 @@
       "birth": 2023,
       "birthApprox": true,
       "father": "mohammed-attal",
-      "mother": "khouloud"
+      "mother": "khouloud",
+      "nameAr": "أحمد عتال"
     },
     "naim": {
       "name": "Naim Accoumeh",
@@ -424,35 +482,41 @@
       "birth": 1998,
       "birthApprox": true,
       "death": 2024,
-      "deathApprox": true
+      "deathApprox": true,
+      "nameAr": "نعيم أكومة"
     },
     "amer": {
       "name": "Amer Accoumeh",
       "gender": "male",
       "father": "abedelrahman",
-      "mother": "khadra"
+      "mother": "khadra",
+      "nameAr": "عامر أكومة"
     },
     "rabia": {
       "name": "Rabia Fatrouni",
-      "gender": "female"
+      "gender": "female",
+      "nameAr": "ربيعة فيتروني"
     },
     "rachad": {
       "name": "Rachad Accoumeh",
       "gender": "male",
       "father": "amer",
-      "mother": "rabia"
+      "mother": "rabia",
+      "nameAr": "رشاد أكومة"
     },
     "abed-el-rahman": {
       "name": "Abed el Rahman Accoumeh",
       "gender": "male",
       "father": "amer",
-      "mother": "rabia"
+      "mother": "rabia",
+      "nameAr": "عبدالرحمن أكومة"
     },
     "rabih": {
       "name": "Rabih Accoumeh",
       "gender": "male",
       "father": "amer",
-      "mother": "rabia"
+      "mother": "rabia",
+      "nameAr": "ربيع أكومة"
     },
     "jamal": {
       "name": "Jamal Accoumeh",
@@ -460,14 +524,16 @@
       "birth": 1960,
       "birthApprox": true,
       "father": "abedelrahman",
-      "mother": "khadra"
+      "mother": "khadra",
+      "nameAr": "جمال أكومة"
     },
     "houda": {
       "name": "Houda Morhabi",
       "gender": "female",
       "birth": 1965,
       "birthApprox": true,
-      "maidenName": "Morhabi"
+      "maidenName": "Morhabi",
+      "nameAr": "هدى مرعبي"
     },
     "sahar": {
       "name": "Sahar Accoumeh",
@@ -475,13 +541,15 @@
       "birth": 1987,
       "birthApprox": true,
       "father": "jamal",
-      "mother": "houda"
+      "mother": "houda",
+      "nameAr": "سحر أكومة"
     },
     "hady-el-ayoubi": {
       "name": "Hady El Ayoubi",
       "gender": "male",
       "birth": 1986,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "هادي العيوبي"
     },
     "karim-el-ayoubi": {
       "name": "Karim El Ayoubi",
@@ -489,7 +557,8 @@
       "birth": 2021,
       "birthApprox": true,
       "father": "hady-el-ayoubi",
-      "mother": "sahar"
+      "mother": "sahar",
+      "nameAr": "كريم العيوبي"
     },
     "lea-el-ayoubi": {
       "name": "Lea El Ayoubi",
@@ -497,7 +566,8 @@
       "birth": 2023,
       "birthApprox": true,
       "father": "hady-el-ayoubi",
-      "mother": "sahar"
+      "mother": "sahar",
+      "nameAr": "ليا العيوبي"
     },
     "zeina": {
       "name": "Zeina Accoumeh",
@@ -505,13 +575,15 @@
       "birth": 1985,
       "birthApprox": true,
       "father": "jamal",
-      "mother": "houda"
+      "mother": "houda",
+      "nameAr": "زينة أكومة"
     },
     "bassem-maraach": {
       "name": "Bassem Maraach",
       "gender": "male",
       "birth": 1981,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "باسم مرعش"
     },
     "mostafa-maraach": {
       "name": "Mostafa Maraach",
@@ -519,7 +591,8 @@
       "birth": 2013,
       "birthApprox": true,
       "father": "bassem-maraach",
-      "mother": "zeina"
+      "mother": "zeina",
+      "nameAr": "مصطفى مرعش"
     },
     "zein-maraach": {
       "name": "Zein Maraach",
@@ -527,7 +600,8 @@
       "birth": 2021,
       "birthApprox": true,
       "father": "bassem-maraach",
-      "mother": "zeina"
+      "mother": "zeina",
+      "nameAr": "زين مرعش"
     },
     "nada": {
       "name": "Nada Accoumeh",
@@ -535,13 +609,15 @@
       "birth": 1993,
       "birthApprox": true,
       "father": "jamal",
-      "mother": "houda"
+      "mother": "houda",
+      "nameAr": "ندى أكومة"
     },
     "mohamad-chekouch": {
       "name": "Mohamad Chekouch",
       "gender": "male",
       "birth": 1992,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "محمد شاكوش"
     },
     "jawad-chekouch": {
       "name": "Jawad Chekouch",
@@ -549,14 +625,16 @@
       "birth": 2025,
       "birthApprox": true,
       "father": "mohamad-chekouch",
-      "mother": "nada"
+      "mother": "nada",
+      "nameAr": "جواد شاكوش"
     },
     "sawsan-accoumeh": {
       "name": "Sawsan Accoumeh",
       "gender": "female",
       "order": 1995,
       "father": "jamal",
-      "mother": "houda"
+      "mother": "houda",
+      "nameAr": "سوسن أكومة"
     },
     "issam": {
       "name": "Issam Accoumeh",
@@ -564,7 +642,8 @@
       "birth": 1997,
       "birthApprox": true,
       "father": "jamal",
-      "mother": "houda"
+      "mother": "houda",
+      "nameAr": "عصام أكومة"
     },
     "asma": {
       "name": "Asma Accoumeh",
@@ -572,7 +651,8 @@
       "birth": 2002,
       "birthApprox": true,
       "father": "jamal",
-      "mother": "houda"
+      "mother": "houda",
+      "nameAr": "أسماء أكومة"
     },
     "mohamad-accoumeh": {
       "name": "Mohamad Accoumeh",
@@ -580,13 +660,15 @@
       "birth": 1950,
       "birthApprox": true,
       "father": "abedelrahman",
-      "mother": "khadra"
+      "mother": "khadra",
+      "nameAr": "محمد أكومة"
     },
     "mona-ghimrawi": {
       "name": "Mona Ghimrawi",
       "gender": "female",
       "birth": 1956,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "منى غمراوي"
     },
     "abdullrahman": {
       "name": "Abdullrahman Accoumeh",
@@ -594,17 +676,20 @@
       "birth": 1977,
       "birthApprox": true,
       "father": "mohamad-accoumeh",
-      "mother": "mona-ghimrawi"
+      "mother": "mona-ghimrawi",
+      "nameAr": "عبد الرحمن أكومة"
     },
     "jinan-saadeh": {
       "name": "Jinan Saadeh",
-      "gender": "female"
+      "gender": "female",
+      "nameAr": "جنان سعادة"
     },
     "mohamad-accoumeh-jr": {
       "name": "Mohamad Accoumeh",
       "gender": "male",
       "father": "abdullrahman",
-      "mother": "jinan-saadeh"
+      "mother": "jinan-saadeh",
+      "nameAr": "محمد أكومة"
     },
     "ahmad-mohamad": {
       "name": "Ahmad Accoumeh",
@@ -612,35 +697,41 @@
       "birth": 1979,
       "birthApprox": true,
       "father": "mohamad-accoumeh",
-      "mother": "mona-ghimrawi"
+      "mother": "mona-ghimrawi",
+      "nameAr": "أحمد أكومة"
     },
     "elham": {
       "name": "Elham",
-      "gender": "female"
+      "gender": "female",
+      "nameAr": "إلهام"
     },
     "biren": {
       "name": "Birine Accoumeh",
       "gender": "male",
       "father": "ahmad-mohamad",
-      "mother": "elham"
+      "mother": "elham",
+      "nameAr": "بيرين أكومة"
     },
     "tahani-jr": {
       "name": "Tahani Accoumeh",
       "gender": "female",
       "father": "ahmad-mohamad",
-      "mother": "elham"
+      "mother": "elham",
+      "nameAr": "تهاني أكومة"
     },
     "talien": {
       "name": "Taline Accoumeh",
       "gender": "male",
       "father": "ahmad-mohamad",
-      "mother": "elham"
+      "mother": "elham",
+      "nameAr": "تالين أكومة"
     },
     "kinan": {
       "name": "Kinan Accoumeh",
       "gender": "male",
       "father": "ahmad-mohamad",
-      "mother": "elham"
+      "mother": "elham",
+      "nameAr": "كنان أكومة"
     },
     "tahani": {
       "name": "Tahine Accoumeh",
@@ -648,29 +739,34 @@
       "birth": 1980,
       "birthApprox": true,
       "father": "mohamad-accoumeh",
-      "mother": "mona-ghimrawi"
+      "mother": "mona-ghimrawi",
+      "nameAr": "تهاني أكومة"
     },
     "hassan-ghimrawi": {
       "name": "Hassan Ghimrawi",
-      "gender": "male"
+      "gender": "male",
+      "nameAr": "حسن غمراوي"
     },
     "rashed": {
       "name": "Rashed Ghimrawi",
       "gender": "male",
       "father": "hassan-ghimrawi",
-      "mother": "tahani"
+      "mother": "tahani",
+      "nameAr": "راشد غمراوي"
     },
     "fahad": {
       "name": "Fahad Ghimrawi",
       "gender": "male",
       "father": "hassan-ghimrawi",
-      "mother": "tahani"
+      "mother": "tahani",
+      "nameAr": "فهد غمراوي"
     },
     "yaala": {
       "name": "Yaala Ghimrawi",
       "gender": "female",
       "father": "hassan-ghimrawi",
-      "mother": "tahani"
+      "mother": "tahani",
+      "nameAr": "يالا غمراوي"
     },
     "nader": {
       "name": "Nader Accoumeh",
@@ -678,13 +774,15 @@
       "birth": 1984,
       "birthApprox": true,
       "father": "mohamad-accoumeh",
-      "mother": "mona-ghimrawi"
+      "mother": "mona-ghimrawi",
+      "nameAr": "نادر أكومة"
     },
     "noura-slieman": {
       "name": "Noura Slieman",
       "gender": "female",
       "birth": 1992,
-      "birthApprox": true
+      "birthApprox": true,
+      "nameAr": "نورا سليمان"
     },
     "naya": {
       "name": "Naya Accoumeh",
@@ -692,7 +790,8 @@
       "birth": 2013,
       "birthApprox": true,
       "father": "nader",
-      "mother": "noura-slieman"
+      "mother": "noura-slieman",
+      "nameAr": "نايا أكومة"
     },
     "rola": {
       "name": "Rola Accoumeh",
@@ -700,7 +799,8 @@
       "birth": 2015,
       "birthApprox": true,
       "father": "nader",
-      "mother": "noura-slieman"
+      "mother": "noura-slieman",
+      "nameAr": "رولا أكومة"
     },
     "sofya": {
       "name": "Sofya Accoumeh",
@@ -708,7 +808,8 @@
       "birth": 2020,
       "birthApprox": true,
       "father": "nader",
-      "mother": "noura-slieman"
+      "mother": "noura-slieman",
+      "nameAr": "صوفيا أكومة"
     }
   },
   "marriages": [

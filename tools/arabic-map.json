@@ -1,0 +1,507 @@
+{
+  "family": {
+    "Accoumeh": {
+      "ar": "أكومة",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Jalloul": {
+      "ar": "جلول",
+      "conf": "HIGH"
+    },
+    "Gracey": {
+      "ar": "غريسي",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Choghri": {
+      "ar": "شغري",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Moradi": {
+      "ar": "مرادي",
+      "conf": "HIGH"
+    },
+    "Kouchi": {
+      "ar": "كوشي",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Moradi Kouchi": {
+      "ar": "مرادي كوشي",
+      "conf": "HIGH",
+      "note": "compound surname — the Kouchi part follows the KOU codes"
+    },
+    "Ghemraoui": {
+      "ar": "غمراوي",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Ghimrawi": {
+      "ar": "غمراوي",
+      "conf": "HIGH"
+    },
+    "Ghomrawi": {
+      "ar": "غمراوي",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Moraabi": {
+      "ar": "مرعبي",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Hammoud": {
+      "ar": "حمود",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Moussa": {
+      "ar": "موسى",
+      "conf": "HIGH"
+    },
+    "Kahil": {
+      "ar": "كحيل",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Khanji": {
+      "ar": "كانجي",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Ali": {
+      "ar": "علي",
+      "conf": "HIGH"
+    },
+    "Raouf Hammoud": {
+      "ar": "رؤوف حمود",
+      "conf": "HIGH",
+      "note": "compound — عبد رؤوف حمود"
+    },
+    "el Rahman Accoumeh": {
+      "ar": "أكومة",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Attal": {
+      "ar": "عتال",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Fatrouni": {
+      "ar": "فيتروني",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Morhabi": {
+      "ar": "مرعبي",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "El Ayoubi": {
+      "ar": "العيوبي",
+      "conf": "HIGH"
+    },
+    "Maraach": {
+      "ar": "مرعش",
+      "conf": "HIGH"
+    },
+    "Chekouch": {
+      "ar": "شاكوش",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Saadeh": {
+      "ar": "سعادة",
+      "conf": "HIGH"
+    },
+    "Slieman": {
+      "ar": "سليمان",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    }
+  },
+  "first": {
+    "Abdul": {
+      "ar": "عبد",
+      "conf": "HIGH"
+    },
+    "Abdullah": {
+      "ar": "عبدالله",
+      "conf": "HIGH"
+    },
+    "Abdullrahman": {
+      "ar": "عبد الرحمن",
+      "conf": "HIGH"
+    },
+    "Abed": {
+      "ar": "عبدالرحمن",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Abedelrahman": {
+      "ar": "عبد الرحمن",
+      "conf": "HIGH"
+    },
+    "Abeer": {
+      "ar": "عبير",
+      "conf": "HIGH"
+    },
+    "Abir": {
+      "ar": "عبير",
+      "conf": "HIGH"
+    },
+    "Adrian": {
+      "ar": "أدريان",
+      "conf": "HIGH"
+    },
+    "Ahmad": {
+      "ar": "أحمد",
+      "conf": "HIGH"
+    },
+    "Ahmed": {
+      "ar": "أحمد",
+      "conf": "HIGH",
+      "note": "unify spelling with Ahmad"
+    },
+    "Amani": {
+      "ar": "أماني",
+      "conf": "HIGH"
+    },
+    "Amar": {
+      "ar": "عمار",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Amer": {
+      "ar": "عامر",
+      "conf": "HIGH"
+    },
+    "Andrew": {
+      "ar": "أندرو",
+      "conf": "HIGH"
+    },
+    "Asma": {
+      "ar": "أسماء",
+      "conf": "HIGH"
+    },
+    "Bassam": {
+      "ar": "باسم",
+      "conf": "HIGH"
+    },
+    "Bassem": {
+      "ar": "باسم",
+      "conf": "HIGH"
+    },
+    "Belal": {
+      "ar": "بلال",
+      "conf": "HIGH",
+      "note": "duplicate spelling with Bilal — unify"
+    },
+    "Bilal": {
+      "ar": "بلال",
+      "conf": "HIGH"
+    },
+    "Birine": {
+      "ar": "بيرين",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Delano": {
+      "ar": "دلانو",
+      "conf": "HIGH"
+    },
+    "Diyaa": {
+      "ar": "ضياء",
+      "conf": "HIGH"
+    },
+    "Elham": {
+      "ar": "إلهام",
+      "conf": "HIGH"
+    },
+    "Fahad": {
+      "ar": "فهد",
+      "conf": "HIGH"
+    },
+    "Farhad": {
+      "ar": "فرهاد",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Hady": {
+      "ar": "هادي",
+      "conf": "HIGH"
+    },
+    "Hamad": {
+      "ar": "حمود",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Hanan": {
+      "ar": "حنان",
+      "conf": "HIGH"
+    },
+    "Hassan": {
+      "ar": "حسن",
+      "conf": "HIGH"
+    },
+    "Hilal": {
+      "ar": "هلال",
+      "conf": "HIGH"
+    },
+    "Houda": {
+      "ar": "هدى",
+      "conf": "HIGH"
+    },
+    "Isabella": {
+      "ar": "إيزابيلا",
+      "conf": "HIGH"
+    },
+    "Issam": {
+      "ar": "عصام",
+      "conf": "HIGH"
+    },
+    "Jamal": {
+      "ar": "جمال",
+      "conf": "HIGH"
+    },
+    "Jawad": {
+      "ar": "جواد",
+      "conf": "HIGH"
+    },
+    "Jenan": {
+      "ar": "جنان",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Jinan": {
+      "ar": "جنان",
+      "conf": "HIGH"
+    },
+    "Karim": {
+      "ar": "كريم",
+      "conf": "HIGH"
+    },
+    "Khadra": {
+      "ar": "خضراء",
+      "conf": "HIGH"
+    },
+    "Khouloud": {
+      "ar": "خلود",
+      "conf": "HIGH"
+    },
+    "Kinan": {
+      "ar": "كنان",
+      "conf": "HIGH"
+    },
+    "Lana": {
+      "ar": "لانا",
+      "conf": "HIGH"
+    },
+    "Lara": {
+      "ar": "لارا",
+      "conf": "HIGH"
+    },
+    "Lea": {
+      "ar": "ليا",
+      "conf": "MEDIUM"
+    },
+    "Liam": {
+      "ar": "ليام",
+      "conf": "HIGH"
+    },
+    "Lilianna": {
+      "ar": "ليليانا",
+      "conf": "HIGH"
+    },
+    "Lucas": {
+      "ar": "لوكاس",
+      "conf": "HIGH"
+    },
+    "Mohamad": {
+      "ar": "محمد",
+      "conf": "HIGH"
+    },
+    "Mohamed": {
+      "ar": "محمد",
+      "conf": "HIGH"
+    },
+    "Mohammed": {
+      "ar": "محمد",
+      "conf": "HIGH"
+    },
+    "Mona": {
+      "ar": "منى",
+      "conf": "HIGH"
+    },
+    "Mostafa": {
+      "ar": "مصطفى",
+      "conf": "HIGH"
+    },
+    "Nada": {
+      "ar": "ندى",
+      "conf": "HIGH"
+    },
+    "Nader": {
+      "ar": "نادر",
+      "conf": "HIGH"
+    },
+    "Naim": {
+      "ar": "نعيم",
+      "conf": "HIGH"
+    },
+    "Naya": {
+      "ar": "نايا",
+      "conf": "HIGH"
+    },
+    "Noura": {
+      "ar": "نورا",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Omar": {
+      "ar": "عمر",
+      "conf": "HIGH"
+    },
+    "Rabia": {
+      "ar": "ربيعة",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Rabih": {
+      "ar": "ربيع",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Rachad": {
+      "ar": "رشاد",
+      "conf": "HIGH"
+    },
+    "Rami": {
+      "ar": "رامي",
+      "conf": "HIGH"
+    },
+    "Rana": {
+      "ar": "رنا",
+      "conf": "HIGH"
+    },
+    "Rasha": {
+      "ar": "رشا",
+      "conf": "HIGH"
+    },
+    "Rashed": {
+      "ar": "راشد",
+      "conf": "HIGH"
+    },
+    "Razan": {
+      "ar": "رزان",
+      "conf": "HIGH"
+    },
+    "Rola": {
+      "ar": "رولا",
+      "conf": "HIGH"
+    },
+    "Ryan": {
+      "ar": "ريان",
+      "conf": "HIGH"
+    },
+    "Sahar": {
+      "ar": "سحر",
+      "conf": "HIGH"
+    },
+    "Samer": {
+      "ar": "سامر",
+      "conf": "HIGH"
+    },
+    "Sami": {
+      "ar": "سامي",
+      "conf": "HIGH"
+    },
+    "Samira": {
+      "ar": "سميرة",
+      "conf": "HIGH"
+    },
+    "Sania": {
+      "ar": "سناء",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Sara": {
+      "ar": "سارة",
+      "conf": "HIGH"
+    },
+    "Sarah": {
+      "ar": "سارة",
+      "conf": "HIGH",
+      "note": "duplicate spelling — unify"
+    },
+    "Sawsan": {
+      "ar": "سوسن",
+      "conf": "HIGH"
+    },
+    "Sila": {
+      "ar": "سيلا",
+      "conf": "HIGH"
+    },
+    "Sofya": {
+      "ar": "صوفيا",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Susanne": {
+      "ar": "سوزان",
+      "conf": "HIGH"
+    },
+    "Tagreed": {
+      "ar": "تغريد",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Tahani": {
+      "ar": "تهاني",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Tahine": {
+      "ar": "تهاني",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Taline": {
+      "ar": "تالين",
+      "conf": "MEDIUM"
+    },
+    "Yaala": {
+      "ar": "يالا",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Yara": {
+      "ar": "يارا",
+      "conf": "HIGH"
+    },
+    "Youssef": {
+      "ar": "يوسف",
+      "conf": "HIGH"
+    },
+    "Zein": {
+      "ar": "زين",
+      "conf": "HIGH"
+    },
+    "Zeina": {
+      "ar": "زينة",
+      "conf": "HIGH"
+    },
+    "Zena": {
+      "ar": "زينة",
+      "conf": "USER",
+      "note": "user-confirmed spelling"
+    },
+    "Zachariah": {
+      "ar": "زكريا",
+      "conf": "HIGH"
+    }
+  }
+}
