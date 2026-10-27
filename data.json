@@ -3,7 +3,7 @@
     "familyName": "The Accoumeh Family",
     "tagline": "Descendants of Abedelrahman Accoumeh",
     "description": "Four generations of the Accoumeh family — tap anyone to see their details, spouses, children and siblings.",
-    "root": "Abed el Rahman"
+    "root": "abedelrahman"
   },
   "people": {
     "abedelrahman": {
@@ -453,6 +453,261 @@
       "gender": "male",
       "father": "amer",
       "mother": "rabia"
+    },
+    "jamal": {
+      "name": "Jamal Accoumeh",
+      "gender": "male",
+      "birth": 1960,
+      "birthApprox": true,
+      "father": "abedelrahman",
+      "mother": "khadra"
+    },
+    "houda": {
+      "name": "Houda Accoumeh",
+      "gender": "female",
+      "birth": 1965,
+      "birthApprox": true,
+      "maidenName": "Morhabi"
+    },
+    "sahar": {
+      "name": "Sahar Accoumeh",
+      "gender": "female",
+      "birth": 1987,
+      "birthApprox": true,
+      "father": "jamal",
+      "mother": "houda"
+    },
+    "hady-el-ayoubi": {
+      "name": "Hady El Ayoubi",
+      "gender": "male",
+      "birth": 1986,
+      "birthApprox": true
+    },
+    "karim-el-ayoubi": {
+      "name": "Karim El Ayoubi",
+      "gender": "male",
+      "birth": 2021,
+      "birthApprox": true,
+      "father": "hady-el-ayoubi",
+      "mother": "sahar"
+    },
+    "lea-el-ayoubi": {
+      "name": "Lea El Ayoubi",
+      "gender": "female",
+      "birth": 2023,
+      "birthApprox": true,
+      "father": "hady-el-ayoubi",
+      "mother": "sahar"
+    },
+    "zeina": {
+      "name": "Zeina Accoumeh",
+      "gender": "female",
+      "birth": 1985,
+      "birthApprox": true,
+      "father": "jamal",
+      "mother": "houda"
+    },
+    "bassem-maraach": {
+      "name": "Bassem Maraach",
+      "gender": "male",
+      "birth": 1981,
+      "birthApprox": true
+    },
+    "mostafa-maraach": {
+      "name": "Mostafa Maraach",
+      "gender": "male",
+      "birth": 2013,
+      "birthApprox": true,
+      "father": "bassem-maraach",
+      "mother": "zeina"
+    },
+    "zein-maraach": {
+      "name": "Zein Maraach",
+      "gender": "male",
+      "birth": 2021,
+      "birthApprox": true,
+      "father": "bassem-maraach",
+      "mother": "zeina"
+    },
+    "nada": {
+      "name": "Nada Accoumeh",
+      "gender": "female",
+      "birth": 1993,
+      "birthApprox": true,
+      "father": "jamal",
+      "mother": "houda"
+    },
+    "mohamad-chekouch": {
+      "name": "Mohamad Chekouch",
+      "gender": "male",
+      "birth": 1992,
+      "birthApprox": true
+    },
+    "jawad-chekouch": {
+      "name": "Jawad Chekouch",
+      "gender": "male",
+      "birth": 2025,
+      "birthApprox": true,
+      "father": "mohamad-chekouch",
+      "mother": "nada"
+    },
+    "sawsan-accoumeh": {
+      "name": "Sawsan Accoumeh",
+      "gender": "female",
+      "father": "jamal",
+      "mother": "houda"
+    },
+    "issam": {
+      "name": "Issam Accoumeh",
+      "gender": "male",
+      "birth": 1997,
+      "birthApprox": true,
+      "father": "jamal",
+      "mother": "houda"
+    },
+    "asma": {
+      "name": "Asma Accoumeh",
+      "gender": "female",
+      "birth": 2002,
+      "birthApprox": true,
+      "father": "jamal",
+      "mother": "houda"
+    },
+    "mohamad-accoumeh": {
+      "name": "Mohamad Accoumeh",
+      "gender": "male",
+      "birth": 1950,
+      "birthApprox": true,
+      "father": "abedelrahman",
+      "mother": "khadra"
+    },
+    "mona-ghimrawi": {
+      "name": "Mona Ghimrawi",
+      "gender": "female",
+      "birth": 1956,
+      "birthApprox": true
+    },
+    "abdullrahman": {
+      "name": "Abdullrahman Accoumeh",
+      "gender": "male",
+      "birth": 1977,
+      "birthApprox": true,
+      "father": "mohamad-accoumeh",
+      "mother": "mona-ghimrawi"
+    },
+    "jinan-saadeh": {
+      "name": "Jinan Saadeh",
+      "gender": "female"
+    },
+    "mohamad-accoumeh-jr": {
+      "name": "Mohamad Accoumeh",
+      "gender": "male",
+      "father": "abdullrahman",
+      "mother": "jinan-saadeh"
+    },
+    "ahmad-mohamad": {
+      "name": "Ahmad Accoumeh",
+      "gender": "male",
+      "birth": 1979,
+      "birthApprox": true,
+      "father": "mohamad-accoumeh",
+      "mother": "mona-ghimrawi"
+    },
+    "elham": {
+      "name": "Elham",
+      "gender": "female"
+    },
+    "biren": {
+      "name": "Birine Accoumeh",
+      "gender": "male",
+      "father": "ahmad-mohamad",
+      "mother": "elham"
+    },
+    "tahani-jr": {
+      "name": "Tahine Accoumeh",
+      "gender": "female",
+      "father": "ahmad-mohamad",
+      "mother": "elham"
+    },
+    "talien": {
+      "name": "Taline Accoumeh",
+      "gender": "male",
+      "father": "ahmad-mohamad",
+      "mother": "elham"
+    },
+    "kinan": {
+      "name": "Kinan Accoumeh",
+      "gender": "male",
+      "father": "ahmad-mohamad",
+      "mother": "elham"
+    },
+    "tahani": {
+      "name": "Tahine Accoumeh",
+      "gender": "female",
+      "birth": 1980,
+      "birthApprox": true,
+      "father": "mohamad-accoumeh",
+      "mother": "mona-ghimrawi"
+    },
+    "hassan-ghimrawi": {
+      "name": "Hassan Ghimrawi",
+      "gender": "male"
+    },
+    "rashed": {
+      "name": "Rashed Ghimrawi",
+      "gender": "male",
+      "father": "hassan-ghimrawi",
+      "mother": "tahani"
+    },
+    "fahad": {
+      "name": "Fahad Ghimrawi",
+      "gender": "male",
+      "father": "hassan-ghimrawi",
+      "mother": "tahani"
+    },
+    "yaala": {
+      "name": "Yaala Ghimrawi",
+      "gender": "female",
+      "father": "hassan-ghimrawi",
+      "mother": "tahani"
+    },
+    "nader": {
+      "name": "Nader Accoumeh",
+      "gender": "male",
+      "birth": 1984,
+      "birthApprox": true,
+      "father": "mohamad-accoumeh",
+      "mother": "mona-ghimrawi"
+    },
+    "noura-slieman": {
+      "name": "Noura Slieman",
+      "gender": "female",
+      "birth": 1992,
+      "birthApprox": true
+    },
+    "naya": {
+      "name": "Naya Accoumeh",
+      "gender": "female",
+      "birth": 2013,
+      "birthApprox": true,
+      "father": "nader",
+      "mother": "noura-slieman"
+    },
+    "rola": {
+      "name": "Rola Accoumeh",
+      "gender": "female",
+      "birth": 2015,
+      "birthApprox": true,
+      "father": "nader",
+      "mother": "noura-slieman"
+    },
+    "sofya": {
+      "name": "Sofya Accoumeh",
+      "gender": "female",
+      "birth": 2020,
+      "birthApprox": true,
+      "father": "nader",
+      "mother": "noura-slieman"
     }
   },
   "marriages": [
@@ -565,6 +820,69 @@
       "partners": [
         "amer",
         "rabia"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "jamal",
+        "houda"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "sahar",
+        "hady-el-ayoubi"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "zeina",
+        "bassem-maraach"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "nada",
+        "mohamad-chekouch"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "mohamad-accoumeh",
+        "mona-ghimrawi"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "abdullrahman",
+        "jinan-saadeh"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "ahmad-mohamad",
+        "elham"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "tahani",
+        "hassan-ghimrawi"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "nader",
+        "noura-slieman"
       ],
       "status": "married"
     }
