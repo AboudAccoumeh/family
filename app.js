@@ -169,11 +169,15 @@ function buildModel(data) {
 
 const childrenOf = pid => S.ids.filter(id => S.people[id].father === pid || S.people[id].mother === pid).sort(byBirth);
 function byBirth(a, b) {
-  const ya = year(S.people[a].birth), yb = year(S.people[b].birth);
-  if (ya == null && yb == null) return 0;
-  if (ya == null) return 1;
-  if (yb == null) return -1;
-  return ya - yb || String(S.people[a].birth).localeCompare(String(S.people[b].birth));
+  const pa = S.people[a], pb = S.people[b];
+  /* "order" (any number) = manual sibling rank; it wins over birth year when present.
+     Smaller = earlier in the row. People without it sort by birth as before. */
+  const ka = pa.order != null ? pa.order : year(pa.birth);
+  const kb = pb.order != null ? pb.order : year(pb.birth);
+  if (ka == null && kb == null) return 0;
+  if (ka == null) return 1;
+  if (kb == null) return -1;
+  return ka - kb;
 }
 function parentsOf(pid) {
   const p = S.people[pid];
