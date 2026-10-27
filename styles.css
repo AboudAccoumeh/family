@@ -106,7 +106,9 @@
 }
 
 /* ---------- base ---------- */
-* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; -moz-user-select: none; }
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none !important; -webkit-user-select: none !important; -moz-user-select: none !important; -webkit-touch-callout: none; }
+::selection { background: transparent !important; color: inherit; }
+input::selection, textarea::selection { background: var(--accent-soft, rgba(91, 140, 255, .25)) !important; color: inherit; }
 html, body { height: 100%; }
 body {
   font-family: var(--font);
