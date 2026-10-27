@@ -554,6 +554,8 @@
     "sawsan-accoumeh": {
       "name": "Sawsan Accoumeh",
       "gender": "female",
+      "birth": 1994,
+      "birthApprox": true,
       "father": "jamal",
       "mother": "houda"
     },
