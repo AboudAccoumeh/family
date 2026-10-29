@@ -9,11 +9,13 @@
     "abedelrahman": {
       "name": "Abedelrahman Accoumeh",
       "gender": "male",
+      "deceased": true,
       "nameAr": "عبد الرحمن أكومة"
     },
     "khadra": {
       "name": "Khadra Jalloul",
       "gender": "female",
+      "deceased": true,
       "nameAr": "خضرة جلول"
     },
     "ahmed": {
@@ -475,6 +477,7 @@
     "naim": {
       "name": "Naim Accoumeh",
       "gender": "male",
+      "deceased": true,
       "father": "diyaa",
       "mother": "abeer",
       "birth": 1998,
@@ -627,6 +630,7 @@
     "sawsan-accoumeh": {
       "name": "Sawsan Accoumeh",
       "gender": "female",
+      "deceased": true,
       "order": 1995,
       "father": "jamal",
       "mother": "houda",

@@ -530,7 +530,7 @@ function personCard(pid) {
   return `<div class="pcard ${genderCls(p)}${isDead(p) ? ' dead' : ''}${S.selected === pid ? ' sel' : ''}" data-pid="${esc(pid)}" role="button" tabindex="0" aria-label="${esc(nm(p))}">` +
     framed(pid) +
     `<b class="pc-name">${esc(nm(p))}</b>` +
-    `<small class="pc-yrs">${esc(yearsText(p))}${isDead(p) ? '<span class="dagger"> †</span>' : ''}</small>` +
+    `<small class="pc-yrs">${esc(yearsText(p))}</small>` +
     (sub ? `<small class="pc-sub">${esc(sub)}</small>` : '') + `</div>`;
 }
 
