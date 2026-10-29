@@ -1,10 +1,13 @@
-# Publishes the family tree to GitHub Pages whenever a tag is pushed:
+# Publishes the family tree to GitHub Pages on every push to main, and:
 #   git tag v1.0.0 && git push origin v1.0.0
-# It also attaches a zipped copy of the site to a GitHub Release for that tag.
+# additionally attaches a zipped copy of the site to a GitHub Release for that tag.
+# (The github-pages environment only allows deployments from the main branch, so
+#  the Pages deploy is skipped for tag builds — they just produce the release zip.)
 name: Release to GitHub Pages
 
 on:
   push:
+    branches: ['main']
     tags: ['*']
   workflow_dispatch:
 
@@ -31,8 +34,10 @@ jobs:
         run: node tools/build.mjs --out _site
 
       - uses: actions/configure-pages@v5
+        if: startsWith(github.ref, 'refs/heads/')
 
       - uses: actions/upload-pages-artifact@v3
+        if: startsWith(github.ref, 'refs/heads/')
         with:
           path: _site
 
@@ -49,6 +54,7 @@ jobs:
 
   deploy:
     needs: build
+    if: startsWith(github.ref, 'refs/heads/')
     runs-on: ubuntu-latest
     environment:
       name: github-pages
