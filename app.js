@@ -105,7 +105,7 @@ function yearsText(p) {
   if (b && isDead(p)) return `${b} – ?`;
   if (b) return RTE() ? `وُلد ${b}` : `b. ${b}`;
   if (d) return RTE() ? `توفي ${d}` : `d. ${d}`;
-  return L('Deceased');
+  return '';
 }
 const approxDate = (v, approx) => (approx ? (RTE() ? 'ح. ' : 'c. ') + year(v) : fmtDate(v));
 function statusTag(p) {
@@ -430,8 +430,7 @@ const genderCls = p => (p.gender === 'male' ? 'male' : p.gender === 'female' ? '
 function displayName(p) {
   const base = nm(p) || '';
   const nick = p.nickname ? (RTE() ? ` «${p.nickname}»` : ` “${p.nickname}”`) : '';
-  const maiden = (p.maidenName && !RTE()) ? ` (née ${p.maidenName})` : '';
-  return base + nick + maiden;
+  return base + nick;
 }
 
 function spouseWord(pid) {

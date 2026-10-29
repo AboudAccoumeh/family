@@ -14,7 +14,7 @@
     "khadra": {
       "name": "Khadra Jalloul",
       "gender": "female",
-      "nameAr": "خضراء جلول"
+      "nameAr": "خضرة جلول"
     },
     "ahmed": {
       "name": "Ahmed Accoumeh",
@@ -26,12 +26,11 @@
       "nameAr": "أحمد أكومة"
     },
     "sania": {
-      "name": "Sania Accoumeh",
+      "name": "Sania Dabbous",
       "gender": "female",
       "birth": 1959,
       "birthApprox": true,
-      "maidenName": "Dabbous",
-      "nameAr": "سناء أكومة"
+      "nameAr": "سناء دبوس"
     },
     "susanne": {
       "name": "Susanne Accoumeh",
@@ -108,10 +107,9 @@
       "nameAr": "سامي أكومة"
     },
     "zena": {
-      "name": "Zena Accoumeh",
+      "name": "Zena Kabbara",
       "gender": "female",
-      "maidenName": "Kabbara",
-      "nameAr": "زينة أكومة"
+      "nameAr": "زينة كبارة"
     },
     "lilianna": {
       "name": "Lilianna Accoumeh",
@@ -179,7 +177,7 @@
       "birthApprox": true,
       "father": "abedelrahman",
       "mother": "khadra",
-      "nameAr": "باسم أكومة"
+      "nameAr": "بسّام أكومة"
     },
     "samira-ghomrawi": {
       "name": "Samira Ghomrawi",
@@ -229,7 +227,7 @@
       "birthApprox": true,
       "father": "samer",
       "mother": "sara-moraabi",
-      "nameAr": "باسم أكومة"
+      "nameAr": "بسّام أكومة"
     },
     "rana": {
       "name": "Rana Accoumeh",
@@ -341,7 +339,7 @@
       "gender": "female",
       "birth": 1975,
       "birthApprox": true,
-      "nameAr": "عبير كانجي"
+      "nameAr": "عبير خانجي"
     },
     "hanan": {
       "name": "Hanan Accoumeh",
@@ -364,7 +362,7 @@
       "birthApprox": true,
       "father": "mohammed-hammoud",
       "mother": "hanan",
-      "nameAr": "حمود حمود"
+      "nameAr": "حمد حمود"
     },
     "abdul-raouf": {
       "name": "Abdul Raouf Hammoud",
@@ -373,7 +371,7 @@
       "birthApprox": true,
       "father": "mohammed-hammoud",
       "mother": "hanan",
-      "nameAr": "عبد رؤوف حمود"
+      "nameAr": "عبدالرؤوف حمود"
     },
     "jenan": {
       "name": "Jenan Accoumeh",
@@ -413,7 +411,7 @@
       "birthApprox": true,
       "father": "abdullah-ali",
       "mother": "jenan",
-      "nameAr": "عمار علي"
+      "nameAr": "قمر علي"
     },
     "ahmad-ali": {
       "name": "Ahmad Ali",
@@ -547,7 +545,7 @@
       "gender": "male",
       "birth": 1986,
       "birthApprox": true,
-      "nameAr": "هادي العيوبي"
+      "nameAr": "هادي الأيوبي"
     },
     "karim-el-ayoubi": {
       "name": "Karim El Ayoubi",
@@ -556,7 +554,7 @@
       "birthApprox": true,
       "father": "hady-el-ayoubi",
       "mother": "sahar",
-      "nameAr": "كريم العيوبي"
+      "nameAr": "كريم الأيوبي"
     },
     "lea-el-ayoubi": {
       "name": "Lea El Ayoubi",
@@ -565,7 +563,7 @@
       "birthApprox": true,
       "father": "hady-el-ayoubi",
       "mother": "sahar",
-      "nameAr": "ليا العيوبي"
+      "nameAr": "ليا الأيوبي"
     },
     "zeina": {
       "name": "Zeina Accoumeh",
@@ -581,7 +579,7 @@
       "gender": "male",
       "birth": 1981,
       "birthApprox": true,
-      "nameAr": "باسم مرعش"
+      "nameAr": "بسّام مرعش"
     },
     "mostafa-maraach": {
       "name": "Mostafa Maraach",
@@ -650,7 +648,7 @@
       "birthApprox": true,
       "father": "jamal",
       "mother": "houda",
-      "nameAr": "أسماء أكومة"
+      "nameAr": "أسمى أكومة"
     },
     "mohamad-accoumeh": {
       "name": "Mohamad Accoumeh",
@@ -842,13 +840,13 @@
       "nameAr": "عيد صفر"
     },
     "fadwa-el-rafei": {
-      "name": "Fadwa El-Rafei",
+      "name": "Fadwa Safar",
       "gender": "female",
       "birth": 1991,
       "birthApprox": true,
       "father": "eid-safar",
       "mother": "randa-ghamraoui",
-      "nameAr": "فدوى الرفاعي"
+      "nameAr": "فدوى صفر"
     },
     "sami-el-rafei": {
       "name": "Sami El-Rafei",
