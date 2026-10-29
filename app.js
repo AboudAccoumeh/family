@@ -103,7 +103,7 @@ function yearsText(p) {
   const b = yb(p), d = yd(p);
   if (b && d) return `${b} – ${d}`;
   if (b && isDead(p)) return `${b} – ?`;
-  if (b) return RTE() ? `وُلد في ${b}` : `Born in ${b}`;
+  if (b) return RTE() ? `${p.gender === 'female' ? 'وُلدت في' : 'وُلد في'} ${b}` : `Born in ${b}`;
   if (d) return RTE() ? `تُوفي في ${d}` : `Died in ${d}`;
   return '';
 }
@@ -1000,7 +1000,7 @@ function personEvents(pid) {
   const has = y => ev.some(e => e.year === y);
   const by = year(p.birth);
   const PG = S.people[pid].gender === 'female';
-  if (by != null && !has(by)) ev.push({ year: by, date: p.birth, title: L('Born') + (p.birthPlace ? (RTE() ? ' في ' : ' in ') + p.birthPlace : ''), text: parentsOf(pid).length ? `${childWord(pid)}${RTE() ? '' : ' of'} ${parentsOf(pid).map(id => nmId(id)).join(CONJ())}.` : '', kind: 'birth' });
+  if (by != null && !has(by)) ev.push({ year: by, date: p.birth, title: (RTE() && p.gender === 'female' ? 'وُلدت' : L('Born')) + (p.birthPlace ? (RTE() ? ' في ' : ' in ') + p.birthPlace : ''), text: parentsOf(pid).length ? `${childWord(pid)}${RTE() ? '' : ' of'} ${parentsOf(pid).map(id => nmId(id)).join(CONJ())}.` : '', kind: 'birth' });
   for (const m of marriagesOf(pid)) {
     const o = S.people[otherOf(m, pid)];
     const y = year(m.year);
@@ -1045,7 +1045,7 @@ function openDrawer(pid, push = true) {
   /* --- key facts --- */
   const facts = [];
   const PLCE = RTE() ? ' في ' : ' · ';
-  if (p.birth != null) facts.push([L('Born'), approxDate(p.birth, p.birthApprox) + (p.birthPlace ? PLCE + p.birthPlace : '')]);
+  if (p.birth != null) facts.push([RTE() && p.gender === 'female' ? 'وُلدت' : L('Born'), approxDate(p.birth, p.birthApprox) + (p.birthPlace ? PLCE + p.birthPlace : '')]);
   if (dead) facts.push([L('Died'), (approxDate(p.death, p.deathApprox) || L('Unknown')) + (p.deathPlace ? PLCE + p.deathPlace : '')]);
   if (age != null) facts.push([dead ? L('Lived to') : L('Age'),
     (p.birthApprox || p.deathApprox ? (RTE() ? 'حوالي ' : 'about ') : '') +
