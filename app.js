@@ -97,17 +97,17 @@ function ageOf(p) {
 }
 /* living = not dead and a plausible birth year (no dates → unknown) */
 const isLiving = p => !isDead(p) && (p.living === true || (year(p.birth) != null && NOW_YEAR - year(p.birth) < 105));
-const yb = p => (year(p.birth) == null ? null : (p.birthApprox ? (RTE() ? 'ح. ' : 'c. ') : '') + year(p.birth));
-const yd = p => (year(p.death) == null ? null : (p.deathApprox ? (RTE() ? 'ح. ' : 'c. ') : '') + year(p.death));
+const yb = p => year(p.birth);
+const yd = p => year(p.death);
 function yearsText(p) {
   const b = yb(p), d = yd(p);
   if (b && d) return `${b} – ${d}`;
   if (b && isDead(p)) return `${b} – ?`;
-  if (b) return RTE() ? `وُلد ${b}` : `b. ${b}`;
-  if (d) return RTE() ? `توفي ${d}` : `d. ${d}`;
+  if (b) return RTE() ? `وُلد في ${b}` : `Born in ${b}`;
+  if (d) return RTE() ? `تُوفي في ${d}` : `Died in ${d}`;
   return '';
 }
-const approxDate = (v, approx) => (approx ? (RTE() ? 'ح. ' : 'c. ') + year(v) : fmtDate(v));
+const approxDate = v => fmtDate(v);
 function statusTag(p) {
   if (isDead(p)) return `<span class="tag">${L('Deceased')}</span>`;
   return isLiving(p) ? `<span class="tag living">${L('Living')}</span>` : '';
@@ -1331,7 +1331,7 @@ function renderTimeline() {
   for (const e of ev) {
     const dec = Math.floor(e.y / 10) * 10;
     if (dec !== lastDec) { html += `<div class="ftl-decade">${dec}${RTE() ? '' : 's'}</div>`; lastDec = dec; }
-    html += `<button class="ftl-item k-${e.kind}" data-pid="${esc(e.pid)}">${avatar(e.pid)}<div><div class="ftl-y">${e.approx ? (RTE() ? 'ح. ' : 'c. ') : ''}${e.y}</div><div class="ftl-t">${esc(e.t)}</div>${e.d ? `<div class="ftl-d">${esc(e.d)}</div>` : ''}</div><span class="ftl-ic">${icon(e.kind)}</span></button>`;
+    html += `<button class="ftl-item k-${e.kind}" data-pid="${esc(e.pid)}">${avatar(e.pid)}<div><div class="ftl-y">${e.y}</div><div class="ftl-t">${esc(e.t)}</div>${e.d ? `<div class="ftl-d">${esc(e.d)}</div>` : ''}</div><span class="ftl-ic">${icon(e.kind)}</span></button>`;
   }
   html += '</div>';
   $('#family-timeline').innerHTML = ev.length ? html : `<div class="no-results">${L('Add birth years and timeline entries in data.json to see them here.')}</div>`;
