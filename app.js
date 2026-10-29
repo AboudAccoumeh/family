@@ -101,10 +101,12 @@ const yb = p => year(p.birth);
 const yd = p => year(p.death);
 function yearsText(p) {
   const b = yb(p), d = yd(p);
+  const dead = RTE() ? (p.gender === 'female' ? 'متوفاة' : 'متوفى') : 'Deceased';
   if (b && d) return `${b} – ${d}`;
-  if (b && isDead(p)) return `${b} – ?`;
+  if (b && isDead(p)) return RTE() ? `وُلد${p.gender === 'female' ? 'ت' : ''} في ${b} – ${dead}` : `Born in ${b} – ${dead}`;
   if (b) return RTE() ? `${p.gender === 'female' ? 'وُلدت في' : 'وُلد في'} ${b}` : `Born in ${b}`;
   if (d) return RTE() ? `تُوفي في ${d}` : `Died in ${d}`;
+  if (isDead(p)) return dead;
   return '';
 }
 const approxDate = v => fmtDate(v);
@@ -519,7 +521,7 @@ function framed(pid, cls = '') {
   const p = S.people[pid];
   const g = S.gen.has(pid) ? S.gen.get(pid) : null;
   const metal = g == null ? 'm4' : 'm' + Math.min(g, 4);
-  return `<span class="frame ${genderCls(p)} ${metal}${isDead(p) ? ' dead' : ''} ${cls}">` +
+  return `<span class="frame ${genderCls(p)} ${metal} ${cls}">` +
     `<span class="orbit"></span><span class="ring"></span>${avatar(pid)}` +
     (g != null ? `<span class="badge">${ROMAN[g] || g + 1}</span>` : '') + `</span>`;
 }
@@ -527,7 +529,7 @@ function framed(pid, cls = '') {
 function personCard(pid) {
   const p = S.people[pid];
   const sub = p.occupation || p.location || '';
-  return `<div class="pcard ${genderCls(p)}${isDead(p) ? ' dead' : ''}${S.selected === pid ? ' sel' : ''}" data-pid="${esc(pid)}" role="button" tabindex="0" aria-label="${esc(nm(p))}">` +
+  return `<div class="pcard ${genderCls(p)}${S.selected === pid ? ' sel' : ''}" data-pid="${esc(pid)}" role="button" tabindex="0" aria-label="${esc(nm(p))}">` +
     framed(pid) +
     `<b class="pc-name">${esc(nm(p))}</b>` +
     `<small class="pc-yrs">${esc(yearsText(p))}</small>` +

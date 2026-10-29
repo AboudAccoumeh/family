@@ -695,8 +695,7 @@ body.searching #edges path { opacity: 0.35; }
   border: 2px solid var(--surface); box-shadow: 0 3px 8px -2px var(--mglow);
 }
 .frame.m0 .badge::before { content: '✦ '; }
-.frame.dead .av { filter: grayscale(0.75) contrast(0.95); }
-.frame.dead .ring { filter: saturate(0.35); animation: none; }
+
 .frame.sm { --fs: 66px; }
 .frame.sm .orbit { display: none; }
 .frame.sm .badge { min-width: 18px; height: 15px; padding: 0 4px; font-size: 9px; line-height: 11px; border-width: 2px; }
