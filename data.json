@@ -481,8 +481,6 @@
       "mother": "abeer",
       "birth": 1998,
       "birthApprox": true,
-      "death": 2024,
-      "deathApprox": true,
       "nameAr": "نعيم أكومة"
     },
     "amer": {
@@ -810,6 +808,97 @@
       "father": "nader",
       "mother": "noura-slieman",
       "nameAr": "صوفيا أكومة"
+    },
+    "abdulkader-ghamraoui": {
+      "name": "AbdulKader Ghamraoui",
+      "gender": "male",
+      "birth": 1943,
+      "birthApprox": true,
+      "nameAr": "عبدالقادر غمراوي"
+    },
+    "hadiya-akkoumeh": {
+      "name": "Hadiya Akkoumeh",
+      "gender": "female",
+      "birth": 1946,
+      "birthApprox": true,
+      "father": "abedelrahman",
+      "mother": "khadra",
+      "nameAr": "هدية أكومة"
+    },
+    "randa-ghamraoui": {
+      "name": "Randa Ghamraoui",
+      "gender": "female",
+      "birth": 1968,
+      "birthApprox": true,
+      "father": "abdulkader-ghamraoui",
+      "mother": "hadiya-akkoumeh",
+      "nameAr": "رندا غمراوي"
+    },
+    "eid-safar": {
+      "name": "Eid Safar",
+      "gender": "male",
+      "birth": 1964,
+      "birthApprox": true,
+      "nameAr": "عيد صفر"
+    },
+    "fadwa-el-rafei": {
+      "name": "Fadwa El-Rafei",
+      "gender": "female",
+      "birth": 1991,
+      "birthApprox": true,
+      "father": "eid-safar",
+      "mother": "randa-ghamraoui",
+      "nameAr": "فدوى الرفاعي"
+    },
+    "sami-el-rafei": {
+      "name": "Sami El-Rafei",
+      "gender": "male",
+      "birth": 1988,
+      "birthApprox": true,
+      "nameAr": "سامي الرفاعي"
+    },
+    "bassem-el-rafei": {
+      "name": "Bassem El-Rafei",
+      "gender": "male",
+      "birth": 2022,
+      "birthApprox": true,
+      "father": "sami-el-rafei",
+      "mother": "fadwa-el-rafei",
+      "nameAr": "بسام الرفاعي"
+    },
+    "elias-el-rafei": {
+      "name": "Elias El-Rafei",
+      "gender": "male",
+      "birth": 2025,
+      "birthApprox": true,
+      "father": "sami-el-rafei",
+      "mother": "fadwa-el-rafei",
+      "nameAr": "الياس الرفاعي"
+    },
+    "mohammad-safar": {
+      "name": "Mohammad Safar",
+      "gender": "male",
+      "birth": 1993,
+      "birthApprox": true,
+      "father": "eid-safar",
+      "mother": "randa-ghamraoui",
+      "nameAr": "محمد صفر"
+    },
+    "rayan-sankari": {
+      "name": "Rayan Sankari",
+      "gender": "female",
+      "birth": 1996,
+      "birthApprox": true,
+      "nameAr": "راين سنكري"
+    },
+    "nazeeh-safar": {
+      "name": "Nazeeh Safar",
+      "gender": "male",
+      "birth": 1999,
+      "birthApprox": true,
+      "father": "eid-safar",
+      "mother": "randa-ghamraoui",
+      "nameAr": "نزيه صفر"
     }
   },
   "marriages": [
@@ -985,6 +1074,34 @@
       "partners": [
         "nader",
         "noura-slieman"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "abdulkader-ghamraoui",
+        "hadiya-akkoumeh"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "randa-ghamraoui",
+        "eid-safar"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "fadwa-el-rafei",
+        "sami-el-rafei"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "mohammad-safar",
+        "rayan-sankari"
       ],
       "status": "married"
     }
