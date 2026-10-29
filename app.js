@@ -307,7 +307,7 @@ const nmId = pid => nm(S.people[pid]);
 const ARUI = {
   'Tree': 'الشجرة', 'Members': 'الأعضاء', 'Timeline': 'خط الزمن',
   'Search name, job, city…': 'ابحث عن اسم أو عمل أو مدينة…',
-  'All': 'الكل', 'Living': 'أحياء', 'Deceased': 'رحلوا', 'Male': 'رجال', 'Female': 'نساء',
+  'All': 'الكل', 'Living': 'أحياء', 'Male': 'رجال', 'Female': 'نساء',
   'Show in tree': 'أظهره في الشجرة', 'Copy link': 'انسخ الرابط',
   'Men': 'رجال', 'Women': 'نساء',
   'Drag to pan · Scroll to zoom · Click a person for details': 'اسحب للتحريك · عجلة الفأرة للتكبير · اضغط على شخص للتفاصيل',
@@ -359,7 +359,7 @@ function applyLangDom() {
   });
   const si = $('#search');
   if (si) si.placeholder = L('Search name, job, city…');
-  $$('#filters .chip').forEach(c => c.textContent = L({ all: 'All', living: 'Living', deceased: 'Deceased', male: 'Male', female: 'Female' }[c.dataset.f]));
+  $$('#filters .chip').forEach(c => c.textContent = L({ all: 'All', living: 'Living', male: 'Male', female: 'Female' }[c.dataset.f]));
   /* legend + hint bubble */
   const lg = $('#legend');
   if (lg) {
@@ -1245,7 +1245,6 @@ function renderPeople() {
   let list = S.ids.filter(id => !S.people[id].missing || S.query);
   const f = S.filter;
   if (f === 'living') list = list.filter(id => isLiving(S.people[id]));
-  if (f === 'deceased') list = list.filter(id => isDead(S.people[id]));
   if (f === 'male' || f === 'female') list = list.filter(id => S.people[id].gender === f);
   if (S.query) list = list.filter(id => matches(id, S.query));
 

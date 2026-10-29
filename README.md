@@ -5,7 +5,7 @@ from `data.json`.** To add or fix a person, edit that one file. You never need t
 
 - **Tree**: pan, zoom and pinch, with expandable branches. Spouses sit side by side, and each
   marriage's children branch from that couple. Divorces show as a dashed link.
-- **Members**: a searchable directory with filters (living, deceased, male, female) that you can
+- **Members**: a searchable directory with filters (living, male, female) that you can
   group by generation, branch, location or A–Z, plus family stats.
 - **Timeline**: births, marriages, divorces, milestones and deaths, grouped by decade.
 - **Profiles**: details, parents, all spouses (with status), children grouped by the other
