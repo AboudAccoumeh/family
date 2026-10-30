@@ -901,6 +901,255 @@
       "father": "eid-safar",
       "mother": "randa-ghamraoui",
       "nameAr": "نزيه صفر"
+    },
+    "bassam-ghamraoui": {
+      "name": "Bassam Ghamraoui",
+      "gender": "male",
+      "birth": 1963,
+      "birthApprox": true,
+      "father": "abdulkader-ghamraoui",
+      "mother": "hadiya-akkoumeh",
+      "nameAr": "بسام غمراوي"
+    },
+    "vandanah-ghamraoui": {
+      "name": "Vandanah Ghamraoui",
+      "gender": "female",
+      "nameAr": "فندانا"
+    },
+    "abdulkader-ghamraoui-jr": {
+      "name": "AbdulKader Ghamraoui",
+      "gender": "male",
+      "father": "bassam-ghamraoui",
+      "mother": "vandanah-ghamraoui",
+      "nameAr": "عبدالقادر غمراوي"
+    },
+    "rouba-ghamraoui": {
+      "name": "Rouba Ghamraoui",
+      "gender": "female",
+      "father": "bassam-ghamraoui",
+      "mother": "vandanah-ghamraoui",
+      "nameAr": "ربى غمراوي"
+    },
+    "wassim-hamid": {
+      "name": "Wassim Hamid",
+      "gender": "male",
+      "nameAr": "وسيم حميد"
+    },
+    "ahmad-hamid": {
+      "name": "Ahmad Hamid",
+      "gender": "male",
+      "father": "wassim-hamid",
+      "mother": "rouba-ghamraoui",
+      "nameAr": "احمد حميد"
+    },
+    "hiba-ghamraoui": {
+      "name": "Hiba Ghamraoui",
+      "gender": "female",
+      "father": "bassam-ghamraoui",
+      "mother": "vandanah-ghamraoui",
+      "nameAr": "هبة غمراوي"
+    },
+    "azzam-ghamraoui": {
+      "name": "Azzam Ghamraoui",
+      "gender": "male",
+      "birth": 1964,
+      "birthApprox": true,
+      "father": "abdulkader-ghamraoui",
+      "mother": "hadiya-akkoumeh",
+      "nameAr": "عزام غمراوي"
+    },
+    "nadia-monlah": {
+      "name": "Nadia Monlah",
+      "gender": "female",
+      "nameAr": "ناديا منلا"
+    },
+    "suher-ghamraoui": {
+      "name": "Suher Ghamraoui",
+      "gender": "female",
+      "father": "azzam-ghamraoui",
+      "mother": "nadia-monlah",
+      "nameAr": "سهير غمراوي"
+    },
+    "suhaib-monlah": {
+      "name": "Suhaib Monlah",
+      "gender": "male",
+      "nameAr": "صهيب منلا"
+    },
+    "aseel-monlah": {
+      "name": "Aseel Monlah",
+      "gender": "female",
+      "father": "suhaib-monlah",
+      "mother": "suher-ghamraoui",
+      "nameAr": "أسيل منلا"
+    },
+    "talin-monlah": {
+      "name": "Talin Monlah",
+      "gender": "female",
+      "father": "suhaib-monlah",
+      "mother": "suher-ghamraoui",
+      "nameAr": "تالين منلا"
+    },
+    "ismail-monlah": {
+      "name": "Ismail Monlah",
+      "gender": "male",
+      "father": "suhaib-monlah",
+      "mother": "suher-ghamraoui",
+      "nameAr": "إسماعيل منلا"
+    },
+    "sara-ghamraoui": {
+      "name": "Sara Ghamraoui",
+      "gender": "female",
+      "father": "azzam-ghamraoui",
+      "mother": "nadia-monlah",
+      "nameAr": "سارا غمراوي"
+    },
+    "ehab-koubaitary": {
+      "name": "Ehab Koubaitary",
+      "gender": "male",
+      "nameAr": "إيهاب قبيطري"
+    },
+    "azzam-koubaitary": {
+      "name": "Azzam Koubaitary",
+      "gender": "male",
+      "father": "ehab-koubaitary",
+      "mother": "sara-ghamraoui",
+      "nameAr": "عزام قبيطري"
+    },
+    "amjad-koubaitary": {
+      "name": "Amjad Koubaitary",
+      "gender": "male",
+      "father": "ehab-koubaitary",
+      "mother": "sara-ghamraoui",
+      "nameAr": "أمجد قبيطري"
+    },
+    "houda-ghamraoui": {
+      "name": "Houda Ghamraoui",
+      "gender": "female",
+      "father": "azzam-ghamraoui",
+      "mother": "nadia-monlah",
+      "nameAr": "هدى غمراوي"
+    },
+    "samar-ghamraoui-hazzouri": {
+      "name": "Samar Ghamraoui Hazzouri",
+      "gender": "female",
+      "deceased": true,
+      "birth": 1969,
+      "birthApprox": true,
+      "father": "abdulkader-ghamraoui",
+      "mother": "hadiya-akkoumeh",
+      "nameAr": "سمر غمراوي"
+    },
+    "abdulrahman-hazzouri": {
+      "name": "AbdulRahman Hazzouri",
+      "gender": "male",
+      "nameAr": "عبدالرحمن حازوري"
+    },
+    "abdallah-hazzouri": {
+      "name": "Abdallah Hazzouri",
+      "gender": "male",
+      "father": "abdulrahman-hazzouri",
+      "mother": "samar-ghamraoui-hazzouri",
+      "nameAr": "عبدالله حازوري"
+    },
+    "ibrahim-hazzouri": {
+      "name": "Ibrahim Hazzouri",
+      "gender": "male",
+      "father": "abdulrahman-hazzouri",
+      "mother": "samar-ghamraoui-hazzouri",
+      "nameAr": "إبراهيم حازوري"
+    },
+    "noor-hazzouri": {
+      "name": "Noor Hazzouri",
+      "gender": "female",
+      "father": "abdulrahman-hazzouri",
+      "mother": "samar-ghamraoui-hazzouri",
+      "nameAr": "نور حازوري"
+    },
+    "hisham-ghamraoui": {
+      "name": "Hisham Ghamraoui",
+      "gender": "male",
+      "birth": 1967,
+      "birthApprox": true,
+      "father": "abdulkader-ghamraoui",
+      "mother": "hadiya-akkoumeh",
+      "nameAr": "هشام غمراوي"
+    },
+    "khawla-ghamraoui": {
+      "name": "Khawla Ghamraoui Issa",
+      "gender": "female",
+      "birth": 1971,
+      "birthApprox": true,
+      "father": "abdulkader-ghamraoui",
+      "mother": "hadiya-akkoumeh",
+      "nameAr": "خولة غمراوي"
+    },
+    "yahya-issa": {
+      "name": "Yahya Issa",
+      "gender": "male",
+      "nameAr": "يحي عيسى"
+    },
+    "bilal-issa": {
+      "name": "Bilal Issa",
+      "gender": "male",
+      "father": "yahya-issa",
+      "mother": "khawla-ghamraoui",
+      "nameAr": "بلال عيسى"
+    },
+    "asma-alzahab": {
+      "name": "Asma Alzahab",
+      "gender": "female",
+      "nameAr": "أسمى الذهب"
+    },
+    "yahya-issa-jr": {
+      "name": "Yahya Issa",
+      "gender": "male",
+      "father": "bilal-issa",
+      "mother": "asma-alzahab",
+      "nameAr": "يحي عيسى"
+    },
+    "zakariya-issa": {
+      "name": "Zakariya Issa",
+      "gender": "male",
+      "father": "yahya-issa",
+      "mother": "khawla-ghamraoui",
+      "nameAr": "زكريا عيسى"
+    },
+    "miriam-alwan": {
+      "name": "Miriam Alwan",
+      "gender": "female",
+      "nameAr": "ميريام علوان"
+    },
+    "elsa-issa": {
+      "name": "Elsa Issa",
+      "gender": "female",
+      "father": "zakariya-issa",
+      "mother": "miriam-alwan",
+      "nameAr": "إلسا عيسى"
+    },
+    "tarek-issa": {
+      "name": "Tarek Issa",
+      "gender": "male",
+      "father": "yahya-issa",
+      "mother": "khawla-ghamraoui",
+      "nameAr": "طارق عيسى"
+    },
+    "zena-ghamraoui": {
+      "name": "Zena Ghamraoui",
+      "gender": "female",
+      "birth": 1973,
+      "birthApprox": true,
+      "father": "abdulkader-ghamraoui",
+      "mother": "hadiya-akkoumeh",
+      "nameAr": "زينة غمراوي"
+    },
+    "hala-ghamraoui": {
+      "name": "Hala Ghamraoui",
+      "gender": "female",
+      "birth": 1979,
+      "birthApprox": true,
+      "father": "abdulkader-ghamraoui",
+      "mother": "hadiya-akkoumeh",
+      "nameAr": "هلا غمراوي"
     }
   },
   "marriages": [
@@ -1104,6 +1353,69 @@
       "partners": [
         "mohammad-safar",
         "rayan-sankari"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "bassam-ghamraoui",
+        "vandanah-ghamraoui"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "rouba-ghamraoui",
+        "wassim-hamid"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "azzam-ghamraoui",
+        "nadia-monlah"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "suher-ghamraoui",
+        "suhaib-monlah"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "sara-ghamraoui",
+        "ehab-koubaitary"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "samar-ghamraoui-hazzouri",
+        "abdulrahman-hazzouri"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "khawla-ghamraoui",
+        "yahya-issa"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "bilal-issa",
+        "asma-alzahab"
+      ],
+      "status": "married"
+    },
+    {
+      "partners": [
+        "zakariya-issa",
+        "miriam-alwan"
       ],
       "status": "married"
     }
