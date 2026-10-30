@@ -798,15 +798,9 @@ function initGestures() {
     e.preventDefault();
     dismissHint();
     const rect = vp.getBoundingClientRect();
-    /* pinch (ctrl+wheel) or a mouse wheel zooms; two-finger trackpad scroll pans */
-    const mouseWheel = e.deltaMode !== 0 || (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 40);
-    if (e.ctrlKey || mouseWheel) {
-      const f = Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0018));
-      zoomAt(e.clientX - rect.left, e.clientY - rect.top, f);
-    } else {
-      tgt.x -= e.deltaX; tgt.y -= e.deltaY;
-      clampPan();
-    }
+    /* every wheel gesture zooms (plain wheel, trackpad scroll, ctrl+wheel pinch) — never scrolls */
+    const f = Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0018));
+    zoomAt(e.clientX - rect.left, e.clientY - rect.top, f);
   }, { passive: false });
 
   vp.addEventListener('keydown', e => {
